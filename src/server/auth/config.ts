@@ -21,14 +21,19 @@ export const authConfig = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     authorized({ auth, request: { nextUrl } }: any) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
       const isOnUsers = nextUrl.pathname.startsWith('/users');
+      const isOnAnalytics = nextUrl.pathname.startsWith('/analytics');
+      const isAuthRoute = nextUrl.pathname.startsWith('/login');
+
+      if (isAuthRoute) {
+        return true;
+      }
 
       if (isOnUsers) {
         return isLoggedIn && auth.user.role === 'SUPER_USER';
       }
 
-      if (isOnDashboard) {
+      if (isOnAnalytics || nextUrl.pathname === '/') {
         return isLoggedIn;
       }
 

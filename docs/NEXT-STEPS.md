@@ -57,9 +57,9 @@ According to `docs/PLAN.md`, implement features in this order:
 - [x] Project scaffolding
 - [x] Database schema
 - [x] Authentication setup
-- [ ] **Global layout with navigation**
-- [ ] **Route groups (public, auth, app)**
-- [ ] **Login page with demo account shortcuts**
+- [x] **Global layout with navigation**
+- [x] **Route groups (public, auth, app)**
+- [x] **Login page with demo account shortcuts**
 
 ### Phase 2: Project Management (Week 2)
 - [ ] Project list page with search and filters

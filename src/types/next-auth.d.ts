@@ -1,7 +1,9 @@
 declare module 'next-auth' {
   interface User {
     id: string;
-    role?: string;
+    email: string;
+    name: string;
+    role: 'VIEWER' | 'EDITOR' | 'SUPER_USER';
     organization?: string | null;
   }
 
