@@ -1,6 +1,6 @@
 export function formatCurrency(value: number | null | undefined): string {
   if (value === null || value === undefined) return '—';
-  
+
   return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency: 'EUR',
@@ -17,11 +17,11 @@ export function formatNumber(
   }
 ): string {
   const { decimals = false, thousandSeparators = true } = options || {};
-  
+
   if (!thousandSeparators) {
     return decimals ? value.toFixed(2) : value.toString();
   }
-  
+
   return new Intl.NumberFormat('de-DE', {
     minimumFractionDigits: decimals ? 2 : 0,
     maximumFractionDigits: decimals ? 2 : 0,
@@ -30,9 +30,9 @@ export function formatNumber(
 
 export function formatDate(date: Date | string | null | undefined): string {
   if (!date) return '—';
-  
+
   const d = typeof date === 'string' ? new Date(date) : date;
-  
+
   return new Intl.DateTimeFormat('en-GB', {
     day: '2-digit',
     month: '2-digit',
@@ -46,7 +46,7 @@ export function formatDateRange(
 ): string {
   const start = formatDate(startDate);
   const end = endDate ? formatDate(endDate) : 'Ongoing';
-  
+
   return `${start} - ${end}`;
 }
 
@@ -95,4 +95,42 @@ export function getStatusLabel(status: string): string {
     default:
       return status;
   }
+}
+
+export function formatPercentage(value: number | null | undefined): string {
+  if (value === null || value === undefined) return '—';
+
+  return new Intl.NumberFormat('de-DE', {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 1,
+  }).format(value / 100);
+}
+
+export function formatLargeNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined) return '—';
+
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`;
+  }
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(1)}K`;
+  }
+  return value.toString();
+}
+
+export function formatChartValue(value: number, unit?: string): string {
+  const formattedValue = new Intl.NumberFormat('de-DE', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+
+  return unit ? `${formattedValue} ${unit}` : formattedValue;
+}
+
+export function formatCurrencyMillions(value: number | null | undefined): string {
+  if (value === null || value === undefined) return '—';
+
+  const millions = value / 1_000_000;
+  return `€${millions.toFixed(1)}M`;
 }

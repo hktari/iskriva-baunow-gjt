@@ -6,7 +6,7 @@ export default auth((req: any) => {
   const isLoggedIn = !!req.auth;
 
   const isAuthRoute = nextUrl.pathname.startsWith('/login');
-  const isPublicRoute = nextUrl.pathname === '/login';
+  const isPublicRoute = nextUrl.pathname === '/login' || nextUrl.pathname.startsWith('/analytics');
 
   if (isAuthRoute) {
     if (isLoggedIn) {
@@ -16,7 +16,9 @@ export default auth((req: any) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/login', nextUrl));
+    const loginUrl = new URL('/login', nextUrl);
+    loginUrl.searchParams.set('callbackUrl', nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();

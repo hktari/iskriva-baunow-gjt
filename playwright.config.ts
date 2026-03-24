@@ -3,11 +3,11 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly: false,
+  retries: 0,
+  workers: undefined,
   timeout: 5000,
-  reporter: process.env.CI ? [['list'], ['html']] : 'list',
+  reporter: 'list',
   use: {
     baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
@@ -25,10 +25,5 @@ export default defineConfig({
     //   name: 'webkit',
     //   use: { ...devices['Desktop Safari'] },
     // },
-  ],
-  webServer: {
-    command: 'pnpm test:e2e:server',
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
-  },
+  ]
 });
