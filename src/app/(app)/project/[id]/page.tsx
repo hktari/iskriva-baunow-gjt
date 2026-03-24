@@ -14,18 +14,19 @@ import { ProjectDetailView } from './project-detail-view';
 import { getStatusLabel, getStatusColor } from '@/shared/lib/formatters';
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { id } = await params;
   const session = await auth();
   const userId = session?.user?.id;
   const canEdit = session?.user?.role === 'EDITOR' || session?.user?.role === 'SUPER_USER';
 
   const [project, configurableFields] = await Promise.all([
-    getProject(params.id, userId),
+    getProject(id, userId),
     getConfigurableFields(),
   ]);
 

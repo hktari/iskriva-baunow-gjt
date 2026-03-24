@@ -75,7 +75,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
         router.push(`/project/${result.projectId}`);
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setIsSubmitting(false);

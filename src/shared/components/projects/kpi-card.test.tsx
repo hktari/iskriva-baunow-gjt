@@ -19,7 +19,7 @@ vi.mock('sonner', () => ({
 import { updateKpi, deleteKpi, setPrimaryKpi } from '@/server/actions/kpis';
 import { KpiCard } from './kpi-card';
 
-const mockUpdateKpi = updateKpi as ReturnType<typeof vi.fn>;
+const _mockUpdateKpi = updateKpi as ReturnType<typeof vi.fn>;
 const mockDeleteKpi = deleteKpi as ReturnType<typeof vi.fn>;
 const mockSetPrimaryKpi = setPrimaryKpi as ReturnType<typeof vi.fn>;
 

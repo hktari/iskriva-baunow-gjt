@@ -23,7 +23,7 @@ export function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast.error('Please enter email and password');
       return;
@@ -44,7 +44,7 @@ export function LoginForm() {
           router.push('/');
           router.refresh();
         }
-      } catch (error) {
+      } catch {
         toast.error('An error occurred during login');
       }
     });
@@ -66,7 +66,7 @@ export function LoginForm() {
           router.push('/');
           router.refresh();
         }
-      } catch (error) {
+      } catch {
         toast.error('An error occurred during demo login');
       }
     });
@@ -92,7 +92,7 @@ export function LoginForm() {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input

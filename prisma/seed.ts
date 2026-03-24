@@ -71,6 +71,7 @@ async function main() {
     'Climate adaptation',
     'Education',
     'Emission reduction (CO2)',
+    'Research',
   ];
 
   const investmentTypes = [
@@ -98,6 +99,7 @@ async function main() {
     'tonnes CO2/year',
     '% CO2/year',
     'persons',
+    'people',
     'km2',
     'km',
     'm3/year',

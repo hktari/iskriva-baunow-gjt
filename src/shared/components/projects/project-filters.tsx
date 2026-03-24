@@ -4,6 +4,7 @@ import { Search, SlidersHorizontal, X, Heart } from 'lucide-react';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
+import { Checkbox } from '@/shared/components/ui/checkbox';
 import {
   Accordion,
   AccordionContent,
@@ -70,14 +71,20 @@ export function ProjectFilters({
         </div>
 
         {isAuthenticated && (
-          <Button
-            variant={filters.favoritesOnly ? 'default' : 'outline'}
-            onClick={() => onFilterChange('favoritesOnly', !filters.favoritesOnly)}
-            className="gap-2"
-          >
-            <Heart className={`h-4 w-4 ${filters.favoritesOnly ? 'fill-current' : ''}`} />
-            Favorites Only
-          </Button>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="favorites-only"
+              checked={filters.favoritesOnly}
+              onCheckedChange={(checked: boolean) => onFilterChange('favoritesOnly', checked === true)}
+            />
+            <label
+              htmlFor="favorites-only"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2 cursor-pointer"
+            >
+              <Heart className={`h-4 w-4 ${filters.favoritesOnly ? 'fill-current' : ''}`} />
+              Favorites Only
+            </label>
+          </div>
         )}
       </div>
 
@@ -102,7 +109,7 @@ export function ProjectFilters({
                   value={filters.country}
                   onValueChange={(value) => onFilterChange('country', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Country">
                     <SelectValue placeholder="All countries" />
                   </SelectTrigger>
                   <SelectContent>
@@ -122,7 +129,7 @@ export function ProjectFilters({
                   value={filters.projectType}
                   onValueChange={(value) => onFilterChange('projectType', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Project Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -142,7 +149,7 @@ export function ProjectFilters({
                   value={filters.investmentType}
                   onValueChange={(value) => onFilterChange('investmentType', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Investment Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -162,7 +169,7 @@ export function ProjectFilters({
                   value={filters.status}
                   onValueChange={(value) => onFilterChange('status', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Status">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
                   <SelectContent>
@@ -182,7 +189,7 @@ export function ProjectFilters({
                   value={filters.organization}
                   onValueChange={(value) => onFilterChange('organization', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Organization">
                     <SelectValue placeholder="All organizations" />
                   </SelectTrigger>
                   <SelectContent>
