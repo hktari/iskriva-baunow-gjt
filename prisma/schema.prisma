@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          UserRole  @default(VIEWER)
+  organization  String?
+  status        UserStatus @default(ACTIVE)
+  invitedBy     String?
+  invitedAt     DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  projects      Project[]
+  favorites     Favorite[]
+  auditLogs     AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Project {
+  id               String    @id @default(cuid())
+  name             String
+  country          String
+  projectType      String
+  investmentType   String?
+  projectValue     Float
+  investmentCosts  Float?
+  status           ProjectStatus @default(PLANNING)
+  startDate        DateTime
+  endDate          DateTime?
+  description      String    @db.Text
+  note             String?   @db.Text
+  projectManager   String?
+  contact          String?
+  projectWebsite   String?
+  program          String?
+  targetGroup      String[]
+  impact           String[]
+  organization     String?
+  lastEdited       DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  createdById      String?
+
+  createdBy        User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  kpis             Kpi[]
+  favorites        Favorite[]
+  auditLogs        AuditLog[]
+
+  @@index([country])
+  @@index([projectType])
+  @@index([status])
+  @@index([organization])
+  @@index([createdById])
+  @@map("projects")
+}
+
+model Kpi {
+  id                  String   @id @default(cuid())
+  projectId           String
+  indicatorName       String
+  targetValue         Float
+  valueAchieved       Float
+  unit                String
+  updated             String?
+  decimals            Boolean  @default(false)
+  thousandSeparators  Boolean  @default(true)
+  isPrimary           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  project             Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([isPrimary])
+  @@map("kpis")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([userId])
+  @@index([projectId])
+  @@map("favorites")
+}
+
+model ConfigurableField {
+  id        String   @id @default(cuid())
+  category  FieldCategory
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([category, value])
+  @@index([category])
+  @@map("configurable_fields")
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  entityType  String
+  entityId    String?
+  userId      String?
+  userEmail   String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project     Project? @relation(fields: [entityId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([entityType])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+enum UserRole {
+  VIEWER
+  EDITOR
+  SUPER_USER
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+}
+
+enum FieldCategory {
+  PROJECT_TYPE
+  INVESTMENT_TYPE
+  ORGANIZATION
+  KPI_UNIT
+}

@@ -1,0 +1,11 @@
+{
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "AUTH_SECRET": "@auth_secret"
+  }
+}
