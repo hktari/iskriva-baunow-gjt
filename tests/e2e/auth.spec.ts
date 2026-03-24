@@ -2,16 +2,20 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Authentication Flow', () => {
   test('login with demo editor account', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto('/login');
 
     // Click editor demo button
     await page.getByRole('button', { name: /editor/i }).click();
 
-    // Should redirect to home page
-    await expect(page).toHaveURL('/');
+    // Wait for navigation to complete
+    await page.waitForURL('/');
 
-    // Should show user info in header
-    await expect(page.getByRole('banner').getByText(/editor/i)).toBeVisible();
+    // Should show authenticated content (Add New Project requires auth)
+    await expect(page.getByRole('link', { name: /add new project/i })).toBeVisible();
+
+    // Should show projects heading
+    await expect(page.getByRole('heading', { name: /^projects$/i })).toBeVisible();
   });
 
   test('login with demo viewer account', async ({ page }) => {

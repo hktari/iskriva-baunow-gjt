@@ -44,3 +44,7 @@ prisma/dev.db-journal
 # sentry
 .sentryclirc
 
+
+
+# playwright
+tmp/test-results

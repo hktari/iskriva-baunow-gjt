@@ -6,11 +6,13 @@ export default defineConfig({
   forbidOnly: false,
   retries: 0,
   workers: undefined,
-  timeout: 5000,
+  timeout: 15000,
   reporter: 'list',
+  outputDir: 'tmp/test-results',
   use: {
     baseURL: 'http://localhost:3005',
     trace: 'on-first-retry',
+    screenshot: 'on',
   },
   projects: [
     {

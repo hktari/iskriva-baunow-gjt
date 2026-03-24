@@ -63,6 +63,7 @@ export function LoginForm() {
           toast.error('Demo login failed');
         } else {
           toast.success('Logged in as demo user');
+          await new Promise(resolve => setTimeout(resolve, 100));
           router.push('/');
           router.refresh();
         }
