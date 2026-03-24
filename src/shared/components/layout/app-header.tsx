@@ -9,7 +9,7 @@ import { Menu, LogOut, BarChart3, FolderKanban, Users, BookOpen, Newspaper } fro
 import { useState } from 'react';
 
 interface AppHeaderProps {
-  user: User;
+  user?: User;
 }
 
 const ROLE_COLORS = {
@@ -25,6 +25,7 @@ const ROLE_LABELS = {
 };
 
 export function AppHeader({ user }: AppHeaderProps) {
+  const isLoggedIn = !!user;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
@@ -38,7 +39,7 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'News', href: '/news', icon: Newspaper },
   ];
 
-  if (user.role === 'SUPER_USER') {
+  if (isLoggedIn && user!.role === 'SUPER_USER') {
     navigation.push({ name: 'Users', href: '/users', icon: Users });
   }
 
@@ -66,25 +67,33 @@ export function AppHeader({ user }: AppHeaderProps) {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
-            </div>
-            <Badge className={ROLE_COLORS[user.role as keyof typeof ROLE_COLORS]}>
-              {ROLE_LABELS[user.role as keyof typeof ROLE_LABELS]}
-            </Badge>
-          </div>
+          {isLoggedIn ? (
+            <>
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">{user!.name}</p>
+                  <p className="text-xs text-muted-foreground">{user!.email}</p>
+                </div>
+                <Badge className={ROLE_COLORS[user!.role as keyof typeof ROLE_COLORS]}>
+                  {ROLE_LABELS[user!.role as keyof typeof ROLE_LABELS]}
+                </Badge>
+              </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleSignOut}
-            className="hidden sm:flex gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="hidden sm:flex gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button variant="default" size="sm" asChild className="hidden sm:flex">
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
 
           <Button
             variant="ghost"
@@ -100,15 +109,17 @@ export function AppHeader({ user }: AppHeaderProps) {
       {mobileMenuOpen && (
         <div className="md:hidden border-t">
           <div className="container mx-auto px-4 py-4 space-y-3">
-            <div className="flex items-center gap-3 pb-3 border-b">
-              <div className="flex-1">
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
+            {isLoggedIn && (
+              <div className="flex items-center gap-3 pb-3 border-b">
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{user!.name}</p>
+                  <p className="text-xs text-muted-foreground">{user!.email}</p>
+                </div>
+                <Badge className={ROLE_COLORS[user!.role as keyof typeof ROLE_COLORS]}>
+                  {ROLE_LABELS[user!.role as keyof typeof ROLE_LABELS]}
+                </Badge>
               </div>
-              <Badge className={ROLE_COLORS[user.role as keyof typeof ROLE_COLORS]}>
-                {ROLE_LABELS[user.role as keyof typeof ROLE_LABELS]}
-              </Badge>
-            </div>
+            )}
 
             <nav className="flex flex-col gap-1">
               {navigation.map((item) => (
@@ -121,15 +132,21 @@ export function AppHeader({ user }: AppHeaderProps) {
               ))}
             </nav>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSignOut}
-              className="w-full justify-start gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
+            {isLoggedIn ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="w-full justify-start gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            ) : (
+              <Button variant="default" size="sm" asChild className="w-full">
+                <Link href="/login">Login</Link>
+              </Button>
+            )}
           </div>
         </div>
       )}

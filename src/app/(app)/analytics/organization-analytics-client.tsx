@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -9,7 +9,7 @@ import { InvestmentByTypeChart } from '@/shared/components/analytics/investment-
 import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performance-chart';
 import { ValuePerformanceScatter } from '@/shared/components/analytics/value-performance-scatter';
 import { TopProjectsList } from '@/shared/components/analytics/top-projects-list';
-import { getOrganizationAnalytics } from '@/server/queries/analytics';
+import { getOrganizationAnalytics } from '@/server/actions/analytics';
 import { formatCurrency, formatLargeNumber } from '@/shared/lib/formatters';
 import { getSelectedOrganization, setSelectedOrganization, getEnabledCharts, setEnabledCharts } from '@/shared/lib/analytics-storage';
 import type { OrganizationAnalyticsData, OrganizationOption, ChartVisibilitySettings } from '@/types/analytics';
@@ -18,33 +18,26 @@ import { Building2, TrendingUp, Euro, Settings2 } from 'lucide-react';
 interface OrganizationAnalyticsClientProps {
   userOrganization?: string;
   organizations: OrganizationOption[];
+  initialData?: OrganizationAnalyticsData | null;
 }
 
-export function OrganizationAnalyticsClient({ userOrganization, organizations }: OrganizationAnalyticsClientProps) {
-  const [data, setData] = useState<OrganizationAnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedOrg, setSelectedOrg] = useState<string>('');
-  const [chartVisibility, setChartVisibility] = useState<ChartVisibilitySettings>({});
+export function OrganizationAnalyticsClient({
+  userOrganization,
+  organizations,
+  initialData,
+}: OrganizationAnalyticsClientProps) {
+  const [data, setData] = useState<OrganizationAnalyticsData | null>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
+  const [selectedOrg, setSelectedOrg] = useState<string>(() => {
+    const storedOrg = getSelectedOrganization();
+    return storedOrg || userOrganization || (organizations.length > 0 ? organizations[0].id : '');
+  });
+  const [chartVisibility, setChartVisibility] = useState<ChartVisibilitySettings>(() => getEnabledCharts());
   const [showSettings, setShowSettings] = useState(false);
 
-  useEffect(() => {
-    const storedOrg = getSelectedOrganization();
-    const storedCharts = getEnabledCharts();
-    
-    const initialOrg = storedOrg || userOrganization || (organizations.length > 0 ? organizations[0].id : '');
-    setSelectedOrg(initialOrg);
-    setChartVisibility(storedCharts);
-  }, [userOrganization, organizations]);
-
-  useEffect(() => {
-    if (selectedOrg) {
-      loadData();
-    }
-  }, [selectedOrg]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!selectedOrg) return;
-    
+
     setLoading(true);
     try {
       const result = await getOrganizationAnalytics(selectedOrg);
@@ -54,7 +47,14 @@ export function OrganizationAnalyticsClient({ userOrganization, organizations }:
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedOrg]);
+
+  useEffect(() => {
+    // Only fetch when selectedOrg changes and it's different from initialData's org
+    if (selectedOrg && (!initialData || selectedOrg !== initialData.organizationId)) {
+      loadData();
+    }
+  }, [selectedOrg, initialData, loadData]);
 
   const handleOrgChange = (orgId: string) => {
     setSelectedOrg(orgId);
@@ -247,7 +247,7 @@ export function OrganizationAnalyticsClient({ userOrganization, organizations }:
           {chartVisibility.valueVsPerformance !== false && (
             <ValuePerformanceScatter data={data.valueVsPerformance} />
           )}
-          
+
           {chartVisibility.topProjects !== false && (
             <TopProjectsList data={data.topProjects} />
           )}

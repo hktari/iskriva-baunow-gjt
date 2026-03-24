@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Select } from '@/shared/components/ui/select';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Label } from '@/shared/components/ui/label';
@@ -13,32 +12,34 @@ import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performan
 import { EnvironmentalImpactChart } from '@/shared/components/analytics/environmental-impact-chart';
 import { ValuePerformanceScatter } from '@/shared/components/analytics/value-performance-scatter';
 import { TopProjectsList } from '@/shared/components/analytics/top-projects-list';
-import { getGeneralAnalytics } from '@/server/queries/analytics';
+import { getGeneralAnalytics } from '@/server/actions/analytics';
 import { formatCurrency, formatLargeNumber } from '@/shared/lib/formatters';
 import type { GeneralAnalyticsData, AnalyticsFilters } from '@/types/analytics';
 import { Building2, TrendingUp, Euro, X } from 'lucide-react';
 
 interface GeneralAnalyticsClientProps {
   userId?: string;
+  initialData?: GeneralAnalyticsData;
 }
 
-export function GeneralAnalyticsClient({ userId }: GeneralAnalyticsClientProps) {
-  const [data, setData] = useState<GeneralAnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
+export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalyticsClientProps) {
+  const [data, setData] = useState<GeneralAnalyticsData | null>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
   const [filters, setFilters] = useState<AnalyticsFilters>({});
-  const [countries, setCountries] = useState<string[]>([]);
-  const [projectTypes, setProjectTypes] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>(() => {
+    if (initialData?.projectsByCountry.length) {
+      return initialData.projectsByCountry.map(p => p.country).sort();
+    }
+    return [];
+  });
+  const [projectTypes, _setProjectTypes] = useState<string[]>([]);
 
-  useEffect(() => {
-    loadData();
-  }, [filters, userId]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const result = await getGeneralAnalytics(filters, userId);
       setData(result);
-      
+
       if (!countries.length && result.projectsByCountry.length > 0) {
         const uniqueCountries = result.projectsByCountry.map(p => p.country).sort();
         setCountries(uniqueCountries);
@@ -48,7 +49,14 @@ export function GeneralAnalyticsClient({ userId }: GeneralAnalyticsClientProps) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, userId, countries.length]);
+
+  useEffect(() => {
+    // Only fetch if no initial data or when filters change (not on mount with initial data)
+    if (!initialData || Object.keys(filters).length > 0) {
+      loadData();
+    }
+  }, [filters, userId, initialData, loadData]);
 
   const hasActiveFilters = filters.country || filters.projectType || filters.favoritesOnly;
 
@@ -192,7 +200,7 @@ export function GeneralAnalyticsClient({ userId }: GeneralAnalyticsClientProps) 
       {/* Charts Grid */}
       <div className="grid gap-6">
         <ProjectsByCountryChart data={data.projectsByCountry} />
-        
+
         <div className="grid gap-6 md:grid-cols-2">
           <ProjectStatusChart data={data.projectStatus} />
           <InvestmentByTypeChart data={data.investmentByType} />

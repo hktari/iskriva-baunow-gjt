@@ -9,13 +9,9 @@ export default async function AppLayout({
 }) {
   const session = await auth();
 
-  if (!session) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
-      <AppHeader user={session.user} />
+      <AppHeader user={session?.user} />
       <main className="flex-1">{children}</main>
       <AppFooter />
     </div>
