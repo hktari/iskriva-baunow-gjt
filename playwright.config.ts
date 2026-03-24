@@ -6,9 +6,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
+  timeout: 5000,
   reporter: process.env.CI ? [['list'], ['html']] : 'list',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
   },
   projects: [
@@ -26,8 +27,8 @@ export default defineConfig({
     // },
   ],
   webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3000',
+    command: 'pnpm test:e2e:server',
+    url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
   },
 });
