@@ -49,9 +49,48 @@ This document tracks known issues and bugs discovered during development and tes
 - **Steps to Reproduce**: TBD
 - **Notes**: Issue discovered during testing phase
 
+### BUG-006: Project Types Not Showing on Analytics Filter Page
+
+- **Component**: Analytics Page - Filters
+- **Severity**: High
+- **Status**: Open
+- **Description**: Project types are not displaying in the analytics filter dropdown.
+- **Steps to Reproduce**: Navigate to analytics page and check project type filter
+- **Notes**: May be related to BUG-005
+
+### BUG-007: Missing Background on Dropdown Selectors
+
+- **Component**: UI - Dropdown Components
+- **Severity**: Medium
+- **Status**: Open
+- **Description**: Dropdown selectors lack background styling, making them difficult to see/use.
+- **Affected Elements**:
+  - Analytics filter page dropdowns
+  - Country selector on Create New Project page
+- **Notes**: UX issue affecting visual clarity
+
+### BUG-008: Country Selector Missing Search Functionality
+
+- **Component**: Create New Project Page - Country Selector
+- **Severity**: Medium
+- **Status**: Open
+- **Description**: Country selector dropdown does not have text search functionality, making it difficult to find countries in a long list.
+- **Steps to Reproduce**: Open Create New Project page and try to select a country
+- **Notes**: UX improvement needed for better usability
+
+### BUG-009: Poor Toggle State Visibility on Pills
+
+- **Component**: Create New Project Page - Target Group & Impact Areas
+- **Severity**: Medium
+- **Status**: Open
+- **Description**: The toggled and untoggled states on pill components (target group and impact areas) are barely noticeable, making it unclear which options are selected.
+- **Steps to Reproduce**: Navigate to Create New Project page and toggle target group or impact area pills
+- **Notes**: UX issue - needs better visual distinction between selected/unselected states
+
 ## Resolved Issues
 
 _None yet_
+BUG-003
 
 ---
 
