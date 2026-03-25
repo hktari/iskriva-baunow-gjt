@@ -35,7 +35,7 @@ This document tracks known issues and bugs discovered during development and tes
 
 - **Component**: Data Types/Schema
 - **Severity**: Medium
-- **Status**: Open
+- **Status**: Resolved
 - **Description**: Project type enumerations are not defined or missing from the codebase.
 - **Steps to Reproduce**: TBD
 - **Notes**: Issue discovered during testing phase
