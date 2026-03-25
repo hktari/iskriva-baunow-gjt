@@ -1,7 +1,7 @@
-import Credentials from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/shared/lib/db';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
+import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -17,6 +17,7 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
+  trustHost: true,
   callbacks: {
     authorized({ auth, request: { nextUrl } }: any) {
       const isLoggedIn = !!auth?.user;
