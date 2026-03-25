@@ -20,32 +20,16 @@ if [ -z "$NEON_PROJECT_ID" ]; then
     exit 1
 fi
 
-# Check if NEON_API_KEY is set
-if [ -z "$NEON_API_KEY" ]; then
-    echo "❌ Error: NEON_API_KEY environment variable is not set"
-    echo "Set it with: export NEON_API_KEY=your-api-key"
-    exit 1
-fi
-
 PROJECT_ID="$NEON_PROJECT_ID"
 PREVIEW_BRANCH="preview"
-MAIN_BRANCH="main"
+PRODUCTION_BRANCH="production"
 
 echo "📋 Project ID: $PROJECT_ID"
 echo "🌿 Preview branch: $PREVIEW_BRANCH"
 
-# Check if preview branch exists
-if neonctl branches list --project-id "$PROJECT_ID" | grep -q "$PREVIEW_BRANCH"; then
-    echo "🗑️  Deleting existing preview branch..."
-    neonctl branches delete "$PREVIEW_BRANCH" --project-id "$PROJECT_ID"
-    echo "✅ Preview branch deleted"
-else
-    echo "ℹ️  Preview branch does not exist, will create new one"
-fi
-
-# Create new preview branch from main
-echo "🌱 Creating new preview branch from $MAIN_BRANCH..."
-neonctl branches create --project-id "$PROJECT_ID" --name "$PREVIEW_BRANCH" --parent "$MAIN_BRANCH"
+# Restore preview branch from production
+echo "🔄 Restoring preview branch from $PRODUCTION_BRANCH..."
+neonctl branch restore "$PREVIEW_BRANCH" "$PRODUCTION_BRANCH" --project-id "$PROJECT_ID"
 
 echo "✅ Preview database reset complete!"
 echo ""

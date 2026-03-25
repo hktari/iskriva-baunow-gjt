@@ -5,10 +5,10 @@ This document describes the preview deployment workflow for the Baunow GJT appli
 ## Architecture
 
 ```
-Production (main branch)          Preview (feature branch)
+Production (production branch)          Preview (feature branch)
 ┌─────────────────────┐          ┌─────────────────────┐
 │ Vercel Production   │          │ Vercel Preview      │
-│ neondb (main)       │          │ neondb (preview)    │
+│ neondb (production)       │          │ neondb (preview)    │
 └─────────────────────┘          └─────────────────────┘
 ```
 
@@ -26,11 +26,14 @@ npm install -g neonctl
 
 ### 2. Set Up Environment Variables
 
-Create the following environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your Neon project ID:
 
 ```bash
-# Neon Configuration
-export NEON_PROJECT_ID=your-neon-project-id
+NEON_PROJECT_ID=your-neon-project-id
 ```
 
 To find your Neon project ID:
@@ -38,12 +41,6 @@ To find your Neon project ID:
 ```bash
 neonctl projects list
 ```
-
-To create a Neon API key:
-
-1. Go to https://console.neon.tech/app/settings/api-keys
-2. Create a new API key
-3. Save it securely
 
 ### 3. Configure Vercel Environment Variables
 
@@ -59,7 +56,7 @@ Set up environment variables in Vercel for each environment:
 #### Production Environment
 
 1. Add `DATABASE_URL` for **Production** environment
-2. Use the connection string from your Neon `main` branch
+2. Use the connection string from your Neon `production` branch
 
 To get connection strings:
 
@@ -67,8 +64,8 @@ To get connection strings:
 # Preview branch
 neonctl connection-string preview --project-id $NEON_PROJECT_ID
 
-# Main branch
-neonctl connection-string main --project-id $NEON_PROJECT_ID
+# production branch
+neonctl connection-string production --project-id $NEON_PROJECT_ID
 ```
 
 ## Workflow
@@ -84,7 +81,7 @@ pnpm db:reset-preview
 This will:
 
 - Delete existing preview branch (if any)
-- Create new preview branch from production (main)
+- Create new preview branch from production (production)
 - Give you a fresh copy of production data
 
 ### Step 2: Deploy to Preview
@@ -227,7 +224,7 @@ name: Preview Deployment
 
 on:
   pull_request:
-    branches: [main]
+    branches: [production]
 
 jobs:
   deploy-and-test:
