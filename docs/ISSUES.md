@@ -26,10 +26,10 @@ This document tracks known issues and bugs discovered during development and tes
 
 - **Component**: Projects Page - Edit Project Button
 - **Severity**: High
-- **Status**: Open
-- **Description**: The edit project button is non-functional or causes errors.
-- **Steps to Reproduce**: TBD
-- **Notes**: Issue discovered during testing phase
+- **Status**: Resolved
+- **Description**: Editing a project failed because optional select fields submitted invalid empty values.
+- **Steps to Reproduce**: Open a project, click "Edit Project", and submit while optional selects are set to None.
+- **Notes**: Fixed by mapping optional select "None" values to `null` before validation.
 
 ### BUG-004: URL Redirect Defaults to Port 3000
 
@@ -55,4 +55,4 @@ _None yet_
 
 ---
 
-_Last updated: March 2026_
+_Last updated: March 2026 (BUG-003 resolved)_

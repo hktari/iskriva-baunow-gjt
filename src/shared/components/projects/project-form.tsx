@@ -32,6 +32,8 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+const NONE_OPTION_VALUE = '__none__';
+
 interface ProjectFormProps {
   project?: any;
   configurableFields: {
@@ -56,6 +58,14 @@ export function ProjectForm({
   );
   const [selectedImpacts, setSelectedImpacts] = useState<string[]>(project?.impact ?? []);
 
+  const normalizeOptionalSelectValue = (value: FormDataEntryValue | null) => {
+    if (typeof value !== 'string' || value === NONE_OPTION_VALUE) {
+      return null;
+    }
+
+    return value;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -65,7 +75,7 @@ export function ProjectForm({
       name: formData.get('name') as string,
       country: formData.get('country') as string,
       projectType: formData.get('projectType') as string,
-      investmentType: (formData.get('investmentType') as string) ?? null,
+      investmentType: normalizeOptionalSelectValue(formData.get('investmentType')),
       projectValue: parseFloat(formData.get('projectValue') as string),
       investmentCosts: formData.get('investmentCosts')
         ? parseFloat(formData.get('investmentCosts') as string)
@@ -78,8 +88,8 @@ export function ProjectForm({
       projectManager: (formData.get('projectManager') as string) ?? null,
       contact: (formData.get('contact') as string) ?? null,
       projectWebsite: (formData.get('projectWebsite') as string) ?? null,
-      program: (formData.get('program') as string) ?? null,
-      organization: (formData.get('organization') as string) ?? null,
+      program: normalizeOptionalSelectValue(formData.get('program')),
+      organization: normalizeOptionalSelectValue(formData.get('organization')),
       targetGroup: selectedTargetGroups,
       impact: selectedImpacts,
     };
@@ -149,12 +159,12 @@ export function ProjectForm({
                 Organization
                 <Info className="inline h-3 w-3 ml-1 text-muted-foreground" />
               </Label>
-              <Select name="organization" defaultValue={project?.organization ?? ''}>
+              <Select name="organization" defaultValue={project?.organization ?? NONE_OPTION_VALUE}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select organization" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value={NONE_OPTION_VALUE}>None</SelectItem>
                   {configurableFields.ORGANIZATION?.map(org => (
                     <SelectItem key={org} value={org}>
                       {org}
@@ -184,12 +194,15 @@ export function ProjectForm({
 
             <div className="space-y-2">
               <Label htmlFor="investmentType">Investment Type</Label>
-              <Select name="investmentType" defaultValue={project?.investmentType ?? ''}>
+              <Select
+                name="investmentType"
+                defaultValue={project?.investmentType ?? NONE_OPTION_VALUE}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value={NONE_OPTION_VALUE}>None</SelectItem>
                   {configurableFields.INVESTMENT_TYPE?.map(type => (
                     <SelectItem key={type} value={type}>
                       {type}
@@ -296,12 +309,12 @@ export function ProjectForm({
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="program">Programme</Label>
-            <Select name="program" defaultValue={project?.program ?? ''}>
+            <Select name="program" defaultValue={project?.program ?? NONE_OPTION_VALUE}>
               <SelectTrigger>
                 <SelectValue placeholder="Select programme" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value={NONE_OPTION_VALUE}>None</SelectItem>
                 {PROGRAMS.map(program => (
                   <SelectItem key={program} value={program}>
                     {program}
