@@ -1,19 +1,19 @@
-import { cache } from 'react';
 import { db } from '@/shared/lib/db';
 import type {
   AnalyticsFilters,
-  GeneralAnalyticsData,
-  OrganizationAnalyticsData,
-  OrganizationOption,
   AnalyticsMetrics,
-  ProjectsByCountry,
-  ProjectStatusData,
+  EnvironmentalImpactData,
+  GeneralAnalyticsData,
   InvestmentByType,
   KpiPerformanceData,
-  EnvironmentalImpactData,
-  ValueVsPerformanceData,
+  OrganizationAnalyticsData,
+  OrganizationOption,
+  ProjectsByCountry,
+  ProjectStatusData,
   TopProject,
+  ValueVsPerformanceData,
 } from '@/types/analytics';
+import { cache } from 'react';
 
 const CO2_INDICATORS = ['CO2eq reduction per year', 'Percentage CO2eq reduction per year'];
 
@@ -190,6 +190,20 @@ export const getOrganizationList = cache(async (): Promise<OrganizationOption[]>
       name: org.value,
     })
   );
+});
+
+export const getProjectTypeList = cache(async (): Promise<string[]> => {
+  const projectTypes = await db.project.findMany({
+    select: {
+      projectType: true,
+    },
+    distinct: ['projectType'],
+    orderBy: {
+      projectType: 'asc',
+    },
+  });
+
+  return projectTypes.map(p => p.projectType).filter(Boolean);
 });
 
 function buildWhereClause(filters?: AnalyticsFilters, userId?: string) {

@@ -26,9 +26,14 @@ import { useCallback, useEffect, useState } from 'react';
 interface GeneralAnalyticsClientProps {
   userId?: string;
   initialData?: GeneralAnalyticsData;
+  projectTypes: string[];
 }
 
-export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalyticsClientProps) {
+export function GeneralAnalyticsClient({
+  userId,
+  initialData,
+  projectTypes,
+}: GeneralAnalyticsClientProps) {
   const [data, setData] = useState<GeneralAnalyticsData | null>(initialData || null);
   const [loading, setLoading] = useState(!initialData);
   const [filters, setFilters] = useState<AnalyticsFilters>({});
@@ -38,7 +43,6 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
     }
     return [];
   });
-  const [projectTypes, _setProjectTypes] = useState<string[]>([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);

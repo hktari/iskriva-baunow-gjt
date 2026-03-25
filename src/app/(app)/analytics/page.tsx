@@ -1,6 +1,6 @@
 import { getGeneralAnalytics, getOrganizationAnalytics } from '@/server/actions/analytics';
 import { auth } from '@/server/auth';
-import { getOrganizationList } from '@/server/queries/analytics';
+import { getOrganizationList, getProjectTypeList } from '@/server/queries/analytics';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { AlertCircle } from 'lucide-react';
@@ -16,6 +16,7 @@ export const metadata = {
 export default async function AnalyticsPage() {
   const session = await auth();
   const organizations = await getOrganizationList();
+  const projectTypes = await getProjectTypeList();
 
   // Pre-fetch initial data to prevent refetch on tab switch
   const [generalAnalytics, organizationAnalytics] = await Promise.all([
@@ -40,7 +41,11 @@ export default async function AnalyticsPage() {
 
         <TabsContent value="general" className="space-y-6">
           <Suspense fallback={<AnalyticsLoadingSkeleton />}>
-            <GeneralAnalyticsClient userId={session?.user?.id} initialData={generalAnalytics} />
+            <GeneralAnalyticsClient
+              userId={session?.user?.id}
+              initialData={generalAnalytics}
+              projectTypes={projectTypes}
+            />
           </Suspense>
         </TabsContent>
 
