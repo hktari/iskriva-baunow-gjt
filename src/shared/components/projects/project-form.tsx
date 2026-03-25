@@ -54,9 +54,7 @@ export function ProjectForm({
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>(
     project?.targetGroup ?? []
   );
-  const [selectedImpacts, setSelectedImpacts] = useState<string[]>(
-    project?.impact ?? []
-  );
+  const [selectedImpacts, setSelectedImpacts] = useState<string[]>(project?.impact ?? []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,16 +70,16 @@ export function ProjectForm({
       investmentCosts: formData.get('investmentCosts')
         ? parseFloat(formData.get('investmentCosts') as string)
         : null,
-      status: formData.get('status') as "PLANNING" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD",
+      status: formData.get('status') as 'PLANNING' | 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD',
       startDate: new Date(formData.get('startDate') as string),
       endDate: formData.get('endDate') ? new Date(formData.get('endDate') as string) : null,
       description: formData.get('description') as string,
-      note: formData.get('note') ?? null,
-      projectManager: formData.get('projectManager') ?? null,
-      contact: formData.get('contact') ?? null,
-      projectWebsite: formData.get('projectWebsite') ?? null,
-      program: formData.get('program') ?? null,
-      organization: formData.get('organization') ?? null,
+      note: (formData.get('note') as string) ?? null,
+      projectManager: (formData.get('projectManager') as string) ?? null,
+      contact: (formData.get('contact') as string) ?? null,
+      projectWebsite: (formData.get('projectWebsite') as string) ?? null,
+      program: (formData.get('program') as string) ?? null,
+      organization: (formData.get('organization') as string) ?? null,
       targetGroup: selectedTargetGroups,
       impact: selectedImpacts,
     };
@@ -254,7 +252,9 @@ export function ProjectForm({
                 name="startDate"
                 type="date"
                 defaultValue={
-                  project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] ?? '' : ''
+                  project?.startDate
+                    ? (new Date(project.startDate).toISOString().split('T')[0] ?? '')
+                    : ''
                 }
                 required
               />
@@ -267,7 +267,9 @@ export function ProjectForm({
                 name="endDate"
                 type="date"
                 defaultValue={
-                  project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] ?? '' : ''
+                  project?.endDate
+                    ? (new Date(project.endDate).toISOString().split('T')[0] ?? '')
+                    : ''
                 }
               />
             </div>

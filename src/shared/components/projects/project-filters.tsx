@@ -1,10 +1,10 @@
 'use client';
 
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from '@/shared/components/ui/accordion';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
@@ -12,11 +12,11 @@ import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/shared/components/ui/select';
 import { PROJECT_COUNTRIES, PROJECT_STATUSES } from '@/shared/lib/constants';
 import { Heart, Search, SlidersHorizontal, X } from 'lucide-react';
@@ -136,7 +136,7 @@ export function ProjectFilters({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All types</SelectItem>
-                    {configurableFields.PROJECT_TYPE?.map(type => (
+                    {(configurableFields.PROJECT_TYPE || []).map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -156,7 +156,7 @@ export function ProjectFilters({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All types</SelectItem>
-                    {configurableFields.INVESTMENT_TYPE?.map(type => (
+                    {(configurableFields.INVESTMENT_TYPE || []).map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -196,7 +196,7 @@ export function ProjectFilters({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All organizations</SelectItem>
-                    {configurableFields.ORGANIZATION?.map(org => (
+                    {(configurableFields.ORGANIZATION || []).map(org => (
                       <SelectItem key={org} value={org}>
                         {org}
                       </SelectItem>
@@ -224,7 +224,7 @@ export function ProjectFilters({
               </div>
             </div>
 
-            {(hasActiveFilters === true) ? (
+            {hasActiveFilters === true ? (
               <div className="mt-4 pt-4 border-t">
                 <Button variant="outline" onClick={onClearFilters} className="gap-2">
                   <X className="h-4 w-4" />

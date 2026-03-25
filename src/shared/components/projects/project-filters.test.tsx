@@ -75,4 +75,83 @@ describe('ProjectFilters', () => {
     const searchInput = screen.getByPlaceholderText(/search projects/i);
     expect(searchInput).toHaveValue('existing search');
   });
+
+  it('renders without crashing when configurableFields are undefined', async () => {
+    const user = userEvent.setup();
+    const propsWithUndefinedFields = {
+      ...defaultProps,
+      configurableFields: {
+        PROJECT_TYPE: undefined,
+        INVESTMENT_TYPE: undefined,
+        ORGANIZATION: undefined,
+      },
+    };
+
+    render(<ProjectFilters {...propsWithUndefinedFields} />);
+
+    // Open advanced filters accordion
+    await user.click(screen.getByText(/advanced filters/i));
+
+    // Should render all filter dropdowns without crashing
+    expect(screen.getByLabelText(/project type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/investment type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
+  });
+
+  it('renders without crashing when configurableFields object is empty', async () => {
+    const user = userEvent.setup();
+    const propsWithEmptyFields = {
+      ...defaultProps,
+      configurableFields: {},
+    };
+
+    render(<ProjectFilters {...propsWithEmptyFields} />);
+
+    // Open advanced filters accordion
+    await user.click(screen.getByText(/advanced filters/i));
+
+    // Should render all filter dropdowns without crashing
+    expect(screen.getByLabelText(/project type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/investment type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
+  });
+
+  it('renders dropdown options when configurableFields are provided', async () => {
+    const user = userEvent.setup();
+    render(<ProjectFilters {...defaultProps} />);
+
+    // Open advanced filters accordion
+    await user.click(screen.getByText(/advanced filters/i));
+
+    // Open project type dropdown
+    await user.click(screen.getByLabelText(/project type/i));
+
+    // Should show the options from configurableFields
+    expect(screen.getByRole('option', { name: 'Research' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Development' })).toBeInTheDocument();
+  });
+
+  it('shows only default option when configurableFields arrays are empty', async () => {
+    const user = userEvent.setup();
+    const propsWithEmptyArrays = {
+      ...defaultProps,
+      configurableFields: {
+        PROJECT_TYPE: [],
+        INVESTMENT_TYPE: [],
+        ORGANIZATION: [],
+      },
+    };
+
+    render(<ProjectFilters {...propsWithEmptyArrays} />);
+
+    // Open advanced filters accordion
+    await user.click(screen.getByText(/advanced filters/i));
+
+    // Open project type dropdown
+    await user.click(screen.getByLabelText(/project type/i));
+
+    // Should only show the "All types" default option
+    expect(screen.getByRole('option', { name: 'All types' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Research' })).not.toBeInTheDocument();
+  });
 });

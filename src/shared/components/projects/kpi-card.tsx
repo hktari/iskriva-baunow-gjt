@@ -5,10 +5,10 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import {
-    calculateKpiProgress,
-    formatNumber,
-    getKpiProgressBgColor,
-    getKpiProgressColor,
+  calculateKpiProgress,
+  formatNumber,
+  getKpiProgressBgColor,
+  getKpiProgressColor,
 } from '@/shared/lib/formatters';
 import { Pencil, Star, Trash2, TrendingDown, TrendingUp } from 'lucide-react';
 import { useState, useTransition } from 'react';
