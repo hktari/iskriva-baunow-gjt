@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { ProjectStatusChart } from '@/shared/components/analytics/project-status-chart';
@@ -11,8 +17,17 @@ import { ValuePerformanceScatter } from '@/shared/components/analytics/value-per
 import { TopProjectsList } from '@/shared/components/analytics/top-projects-list';
 import { getOrganizationAnalytics } from '@/server/actions/analytics';
 import { formatCurrency, formatLargeNumber } from '@/shared/lib/formatters';
-import { getSelectedOrganization, setSelectedOrganization, getEnabledCharts, setEnabledCharts } from '@/shared/lib/analytics-storage';
-import type { OrganizationAnalyticsData, OrganizationOption, ChartVisibilitySettings } from '@/types/analytics';
+import {
+  getSelectedOrganization,
+  setSelectedOrganization,
+  getEnabledCharts,
+  setEnabledCharts,
+} from '@/shared/lib/analytics-storage';
+import type {
+  OrganizationAnalyticsData,
+  OrganizationOption,
+  ChartVisibilitySettings,
+} from '@/types/analytics';
 import { Building2, TrendingUp, Euro, Settings2 } from 'lucide-react';
 
 interface OrganizationAnalyticsClientProps {
@@ -32,7 +47,9 @@ export function OrganizationAnalyticsClient({
     const storedOrg = getSelectedOrganization();
     return storedOrg || userOrganization || (organizations.length > 0 ? organizations[0].id : '');
   });
-  const [chartVisibility, setChartVisibility] = useState<ChartVisibilitySettings>(() => getEnabledCharts());
+  const [chartVisibility, setChartVisibility] = useState<ChartVisibilitySettings>(() =>
+    getEnabledCharts()
+  );
   const [showSettings, setShowSettings] = useState(false);
 
   const loadData = useCallback(async () => {
@@ -51,7 +68,7 @@ export function OrganizationAnalyticsClient({
 
   useEffect(() => {
     // Only fetch when selectedOrg changes and it's different from initialData's org
-    if (selectedOrg && (!initialData || selectedOrg !== initialData.organizationId)) {
+    if (selectedOrg && selectedOrg !== initialData?.organizationId) {
       loadData();
     }
   }, [selectedOrg, initialData, loadData]);
@@ -117,9 +134,9 @@ export function OrganizationAnalyticsClient({
               id="org-select"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={selectedOrg}
-              onChange={(e) => handleOrgChange(e.target.value)}
+              onChange={e => handleOrgChange(e.target.value)}
             >
-              {organizations.map((org) => (
+              {organizations.map(org => (
                 <option key={org.id} value={org.id}>
                   {org.name}
                 </option>
@@ -127,7 +144,7 @@ export function OrganizationAnalyticsClient({
             </select>
           </div>
 
-          {showSettings && (
+          {showSettings ? (
             <div className="pt-4 border-t space-y-3">
               <h4 className="font-medium text-sm">Chart Visibility</h4>
               <div className="space-y-2">
@@ -135,7 +152,9 @@ export function OrganizationAnalyticsClient({
                   <Checkbox
                     id="chart-status"
                     checked={chartVisibility.projectStatus !== false}
-                    onCheckedChange={(checked) => handleChartToggle('projectStatus', checked as boolean)}
+                    onCheckedChange={checked =>
+                      handleChartToggle('projectStatus', checked as boolean)
+                    }
                   />
                   <Label htmlFor="chart-status" className="cursor-pointer text-sm">
                     Project Status Distribution
@@ -145,7 +164,9 @@ export function OrganizationAnalyticsClient({
                   <Checkbox
                     id="chart-investment"
                     checked={chartVisibility.investmentByType !== false}
-                    onCheckedChange={(checked) => handleChartToggle('investmentByType', checked as boolean)}
+                    onCheckedChange={checked =>
+                      handleChartToggle('investmentByType', checked as boolean)
+                    }
                   />
                   <Label htmlFor="chart-investment" className="cursor-pointer text-sm">
                     Investment by Project Type
@@ -155,7 +176,9 @@ export function OrganizationAnalyticsClient({
                   <Checkbox
                     id="chart-kpi"
                     checked={chartVisibility.kpiPerformance !== false}
-                    onCheckedChange={(checked) => handleChartToggle('kpiPerformance', checked as boolean)}
+                    onCheckedChange={checked =>
+                      handleChartToggle('kpiPerformance', checked as boolean)
+                    }
                   />
                   <Label htmlFor="chart-kpi" className="cursor-pointer text-sm">
                     KPI Performance
@@ -165,7 +188,9 @@ export function OrganizationAnalyticsClient({
                   <Checkbox
                     id="chart-value"
                     checked={chartVisibility.valueVsPerformance !== false}
-                    onCheckedChange={(checked) => handleChartToggle('valueVsPerformance', checked as boolean)}
+                    onCheckedChange={checked =>
+                      handleChartToggle('valueVsPerformance', checked as boolean)
+                    }
                   />
                   <Label htmlFor="chart-value" className="cursor-pointer text-sm">
                     Value vs Performance
@@ -175,7 +200,9 @@ export function OrganizationAnalyticsClient({
                   <Checkbox
                     id="chart-top"
                     checked={chartVisibility.topProjects !== false}
-                    onCheckedChange={(checked) => handleChartToggle('topProjects', checked as boolean)}
+                    onCheckedChange={checked =>
+                      handleChartToggle('topProjects', checked as boolean)
+                    }
                   />
                   <Label htmlFor="chart-top" className="cursor-pointer text-sm">
                     Top Performing Projects
@@ -183,7 +210,7 @@ export function OrganizationAnalyticsClient({
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
         </CardContent>
       </Card>
 
@@ -197,7 +224,8 @@ export function OrganizationAnalyticsClient({
           <CardContent>
             <div className="text-2xl font-bold">{data.metrics.totalProjects}</div>
             <p className="text-xs text-muted-foreground">
-              Across {data.metrics.totalCountries} {data.metrics.totalCountries === 1 ? 'country' : 'countries'}
+              Across {data.metrics.totalCountries}{' '}
+              {data.metrics.totalCountries === 1 ? 'country' : 'countries'}
             </p>
           </CardContent>
         </Card>
@@ -248,9 +276,7 @@ export function OrganizationAnalyticsClient({
             <ValuePerformanceScatter data={data.valueVsPerformance} />
           )}
 
-          {chartVisibility.topProjects !== false && (
-            <TopProjectsList data={data.topProjects} />
-          )}
+          {chartVisibility.topProjects !== false && <TopProjectsList data={data.topProjects} />}
         </div>
       </div>
     </div>
@@ -266,7 +292,7 @@ function AnalyticsLoadingSkeleton() {
         </CardContent>
       </Card>
       <div className="grid gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-20 bg-muted animate-pulse rounded" />
@@ -275,7 +301,7 @@ function AnalyticsLoadingSkeleton() {
         ))}
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
+        {[1, 2, 3, 4].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-64 bg-muted animate-pulse rounded" />

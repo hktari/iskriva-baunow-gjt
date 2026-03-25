@@ -114,7 +114,7 @@ describe('LoginForm', () => {
   });
 
   it('disables inputs while pending', async () => {
-    mockSignIn.mockImplementation(() => new Promise(() => { }));
+    mockSignIn.mockImplementation(() => new Promise(() => {}));
 
     render(<LoginForm />);
 

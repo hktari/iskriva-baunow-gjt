@@ -70,8 +70,8 @@ export const getProjects = cache(async (filters?: ProjectFilters) => {
       },
       favorites: filters?.userId
         ? {
-          where: { userId: filters.userId },
-        }
+            where: { userId: filters.userId },
+          }
         : false,
       _count: {
         select: {
@@ -94,8 +94,8 @@ export const getProject = cache(async (id: string, userId?: string) => {
       },
       favorites: userId
         ? {
-          where: { userId },
-        }
+            where: { userId },
+          }
         : false,
       createdBy: {
         select: {
@@ -114,13 +114,16 @@ export const getConfigurableFields = cache(async () => {
     orderBy: { value: 'asc' },
   });
 
-  const grouped = fields.reduce((acc: Record<string, string[]>, field: { category: string; value: string }) => {
-    if (!acc[field.category]) {
-      acc[field.category] = [];
-    }
-    acc[field.category].push(field.value);
-    return acc;
-  }, {} as Record<string, string[]>);
+  const grouped = fields.reduce(
+    (acc: Record<string, string[]>, field: { category: string; value: string }) => {
+      if (!acc[field.category]) {
+        acc[field.category] = [];
+      }
+      acc[field.category].push(field.value);
+      return acc;
+    },
+    {} as Record<string, string[]>
+  );
 
   return grouped;
 });

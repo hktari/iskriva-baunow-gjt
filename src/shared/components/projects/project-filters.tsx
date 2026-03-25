@@ -65,17 +65,19 @@ export function ProjectFilters({
           <Input
             placeholder="Search projects by name..."
             value={filters.search}
-            onChange={(e) => onFilterChange('search', e.target.value)}
+            onChange={e => onFilterChange('search', e.target.value)}
             className="pl-9"
           />
         </div>
 
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <div className="flex items-center gap-2">
             <Checkbox
               id="favorites-only"
               checked={filters.favoritesOnly}
-              onCheckedChange={(checked: boolean) => onFilterChange('favoritesOnly', checked === true)}
+              onCheckedChange={(checked: boolean) =>
+                onFilterChange('favoritesOnly', checked === true)
+              }
             />
             <label
               htmlFor="favorites-only"
@@ -85,7 +87,7 @@ export function ProjectFilters({
               Favorites Only
             </label>
           </div>
-        )}
+        ) : null}
       </div>
 
       <Accordion type="single" collapsible className="w-full">
@@ -107,14 +109,14 @@ export function ProjectFilters({
                 <Label>Country</Label>
                 <Select
                   value={filters.country}
-                  onValueChange={(value) => onFilterChange('country', value)}
+                  onValueChange={value => onFilterChange('country', value)}
                 >
                   <SelectTrigger aria-label="Country">
                     <SelectValue placeholder="All countries" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All countries</SelectItem>
-                    {PROJECT_COUNTRIES.map((country) => (
+                    {PROJECT_COUNTRIES.map(country => (
                       <SelectItem key={country} value={country}>
                         {country}
                       </SelectItem>
@@ -127,14 +129,14 @@ export function ProjectFilters({
                 <Label>Project Type</Label>
                 <Select
                   value={filters.projectType}
-                  onValueChange={(value) => onFilterChange('projectType', value)}
+                  onValueChange={value => onFilterChange('projectType', value)}
                 >
                   <SelectTrigger aria-label="Project Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All types</SelectItem>
-                    {configurableFields.PROJECT_TYPE?.map((type) => (
+                    {configurableFields.PROJECT_TYPE?.map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -147,14 +149,14 @@ export function ProjectFilters({
                 <Label>Investment Type</Label>
                 <Select
                   value={filters.investmentType}
-                  onValueChange={(value) => onFilterChange('investmentType', value)}
+                  onValueChange={value => onFilterChange('investmentType', value)}
                 >
                   <SelectTrigger aria-label="Investment Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All types</SelectItem>
-                    {configurableFields.INVESTMENT_TYPE?.map((type) => (
+                    {configurableFields.INVESTMENT_TYPE?.map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -167,14 +169,14 @@ export function ProjectFilters({
                 <Label>Status</Label>
                 <Select
                   value={filters.status}
-                  onValueChange={(value) => onFilterChange('status', value)}
+                  onValueChange={value => onFilterChange('status', value)}
                 >
                   <SelectTrigger aria-label="Status">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All statuses</SelectItem>
-                    {PROJECT_STATUSES.map((status) => (
+                    {PROJECT_STATUSES.map(status => (
                       <SelectItem key={status.value} value={status.value}>
                         {status.label}
                       </SelectItem>
@@ -187,14 +189,14 @@ export function ProjectFilters({
                 <Label>Organization</Label>
                 <Select
                   value={filters.organization}
-                  onValueChange={(value) => onFilterChange('organization', value)}
+                  onValueChange={value => onFilterChange('organization', value)}
                 >
                   <SelectTrigger aria-label="Organization">
                     <SelectValue placeholder="All organizations" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">All organizations</SelectItem>
-                    {configurableFields.ORGANIZATION?.map((org) => (
+                    {configurableFields.ORGANIZATION?.map(org => (
                       <SelectItem key={org} value={org}>
                         {org}
                       </SelectItem>
@@ -210,40 +212,36 @@ export function ProjectFilters({
                     type="number"
                     placeholder="Min"
                     value={filters.minValue}
-                    onChange={(e) => onFilterChange('minValue', e.target.value)}
+                    onChange={e => onFilterChange('minValue', e.target.value)}
                   />
                   <Input
                     type="number"
                     placeholder="Max"
                     value={filters.maxValue}
-                    onChange={(e) => onFilterChange('maxValue', e.target.value)}
+                    onChange={e => onFilterChange('maxValue', e.target.value)}
                   />
                 </div>
               </div>
             </div>
 
-            {hasActiveFilters && (
+            {hasActiveFilters ? (
               <div className="mt-4 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={onClearFilters}
-                  className="gap-2"
-                >
+                <Button variant="outline" onClick={onClearFilters} className="gap-2">
                   <X className="h-4 w-4" />
                   Clear all filters
                 </Button>
               </div>
-            )}
+            ) : null}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
 
-      {filters.favoritesOnly && (
+      {filters.favoritesOnly ? (
         <Badge variant="secondary" className="gap-2">
           <Heart className="h-3 w-3 fill-current" />
           Favorites only
         </Badge>
-      )}
+      ) : null}
     </div>
   );
 }

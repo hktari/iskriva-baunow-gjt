@@ -69,7 +69,7 @@ describe('Validation Schemas', () => {
 
     it('validates status enum', () => {
       const validStatuses = ['PLANNING', 'IN_PROGRESS', 'COMPLETED', 'ON_HOLD'];
-      
+
       validStatuses.forEach(status => {
         const result = projectSchema.safeParse({
           name: 'Test Project',

@@ -14,11 +14,9 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             EU Project Manager
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            European Project Analytics Platform
-          </p>
+          <p className="text-gray-600 dark:text-gray-400">European Project Analytics Platform</p>
         </div>
-        
+
         <LoginForm />
       </div>
     </div>

@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Label } from '@/shared/components/ui/label';
@@ -94,10 +100,10 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
                 id="country-filter"
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={filters.country || ''}
-                onChange={(e) => setFilters({ ...filters, country: e.target.value || undefined })}
+                onChange={e => setFilters({ ...filters, country: e.target.value || undefined })}
               >
                 <option value="">All Countries</option>
-                {countries.map((country) => (
+                {countries.map(country => (
                   <option key={country} value={country}>
                     {country}
                   </option>
@@ -111,10 +117,10 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
                 id="type-filter"
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={filters.projectType || ''}
-                onChange={(e) => setFilters({ ...filters, projectType: e.target.value || undefined })}
+                onChange={e => setFilters({ ...filters, projectType: e.target.value || undefined })}
               >
                 <option value="">All Types</option>
-                {projectTypes.map((type) => (
+                {projectTypes.map(type => (
                   <option key={type} value={type}>
                     {type}
                   </option>
@@ -122,14 +128,14 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
               </select>
             </div>
 
-            {userId && (
+            {userId ? (
               <div className="space-y-2">
                 <Label className="block">Favorites</Label>
                 <div className="flex items-center space-x-2 pt-2">
                   <Checkbox
                     id="favorites-filter"
                     checked={filters.favoritesOnly || false}
-                    onCheckedChange={(checked) =>
+                    onCheckedChange={checked =>
                       setFilters({ ...filters, favoritesOnly: checked as boolean })
                     }
                   />
@@ -138,20 +144,21 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
                   </Label>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
-          {hasActiveFilters && (
+          {hasActiveFilters ? (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Showing {data.metrics.totalProjects} project{data.metrics.totalProjects !== 1 ? 's' : ''}
+                Showing {data.metrics.totalProjects} project
+                {data.metrics.totalProjects !== 1 ? 's' : ''}
               </p>
               <Button variant="outline" size="sm" onClick={clearFilters}>
                 <X className="h-4 w-4 mr-2" />
                 Clear Filters
               </Button>
             </div>
-          )}
+          ) : null}
         </CardContent>
       </Card>
 
@@ -165,7 +172,8 @@ export function GeneralAnalyticsClient({ userId, initialData }: GeneralAnalytics
           <CardContent>
             <div className="text-2xl font-bold">{data.metrics.totalProjects}</div>
             <p className="text-xs text-muted-foreground">
-              Across {data.metrics.totalCountries} {data.metrics.totalCountries === 1 ? 'country' : 'countries'}
+              Across {data.metrics.totalCountries}{' '}
+              {data.metrics.totalCountries === 1 ? 'country' : 'countries'}
             </p>
           </CardContent>
         </Card>
@@ -230,7 +238,7 @@ function AnalyticsLoadingSkeleton() {
         </CardContent>
       </Card>
       <div className="grid gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-20 bg-muted animate-pulse rounded" />
@@ -239,7 +247,7 @@ function AnalyticsLoadingSkeleton() {
         ))}
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
+        {[1, 2, 3, 4].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-64 bg-muted animate-pulse rounded" />

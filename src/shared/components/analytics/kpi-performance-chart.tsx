@@ -21,27 +21,22 @@ export function KpiPerformanceChart({ data }: KpiPerformanceChartProps) {
   }
 
   return (
-    <ChartContainer 
-      title="KPI Performance Overview" 
+    <ChartContainer
+      title="KPI Performance Overview"
       description="Average achievement percentage by indicator"
     >
       <ResponsiveContainer width="100%" height={400}>
-        <BarChart 
-          data={data} 
+        <BarChart
+          data={data}
           layout="vertical"
           margin={{ top: 5, right: 30, left: 150, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" unit="%" />
-          <YAxis 
-            type="category" 
-            dataKey="indicator" 
-            width={140}
-            fontSize={12}
-          />
-          <Tooltip 
+          <YAxis type="category" dataKey="indicator" width={140} fontSize={12} />
+          <Tooltip
             content={({ active, payload }) => {
-              if (active && payload && payload.length) {
+              if (active && payload?.length) {
                 const data = payload[0].payload as KpiPerformanceData;
                 return (
                   <div className="bg-background border rounded-lg shadow-lg p-3">
@@ -64,11 +59,7 @@ export function KpiPerformanceChart({ data }: KpiPerformanceChartProps) {
               return null;
             }}
           />
-          <Bar 
-            dataKey="avgAchievement" 
-            fill="hsl(var(--primary))"
-            radius={[0, 4, 4, 0]}
-          />
+          <Bar dataKey="avgAchievement" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

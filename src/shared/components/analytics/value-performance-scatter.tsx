@@ -1,6 +1,16 @@
 'use client';
 
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+} from 'recharts';
 import type { ValueVsPerformanceData } from '@/types/analytics';
 import { ChartContainer } from './chart-container';
 import { formatCurrencyMillions, formatPercentage } from '@/shared/lib/formatters';
@@ -27,36 +37,38 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
     );
   }
 
-  const chartData = data.map((item) => ({
+  const chartData = data.map(item => ({
     ...item,
     valueInMillions: item.value / 1_000_000,
   }));
 
   return (
-    <ChartContainer 
-      title="Value vs Performance" 
+    <ChartContainer
+      title="Value vs Performance"
       description="Investment value compared to average KPI achievement"
     >
       <ResponsiveContainer width="100%" height={300}>
         <ScatterChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            type="number" 
-            dataKey="valueInMillions" 
+          <XAxis
+            type="number"
+            dataKey="valueInMillions"
             name="Investment"
             label={{ value: 'Investment (M EUR)', position: 'insideBottom', offset: -5 }}
           />
-          <YAxis 
-            type="number" 
-            dataKey="avgKpi" 
+          <YAxis
+            type="number"
+            dataKey="avgKpi"
             name="KPI Achievement"
             label={{ value: 'Avg KPI Achievement (%)', angle: -90, position: 'insideLeft' }}
           />
-          <Tooltip 
+          <Tooltip
             cursor={{ strokeDasharray: '3 3' }}
             content={({ active, payload }) => {
-              if (active && payload && payload.length) {
-                const data = payload[0].payload as ValueVsPerformanceData & { valueInMillions: number };
+              if (active && payload?.length) {
+                const data = payload[0].payload as ValueVsPerformanceData & {
+                  valueInMillions: number;
+                };
                 return (
                   <div className="bg-background border rounded-lg shadow-lg p-3">
                     <p className="font-semibold mb-2">{data.name}</p>
@@ -77,7 +89,10 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
           <Legend />
           <Scatter name="Projects" data={chartData}>
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status] || 'hsl(var(--primary))'} />
+              <Cell
+                key={`cell-${index}`}
+                fill={STATUS_COLORS[entry.status] || 'hsl(var(--primary))'}
+              />
             ))}
           </Scatter>
         </ScatterChart>

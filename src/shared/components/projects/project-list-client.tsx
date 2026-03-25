@@ -29,21 +29,24 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
     favoritesOnly: searchParams.get('favoritesOnly') === 'true',
   };
 
-  const onFilterChange = useCallback((key: string, value: string | boolean) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const onFilterChange = useCallback(
+    (key: string, value: string | boolean) => {
+      const params = new URLSearchParams(searchParams.toString());
 
-    if (value === '' || value === false) {
-      params.delete(key);
-    } else {
-      params.set(key, String(value));
-    }
+      if (value === '' || value === false) {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
 
-    // Reset to page 1 when filters change
-    params.delete('page');
+      // Reset to page 1 when filters change
+      params.delete('page');
 
-    const newUrl = params.toString() ? `/?${params.toString()}` : '/';
-    router.push(newUrl as any, { scroll: false });
-  }, [router, searchParams]);
+      const newUrl = params.toString() ? `/?${params.toString()}` : '/';
+      router.push(newUrl as any, { scroll: false });
+    },
+    [router, searchParams]
+  );
 
   const onClearFilters = useCallback(() => {
     router.push('/', { scroll: false });

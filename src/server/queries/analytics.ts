@@ -15,14 +15,9 @@ import type {
   TopProject,
 } from '@/types/analytics';
 
-const CO2_INDICATORS = [
-  'CO2eq reduction per year',
-  'Percentage CO2eq reduction per year',
-];
+const CO2_INDICATORS = ['CO2eq reduction per year', 'Percentage CO2eq reduction per year'];
 
-const RENEWABLE_ENERGY_INDICATORS = [
-  'Renewable energy produced per year',
-];
+const RENEWABLE_ENERGY_INDICATORS = ['Renewable energy produced per year'];
 
 const ENERGY_SAVED_INDICATORS = [
   'Energy saved per year',
@@ -34,13 +29,7 @@ export const getGeneralAnalytics = cache(
   async (filters?: AnalyticsFilters, userId?: string): Promise<GeneralAnalyticsData> => {
     const whereClause = buildWhereClause(filters, userId);
 
-    const [
-      projects,
-      totalProjects,
-      uniqueCountries,
-      aggregates,
-      kpis,
-    ] = await Promise.all([
+    const [projects, totalProjects, uniqueCountries, aggregates, kpis] = await Promise.all([
       db.project.findMany({
         where: whereClause,
         include: {
@@ -113,57 +102,51 @@ export const getOrganizationAnalytics = cache(
       organization: organizationId,
     };
 
-    const [
-      projects,
-      totalProjects,
-      uniqueCountries,
-      aggregates,
-      kpis,
-      organization,
-    ] = await Promise.all([
-      db.project.findMany({
-        where: whereClause,
-        include: {
-          kpis: true,
-        },
-      }),
-      db.project.count({ where: whereClause }),
-      db.project.findMany({
-        where: whereClause,
-        select: { country: true },
-        distinct: ['country'],
-      }),
-      db.project.aggregate({
-        where: whereClause,
-        _sum: {
-          projectValue: true,
-          investmentCosts: true,
-        },
-      }),
-      db.kpi.findMany({
-        where: {
-          project: whereClause,
-        },
-        include: {
-          project: {
-            select: {
-              id: true,
-              name: true,
-              country: true,
-              status: true,
-              projectValue: true,
-              investmentCosts: true,
+    const [projects, totalProjects, uniqueCountries, aggregates, kpis, organization] =
+      await Promise.all([
+        db.project.findMany({
+          where: whereClause,
+          include: {
+            kpis: true,
+          },
+        }),
+        db.project.count({ where: whereClause }),
+        db.project.findMany({
+          where: whereClause,
+          select: { country: true },
+          distinct: ['country'],
+        }),
+        db.project.aggregate({
+          where: whereClause,
+          _sum: {
+            projectValue: true,
+            investmentCosts: true,
+          },
+        }),
+        db.kpi.findMany({
+          where: {
+            project: whereClause,
+          },
+          include: {
+            project: {
+              select: {
+                id: true,
+                name: true,
+                country: true,
+                status: true,
+                projectValue: true,
+                investmentCosts: true,
+              },
             },
           },
-        },
-      }),
-      db.configurableField.findFirst({
-        where: {
-          category: 'ORGANIZATION',
-          value: organizationId,
-        },
-      }),
-    ]);
+        }),
+        db.configurableField.findFirst({
+          where: {
+            category: 'ORGANIZATION',
+            value: organizationId,
+          },
+        }),
+      ]);
 
     const metrics: AnalyticsMetrics = {
       totalProjects,
@@ -201,10 +184,12 @@ export const getOrganizationList = cache(async (): Promise<OrganizationOption[]>
     },
   });
 
-  return organizations.map((org): OrganizationOption => ({
-    id: org.value,
-    name: org.value,
-  }));
+  return organizations.map(
+    (org): OrganizationOption => ({
+      id: org.value,
+      name: org.value,
+    })
+  );
 });
 
 function buildWhereClause(filters?: AnalyticsFilters, userId?: string) {
@@ -232,7 +217,7 @@ function buildWhereClause(filters?: AnalyticsFilters, userId?: string) {
 function calculateProjectsByCountry(projects: any[]): ProjectsByCountry[] {
   const countryMap = new Map<string, number>();
 
-  projects.forEach((project) => {
+  projects.forEach(project => {
     const count = countryMap.get(project.country) || 0;
     countryMap.set(project.country, count + 1);
   });
@@ -246,7 +231,7 @@ function calculateProjectStatus(projects: any[]): ProjectStatusData[] {
   const statusMap = new Map<string, number>();
   const total = projects.length;
 
-  projects.forEach((project) => {
+  projects.forEach(project => {
     const count = statusMap.get(project.status) || 0;
     statusMap.set(project.status, count + 1);
   });
@@ -263,7 +248,7 @@ function calculateProjectStatus(projects: any[]): ProjectStatusData[] {
 function calculateInvestmentByType(projects: any[]): InvestmentByType[] {
   const typeMap = new Map<string, { value: number; count: number }>();
 
-  projects.forEach((project) => {
+  projects.forEach(project => {
     const type = project.investmentType || 'Not specified';
     const existing = typeMap.get(type) || { value: 0, count: 0 };
     typeMap.set(type, {
@@ -282,9 +267,12 @@ function calculateInvestmentByType(projects: any[]): InvestmentByType[] {
 }
 
 function calculateKpiPerformance(kpis: any[]): KpiPerformanceData[] {
-  const indicatorMap = new Map<string, { totalAchieved: number; totalTarget: number; count: number }>();
+  const indicatorMap = new Map<
+    string,
+    { totalAchieved: number; totalTarget: number; count: number }
+  >();
 
-  kpis.forEach((kpi) => {
+  kpis.forEach(kpi => {
     const existing = indicatorMap.get(kpi.indicatorName) || {
       totalAchieved: 0,
       totalTarget: 0,
@@ -312,7 +300,7 @@ function calculateEnvironmentalImpact(kpis: any[]): EnvironmentalImpactData[] {
   const impacts: EnvironmentalImpactData[] = [];
 
   const co2Total = kpis
-    .filter((kpi) => CO2_INDICATORS.includes(kpi.indicatorName))
+    .filter(kpi => CO2_INDICATORS.includes(kpi.indicatorName))
     .reduce((sum, kpi) => sum + kpi.valueAchieved, 0);
 
   if (co2Total > 0) {
@@ -324,7 +312,7 @@ function calculateEnvironmentalImpact(kpis: any[]): EnvironmentalImpactData[] {
   }
 
   const renewableTotal = kpis
-    .filter((kpi) => RENEWABLE_ENERGY_INDICATORS.includes(kpi.indicatorName))
+    .filter(kpi => RENEWABLE_ENERGY_INDICATORS.includes(kpi.indicatorName))
     .reduce((sum, kpi) => sum + kpi.valueAchieved, 0);
 
   if (renewableTotal > 0) {
@@ -336,7 +324,7 @@ function calculateEnvironmentalImpact(kpis: any[]): EnvironmentalImpactData[] {
   }
 
   const energySavedTotal = kpis
-    .filter((kpi) => ENERGY_SAVED_INDICATORS.includes(kpi.indicatorName))
+    .filter(kpi => ENERGY_SAVED_INDICATORS.includes(kpi.indicatorName))
     .reduce((sum, kpi) => sum + kpi.valueAchieved, 0);
 
   if (energySavedTotal > 0) {
@@ -352,12 +340,13 @@ function calculateEnvironmentalImpact(kpis: any[]): EnvironmentalImpactData[] {
 
 function calculateValueVsPerformance(projects: any[]): ValueVsPerformanceData[] {
   return projects
-    .filter((project) => project.kpis && project.kpis.length > 0)
-    .map((project) => {
-      const avgKpi = project.kpis.reduce((sum: number, kpi: any) => {
-        const achievement = kpi.targetValue > 0 ? (kpi.valueAchieved / kpi.targetValue) * 100 : 0;
-        return sum + achievement;
-      }, 0) / project.kpis.length;
+    .filter(project => project.kpis && project.kpis.length > 0)
+    .map(project => {
+      const avgKpi =
+        project.kpis.reduce((sum: number, kpi: any) => {
+          const achievement = kpi.targetValue > 0 ? (kpi.valueAchieved / kpi.targetValue) * 100 : 0;
+          return sum + achievement;
+        }, 0) / project.kpis.length;
 
       return {
         projectId: project.id,
@@ -367,17 +356,18 @@ function calculateValueVsPerformance(projects: any[]): ValueVsPerformanceData[] 
         status: project.status,
       };
     })
-    .filter((item) => item.value > 0);
+    .filter(item => item.value > 0);
 }
 
 function calculateTopProjects(projects: any[]): TopProject[] {
   const projectsWithKpis = projects
-    .filter((project) => project.kpis && project.kpis.length > 0)
-    .map((project) => {
-      const avgAchievement = project.kpis.reduce((sum: number, kpi: any) => {
-        const achievement = kpi.targetValue > 0 ? (kpi.valueAchieved / kpi.targetValue) * 100 : 0;
-        return sum + achievement;
-      }, 0) / project.kpis.length;
+    .filter(project => project.kpis && project.kpis.length > 0)
+    .map(project => {
+      const avgAchievement =
+        project.kpis.reduce((sum: number, kpi: any) => {
+          const achievement = kpi.targetValue > 0 ? (kpi.valueAchieved / kpi.targetValue) * 100 : 0;
+          return sum + achievement;
+        }, 0) / project.kpis.length;
 
       return {
         projectId: project.id,

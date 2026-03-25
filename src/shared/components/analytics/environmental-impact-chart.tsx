@@ -21,33 +21,22 @@ export function EnvironmentalImpactChart({ data }: EnvironmentalImpactChartProps
   }
 
   return (
-    <ChartContainer 
-      title="Environmental Impact" 
-      description="Total achieved environmental metrics"
-    >
+    <ChartContainer title="Environmental Impact" description="Total achieved environmental metrics">
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart 
-          data={data} 
+        <BarChart
+          data={data}
           layout="vertical"
           margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" />
-          <YAxis 
-            type="category" 
-            dataKey="metric" 
-            width={110}
-          />
-          <Tooltip 
+          <YAxis type="category" dataKey="metric" width={110} />
+          <Tooltip
             formatter={(value: number, name: string, props: any) => {
               return [formatChartValue(value, props.payload.unit), 'Total Achieved'];
             }}
           />
-          <Bar 
-            dataKey="value" 
-            fill="hsl(var(--chart-2))"
-            radius={[0, 4, 4, 0]}
-          />
+          <Bar dataKey="value" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

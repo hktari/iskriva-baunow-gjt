@@ -39,7 +39,7 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'News', href: '/news', icon: Newspaper },
   ];
 
-  if (isLoggedIn && user!.role === 'SUPER_USER') {
+  if (isLoggedIn && user.role === 'SUPER_USER') {
     navigation.push({ name: 'Users', href: '/users', icon: Users });
   }
 
@@ -52,7 +52,7 @@ export function AppHeader({ user }: AppHeaderProps) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navigation.map((item) => (
+            {navigation.map(item => (
               <Link key={item.name} href={item.href as any}>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <item.icon className="h-4 w-4" />
@@ -68,12 +68,10 @@ export function AppHeader({ user }: AppHeaderProps) {
             <>
               <div className="hidden sm:flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium">{user!.name}</p>
-                  <p className="text-xs text-muted-foreground">{user!.email}</p>
+                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
-                <Badge className={ROLE_COLORS[user!.role as keyof typeof ROLE_COLORS]}>
-                  {ROLE_LABELS[user!.role as keyof typeof ROLE_LABELS]}
-                </Badge>
+                <Badge className={ROLE_COLORS[user.role]}>{ROLE_LABELS[user.role]}</Badge>
               </div>
 
               <Button
@@ -103,24 +101,26 @@ export function AppHeader({ user }: AppHeaderProps) {
         </div>
       </div>
 
-      {mobileMenuOpen && (
+      {mobileMenuOpen ? (
         <div className="md:hidden border-t">
           <div className="container mx-auto px-4 py-4 space-y-3">
-            {isLoggedIn && (
+            {isLoggedIn ? (
               <div className="flex items-center gap-3 pb-3 border-b">
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{user!.name}</p>
-                  <p className="text-xs text-muted-foreground">{user!.email}</p>
+                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
-                <Badge className={ROLE_COLORS[user!.role as keyof typeof ROLE_COLORS]}>
-                  {ROLE_LABELS[user!.role as keyof typeof ROLE_LABELS]}
-                </Badge>
+                <Badge className={ROLE_COLORS[user.role]}>{ROLE_LABELS[user.role]}</Badge>
               </div>
-            )}
+            ) : null}
 
             <nav className="flex flex-col gap-1">
-              {navigation.map((item) => (
-                <Link key={item.name} href={item.href as any} onClick={() => setMobileMenuOpen(false)}>
+              {navigation.map(item => (
+                <Link
+                  key={item.name}
+                  href={item.href as any}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
                     <item.icon className="h-4 w-4" />
                     {item.name}
@@ -146,7 +146,7 @@ export function AppHeader({ user }: AppHeaderProps) {
             )}
           </div>
         </div>
-      )}
+      ) : null}
     </header>
   );
 }

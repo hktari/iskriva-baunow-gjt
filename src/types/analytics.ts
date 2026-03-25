@@ -85,7 +85,7 @@ export interface OrganizationOption {
   name: string;
 }
 
-export type ChartId = 
+export type ChartId =
   | 'projectStatus'
   | 'investmentByType'
   | 'kpiPerformance'

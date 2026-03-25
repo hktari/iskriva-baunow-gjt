@@ -2,7 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { Textarea } from '@/shared/components/ui/textarea';
@@ -16,7 +22,13 @@ import {
 } from '@/shared/components/ui/select';
 import { Badge } from '@/shared/components/ui/badge';
 import { Lock, Info } from 'lucide-react';
-import { PROJECT_COUNTRIES, PROJECT_STATUSES, PROGRAMS, TARGET_GROUPS, IMPACT_AREAS } from '@/shared/lib/constants';
+import {
+  PROJECT_COUNTRIES,
+  PROJECT_STATUSES,
+  PROGRAMS,
+  TARGET_GROUPS,
+  IMPACT_AREAS,
+} from '@/shared/lib/constants';
 import { createProject, updateProject } from '@/server/actions/projects';
 import { toast } from 'sonner';
 
@@ -31,10 +43,17 @@ interface ProjectFormProps {
   isAuthenticated: boolean;
 }
 
-export function ProjectForm({ project, configurableFields, isEdit = false, isAuthenticated }: ProjectFormProps) {
+export function ProjectForm({
+  project,
+  configurableFields,
+  isEdit = false,
+  isAuthenticated,
+}: ProjectFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>(project?.targetGroup || []);
+  const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>(
+    project?.targetGroup || []
+  );
   const [selectedImpacts, setSelectedImpacts] = useState<string[]>(project?.impact || []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +67,9 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
       projectType: formData.get('projectType') as string,
       investmentType: (formData.get('investmentType') as string) || null,
       projectValue: parseFloat(formData.get('projectValue') as string),
-      investmentCosts: formData.get('investmentCosts') ? parseFloat(formData.get('investmentCosts') as string) : null,
+      investmentCosts: formData.get('investmentCosts')
+        ? parseFloat(formData.get('investmentCosts') as string)
+        : null,
       status: formData.get('status') as any,
       startDate: new Date(formData.get('startDate') as string),
       endDate: formData.get('endDate') ? new Date(formData.get('endDate') as string) : null,
@@ -64,9 +85,8 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
     };
 
     try {
-      const result = isEdit && project
-        ? await updateProject(project.id, data)
-        : await createProject(data);
+      const result =
+        isEdit && project ? await updateProject(project.id, data) : await createProject(data);
 
       if (result.error) {
         toast.error(result.error);
@@ -83,14 +103,14 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
   };
 
   const toggleTargetGroup = (group: string) => {
-    setSelectedTargetGroups((prev) =>
-      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]
+    setSelectedTargetGroups(prev =>
+      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
     );
   };
 
   const toggleImpact = (impact: string) => {
-    setSelectedImpacts((prev) =>
-      prev.includes(impact) ? prev.filter((i) => i !== impact) : [...prev, impact]
+    setSelectedImpacts(prev =>
+      prev.includes(impact) ? prev.filter(i => i !== impact) : [...prev, impact]
     );
   };
 
@@ -104,12 +124,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Project Name *</Label>
-            <Input
-              id="name"
-              name="name"
-              defaultValue={project?.name}
-              required
-            />
+            <Input id="name" name="name" defaultValue={project?.name} required />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,7 +135,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
-                  {PROJECT_COUNTRIES.map((country) => (
+                  {PROJECT_COUNTRIES.map(country => (
                     <SelectItem key={country} value={country}>
                       {country}
                     </SelectItem>
@@ -140,7 +155,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">None</SelectItem>
-                  {configurableFields.ORGANIZATION?.map((org) => (
+                  {configurableFields.ORGANIZATION?.map(org => (
                     <SelectItem key={org} value={org}>
                       {org}
                     </SelectItem>
@@ -158,7 +173,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {configurableFields.PROJECT_TYPE?.map((type) => (
+                  {configurableFields.PROJECT_TYPE?.map(type => (
                     <SelectItem key={type} value={type}>
                       {type}
                     </SelectItem>
@@ -175,7 +190,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">None</SelectItem>
-                  {configurableFields.INVESTMENT_TYPE?.map((type) => (
+                  {configurableFields.INVESTMENT_TYPE?.map(type => (
                     <SelectItem key={type} value={type}>
                       {type}
                     </SelectItem>
@@ -192,7 +207,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                {PROJECT_STATUSES.map((status) => (
+                {PROJECT_STATUSES.map(status => (
                   <SelectItem key={status.value} value={status.value}>
                     {status.label}
                   </SelectItem>
@@ -236,7 +251,9 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 id="startDate"
                 name="startDate"
                 type="date"
-                defaultValue={project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : ''}
+                defaultValue={
+                  project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : ''
+                }
                 required
               />
             </div>
@@ -247,7 +264,9 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 id="endDate"
                 name="endDate"
                 type="date"
-                defaultValue={project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] : ''}
+                defaultValue={
+                  project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] : ''
+                }
               />
             </div>
           </div>
@@ -279,7 +298,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">None</SelectItem>
-                {PROGRAMS.map((program) => (
+                {PROGRAMS.map(program => (
                   <SelectItem key={program} value={program}>
                     {program}
                   </SelectItem>
@@ -322,7 +341,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
           <div className="space-y-2">
             <Label>Target Group</Label>
             <div className="flex flex-wrap gap-2">
-              {TARGET_GROUPS.map((group) => (
+              {TARGET_GROUPS.map(group => (
                 <Badge
                   key={group}
                   variant={selectedTargetGroups.includes(group) ? 'default' : 'outline'}
@@ -338,7 +357,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
           <div className="space-y-2">
             <Label>Impact Areas</Label>
             <div className="flex flex-wrap gap-2">
-              {IMPACT_AREAS.map((impact) => (
+              {IMPACT_AREAS.map(impact => (
                 <Badge
                   key={impact}
                   variant={selectedImpacts.includes(impact) ? 'default' : 'outline'}
@@ -351,7 +370,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
             </div>
           </div>
 
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <div className="space-y-2">
               <Label htmlFor="note" className="flex items-center gap-2">
                 Internal Note
@@ -365,7 +384,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
                 placeholder="Visible only to authenticated users"
               />
             </div>
-          )}
+          ) : null}
         </CardContent>
       </Card>
 
@@ -373,11 +392,7 @@ export function ProjectForm({ project, configurableFields, isEdit = false, isAut
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : isEdit ? 'Update Project' : 'Create Project'}
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="outline" onClick={() => router.back()}>
           Cancel
         </Button>
       </div>

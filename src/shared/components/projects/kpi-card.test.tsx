@@ -53,7 +53,7 @@ describe('KpiCard', () => {
   });
 
   it('shows primary KPI indicator when authenticated', () => {
-    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={false} isAuthenticated={true} />);
+    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={false} isAuthenticated />);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
@@ -63,14 +63,14 @@ describe('KpiCard', () => {
   });
 
   it('shows edit and delete buttons when canEdit is true', () => {
-    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={true} isAuthenticated={false} />);
+    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit isAuthenticated={false} />);
     expect(screen.getAllByRole('button').length).toBeGreaterThan(0);
   });
 
   it('calls deleteKpi when delete confirmed', async () => {
     mockDeleteKpi.mockResolvedValue({ success: true });
     window.confirm = vi.fn(() => true);
-    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={true} isAuthenticated={false} />);
+    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit isAuthenticated={false} />);
     const buttons = screen.getAllByRole('button');
     await user.click(buttons[buttons.length - 1]); // Last button is delete
     expect(mockDeleteKpi).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('KpiCard', () => {
 
   it('calls setPrimaryKpi when star clicked', async () => {
     mockSetPrimaryKpi.mockResolvedValue({ success: true, isPrimary: true });
-    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={false} isAuthenticated={true} />);
+    render(<KpiCard kpi={mockKpi} projectId="proj-1" canEdit={false} isAuthenticated />);
     await user.click(screen.getByRole('button'));
     expect(mockSetPrimaryKpi).toHaveBeenCalledWith('kpi-1', 'proj-1');
   });

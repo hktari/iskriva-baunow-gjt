@@ -19,7 +19,7 @@ function isClient(): boolean {
 
 export function getSelectedOrganization(): string | null {
   if (!isClient()) return null;
-  
+
   try {
     return localStorage.getItem(STORAGE_KEYS.SELECTED_ORGANIZATION);
   } catch (error) {
@@ -30,7 +30,7 @@ export function getSelectedOrganization(): string | null {
 
 export function setSelectedOrganization(organizationId: string): void {
   if (!isClient()) return;
-  
+
   try {
     localStorage.setItem(STORAGE_KEYS.SELECTED_ORGANIZATION, organizationId);
   } catch (error) {
@@ -40,11 +40,11 @@ export function setSelectedOrganization(organizationId: string): void {
 
 export function getEnabledCharts(): ChartVisibilitySettings {
   if (!isClient()) return DEFAULT_CHART_VISIBILITY;
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.ENABLED_CHARTS);
     if (!stored) return DEFAULT_CHART_VISIBILITY;
-    
+
     const parsed = JSON.parse(stored);
     return { ...DEFAULT_CHART_VISIBILITY, ...parsed };
   } catch (error) {
@@ -55,7 +55,7 @@ export function getEnabledCharts(): ChartVisibilitySettings {
 
 export function setEnabledCharts(settings: ChartVisibilitySettings): void {
   if (!isClient()) return;
-  
+
   try {
     localStorage.setItem(STORAGE_KEYS.ENABLED_CHARTS, JSON.stringify(settings));
   } catch (error) {
@@ -65,7 +65,7 @@ export function setEnabledCharts(settings: ChartVisibilitySettings): void {
 
 export function clearAnalyticsStorage(): void {
   if (!isClient()) return;
-  
+
   try {
     localStorage.removeItem(STORAGE_KEYS.SELECTED_ORGANIZATION);
     localStorage.removeItem(STORAGE_KEYS.ENABLED_CHARTS);

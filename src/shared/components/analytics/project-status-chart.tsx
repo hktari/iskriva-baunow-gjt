@@ -27,14 +27,17 @@ export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
     );
   }
 
-  const chartData = data.map((item) => ({
+  const chartData = data.map(item => ({
     name: getStatusLabel(item.status),
     value: item.count,
     percentage: item.percentage,
   }));
 
   return (
-    <ChartContainer title="Project Status Distribution" description="Breakdown of projects by status">
+    <ChartContainer
+      title="Project Status Distribution"
+      description="Breakdown of projects by status"
+    >
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
@@ -50,7 +53,10 @@ export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
             {chartData.map((entry, index) => {
               const originalStatus = data[index].status;
               return (
-                <Cell key={`cell-${index}`} fill={STATUS_COLORS[originalStatus] || 'hsl(var(--primary))'} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={STATUS_COLORS[originalStatus] || 'hsl(var(--primary))'}
+                />
               );
             })}
           </Pie>

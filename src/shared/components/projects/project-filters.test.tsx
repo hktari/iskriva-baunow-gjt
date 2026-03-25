@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProjectFilters } from './project-filters';
 
 const mockFilters = {
@@ -48,14 +48,14 @@ describe('ProjectFilters', () => {
     expect(mockOnFilterChange).toHaveBeenCalled();
   });
 
-  it('shows favorites button when authenticated', () => {
+  it('shows favorites checkbox when authenticated', () => {
     render(<ProjectFilters {...defaultProps} />);
-    expect(screen.getByRole('button', { name: /favorites only/i })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /favorites only/i })).toBeInTheDocument();
   });
 
-  it('hides favorites button when not authenticated', () => {
+  it('hides favorites checkbox when not authenticated', () => {
     render(<ProjectFilters {...defaultProps} isAuthenticated={false} />);
-    expect(screen.queryByRole('button', { name: /favorites only/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('checkbox', { name: /favorites only/i })).not.toBeInTheDocument();
   });
 
   it('renders advanced filters accordion', () => {

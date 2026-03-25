@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
 import { Lock, ExternalLink, Mail, Building2, Calendar, DollarSign, FileText } from 'lucide-react';
@@ -35,7 +41,7 @@ export function ProjectDetailView({
         <ProjectForm
           project={project}
           configurableFields={configurableFields}
-          isEdit={true}
+          isEdit
           isAuthenticated={isAuthenticated}
         />
       </div>
@@ -44,11 +50,11 @@ export function ProjectDetailView({
 
   return (
     <div className="space-y-6">
-      {canEdit && (
+      {canEdit ? (
         <div className="flex justify-end">
           <Button onClick={() => setIsEditing(true)}>Edit Project</Button>
         </div>
-      )}
+      ) : null}
 
       <Card>
         <CardHeader>
@@ -62,7 +68,7 @@ export function ProjectDetailView({
               <p className="font-medium">{project.country}</p>
             </div>
 
-            {project.organization && (
+            {project.organization ? (
               <div>
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
                   <Building2 className="h-3 w-3" />
@@ -70,19 +76,19 @@ export function ProjectDetailView({
                 </span>
                 <p className="font-medium">{project.organization}</p>
               </div>
-            )}
+            ) : null}
 
             <div>
               <span className="text-sm text-muted-foreground">Project Type</span>
               <p className="font-medium">{project.projectType}</p>
             </div>
 
-            {project.investmentType && (
+            {project.investmentType ? (
               <div>
                 <span className="text-sm text-muted-foreground">Investment Type</span>
                 <p className="font-medium">{project.investmentType}</p>
               </div>
-            )}
+            ) : null}
 
             <div>
               <span className="text-sm text-muted-foreground">Status</span>
@@ -99,12 +105,12 @@ export function ProjectDetailView({
               <p className="font-medium">{formatCurrency(project.projectValue)}</p>
             </div>
 
-            {project.investmentCosts && (
+            {project.investmentCosts ? (
               <div>
                 <span className="text-sm text-muted-foreground">Investment Costs</span>
                 <p className="font-medium">{formatCurrency(project.investmentCosts)}</p>
               </div>
-            )}
+            ) : null}
 
             <div>
               <span className="text-sm text-muted-foreground flex items-center gap-1">
@@ -116,7 +122,9 @@ export function ProjectDetailView({
 
             <div>
               <span className="text-sm text-muted-foreground">End Date</span>
-              <p className="font-medium">{project.endDate ? formatDate(project.endDate) : 'Ongoing'}</p>
+              <p className="font-medium">
+                {project.endDate ? formatDate(project.endDate) : 'Ongoing'}
+              </p>
             </div>
 
             <div className="col-span-full">
@@ -127,11 +135,11 @@ export function ProjectDetailView({
               <p className="mt-1">{project.description}</p>
             </div>
 
-            {project.lastEdited && (
+            {project.lastEdited ? (
               <div className="col-span-full text-sm text-muted-foreground">
                 Last edited: {formatDate(project.lastEdited)}
               </div>
-            )}
+            ) : null}
           </div>
         </CardContent>
       </Card>
@@ -143,21 +151,21 @@ export function ProjectDetailView({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {project.program && (
+            {project.program ? (
               <div>
                 <span className="text-sm text-muted-foreground">Programme</span>
                 <p className="font-medium">{project.program}</p>
               </div>
-            )}
+            ) : null}
 
-            {project.projectManager && (
+            {project.projectManager ? (
               <div>
                 <span className="text-sm text-muted-foreground">Project Manager</span>
                 <p className="font-medium">{project.projectManager}</p>
               </div>
-            )}
+            ) : null}
 
-            {project.contact && (
+            {project.contact ? (
               <div>
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
                   <Mail className="h-3 w-3" />
@@ -170,9 +178,9 @@ export function ProjectDetailView({
                   {project.contact}
                 </a>
               </div>
-            )}
+            ) : null}
 
-            {project.projectWebsite && (
+            {project.projectWebsite ? (
               <div>
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
                   <ExternalLink className="h-3 w-3" />
@@ -188,9 +196,9 @@ export function ProjectDetailView({
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
-            )}
+            ) : null}
 
-            {project.targetGroup && project.targetGroup.length > 0 && (
+            {project.targetGroup && project.targetGroup.length > 0 ? (
               <div className="col-span-full">
                 <span className="text-sm text-muted-foreground">Target Group</span>
                 <div className="flex flex-wrap gap-2 mt-1">
@@ -201,9 +209,9 @@ export function ProjectDetailView({
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
 
-            {project.impact && project.impact.length > 0 && (
+            {project.impact && project.impact.length > 0 ? (
               <div className="col-span-full">
                 <span className="text-sm text-muted-foreground">Impact Areas</span>
                 <div className="flex flex-wrap gap-2 mt-1">
@@ -214,9 +222,9 @@ export function ProjectDetailView({
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
 
-            {isAuthenticated && project.note && (
+            {isAuthenticated && project.note ? (
               <div className="col-span-full">
                 <span className="text-sm text-muted-foreground flex items-center gap-1">
                   <Lock className="h-3 w-3" />
@@ -224,7 +232,7 @@ export function ProjectDetailView({
                 </span>
                 <p className="mt-1 p-3 bg-muted rounded-md">{project.note}</p>
               </div>
-            )}
+            ) : null}
           </div>
         </CardContent>
       </Card>

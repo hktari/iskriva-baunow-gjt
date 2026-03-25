@@ -3,6 +3,9 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -20,6 +23,59 @@
           "warn",
           "error"
         ]
+      }
+    ],
+    // React Hooks rules - prevent common hook violations
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    // TypeScript async/promise rules - catch unhandled promises
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ],
+    // Prevent common React rendering issues
+    "react/jsx-no-leaked-render": [
+      "warn",
+      {
+        "validStrategies": [
+          "ternary",
+          "coerce"
+        ]
+      }
+    ],
+    "react/no-array-index-key": "warn",
+    // TypeScript strictness
+    "@typescript-eslint/strict-boolean-expressions": [
+      "warn",
+      {
+        "allowString": true,
+        "allowNumber": false,
+        "allowNullableObject": true,
+        "allowNullableString": true
+      }
+    ],
+    "@typescript-eslint/no-unnecessary-condition": "warn",
+    // Prevent common mistakes
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
+    "@typescript-eslint/prefer-optional-chain": "warn",
+    // React best practices
+    "react/self-closing-comp": "warn",
+    "react/jsx-boolean-value": [
+      "warn",
+      "never"
+    ],
+    "react/jsx-curly-brace-presence": [
+      "warn",
+      {
+        "props": "never",
+        "children": "never"
       }
     ]
   }

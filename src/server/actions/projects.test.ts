@@ -29,7 +29,7 @@ vi.mock('@/shared/lib/db', () => ({
 
 vi.mock('@/shared/lib/validations/project', () => ({
   projectSchema: {
-    parse: vi.fn((data) => data),
+    parse: vi.fn(data => data),
   },
 }));
 

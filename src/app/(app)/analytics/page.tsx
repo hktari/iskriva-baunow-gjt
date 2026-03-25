@@ -20,9 +20,7 @@ export default async function AnalyticsPage() {
   // Pre-fetch initial data to prevent refetch on tab switch
   const [generalAnalytics, organizationAnalytics] = await Promise.all([
     getGeneralAnalytics({}, session?.user?.id),
-    session?.user?.organization
-      ? getOrganizationAnalytics(session.user.organization)
-      : null,
+    session?.user?.organization ? getOrganizationAnalytics(session.user.organization) : null,
   ]);
 
   return (
@@ -42,10 +40,7 @@ export default async function AnalyticsPage() {
 
         <TabsContent value="general" className="space-y-6">
           <Suspense fallback={<AnalyticsLoadingSkeleton />}>
-            <GeneralAnalyticsClient
-              userId={session?.user?.id}
-              initialData={generalAnalytics}
-            />
+            <GeneralAnalyticsClient userId={session?.user?.id} initialData={generalAnalytics} />
           </Suspense>
         </TabsContent>
 
@@ -64,8 +59,8 @@ export default async function AnalyticsPage() {
                 <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
                 <p className="text-muted-foreground text-center max-w-md">
-                  Please log in to access Organization Analytics and view performance metrics
-                  for specific organizations.
+                  Please log in to access Organization Analytics and view performance metrics for
+                  specific organizations.
                 </p>
               </CardContent>
             </Card>
@@ -80,7 +75,7 @@ function AnalyticsLoadingSkeleton() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-20 bg-muted animate-pulse rounded" />
@@ -89,7 +84,7 @@ function AnalyticsLoadingSkeleton() {
         ))}
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
+        {[1, 2, 3, 4].map(i => (
           <Card key={i}>
             <CardContent className="pt-6">
               <div className="h-64 bg-muted animate-pulse rounded" />

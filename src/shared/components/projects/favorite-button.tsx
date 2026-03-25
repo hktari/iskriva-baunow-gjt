@@ -17,7 +17,7 @@ export function FavoriteButton({ projectId, isFavorite }: FavoriteButtonProps) {
   const handleToggle = () => {
     startTransition(async () => {
       const result = await toggleFavorite(projectId);
-      
+
       if (result.error) {
         toast.error(result.error);
       } else {
@@ -34,9 +34,7 @@ export function FavoriteButton({ projectId, isFavorite }: FavoriteButtonProps) {
       disabled={isPending}
       className="h-8 w-8"
     >
-      <Heart
-        className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`}
-      />
+      <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
       <span className="sr-only">{isFavorite ? 'Remove from favorites' : 'Add to favorites'}</span>
     </Button>
   );

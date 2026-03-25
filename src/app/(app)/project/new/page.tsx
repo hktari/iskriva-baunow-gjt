@@ -26,10 +26,7 @@ export default async function NewProjectPage() {
         <h1 className="text-3xl font-bold">Create New Project</h1>
       </div>
 
-      <ProjectForm
-        configurableFields={configurableFields}
-        isAuthenticated={true}
-      />
+      <ProjectForm configurableFields={configurableFields} isAuthenticated />
     </main>
   );
 }

@@ -50,12 +50,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <h1 className="text-3xl font-bold">{project.name}</h1>
               <p className="text-muted-foreground mt-1">
                 {project.country}
-                {project.organization && ` • ${project.organization}`}
+                {project.organization ? ` • ${project.organization}` : null}
                 {` • ${project.projectType}`}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              {userId && <FavoriteButton projectId={project.id} isFavorite={!!isFavorite} />}
+              {userId ? <FavoriteButton projectId={project.id} isFavorite={!!isFavorite} /> : null}
               <Badge variant={getStatusColor(project.status) as any}>
                 {getStatusLabel(project.status)}
               </Badge>
@@ -67,9 +67,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="kpis">
-            KPIs ({project.kpis.length})
-          </TabsTrigger>
+          <TabsTrigger value="kpis">KPIs ({project.kpis.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -85,36 +83,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Key Performance Indicators</h2>
-              {session && (
+              {session ? (
                 <p className="text-sm text-muted-foreground mt-1">
                   <Star className="inline h-3 w-3 mr-1" />
                   Click the star to set a KPI as primary
                 </p>
-              )}
+              ) : null}
             </div>
-            {canEdit && (
-              <AddKpiDialog
-                projectId={project.id}
-                configurableFields={configurableFields}
-              />
-            )}
+            {canEdit ? (
+              <AddKpiDialog projectId={project.id} configurableFields={configurableFields} />
+            ) : null}
           </div>
 
           {project.kpis.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg font-medium text-muted-foreground mb-2">
-                  No KPIs added yet
-                </p>
+                <p className="text-lg font-medium text-muted-foreground mb-2">No KPIs added yet</p>
                 <p className="text-sm text-muted-foreground mb-4">
                   Start tracking project performance by adding your first KPI
                 </p>
-                {canEdit && (
-                  <AddKpiDialog
-                    projectId={project.id}
-                    configurableFields={configurableFields}
-                  />
-                )}
+                {canEdit ? (
+                  <AddKpiDialog projectId={project.id} configurableFields={configurableFields} />
+                ) : null}
               </CardContent>
             </Card>
           ) : (

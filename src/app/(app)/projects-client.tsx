@@ -34,7 +34,7 @@ export function ProjectsClient({
   });
 
   const handleFilterChange = (key: string, value: string | boolean) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const handleClearFilters = () => {
@@ -52,7 +52,7 @@ export function ProjectsClient({
   };
 
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
+    return projects.filter(project => {
       if (filters.search && !project.name.toLowerCase().includes(filters.search.toLowerCase())) {
         return false;
       }
@@ -117,23 +117,19 @@ export function ProjectsClient({
           <p className="text-sm text-muted-foreground mb-4">
             Try adjusting your search criteria or clearing filters
           </p>
-          {(filters.search || Object.entries(filters).some(([k, v]) => k !== 'search' && k !== 'favoritesOnly' && v !== '' && v !== false)) && (
-            <button
-              onClick={handleClearFilters}
-              className="text-sm text-primary hover:underline"
-            >
+          {filters.search ||
+          Object.entries(filters).some(
+            ([k, v]) => k !== 'search' && k !== 'favoritesOnly' && v !== '' && v !== false
+          ) ? (
+            <button onClick={handleClearFilters} className="text-sm text-primary hover:underline">
               Clear all filters
             </button>
-          )}
+          ) : null}
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              userId={userId}
-            />
+          {filteredProjects.map(project => (
+            <ProjectCard key={project.id} project={project} userId={userId} />
           ))}
         </div>
       )}

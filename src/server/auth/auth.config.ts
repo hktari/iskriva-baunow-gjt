@@ -6,7 +6,13 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }: { auth: Session | null; request: { nextUrl: NextRequest['nextUrl'] } }) {
+    authorized({
+      auth,
+      request: { nextUrl },
+    }: {
+      auth: Session | null;
+      request: { nextUrl: NextRequest['nextUrl'] };
+    }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
       const isOnUsers = nextUrl.pathname.startsWith('/users');
@@ -28,7 +34,13 @@ export const authConfig = {
     signIn: string;
   };
   callbacks: {
-    authorized: ({ auth, request }: { auth: Session | null; request: { nextUrl: NextRequest['nextUrl'] } }) => boolean;
+    authorized: ({
+      auth,
+      request,
+    }: {
+      auth: Session | null;
+      request: { nextUrl: NextRequest['nextUrl'] };
+    }) => boolean;
   };
   providers: any[];
 };

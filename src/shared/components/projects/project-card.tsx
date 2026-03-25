@@ -1,9 +1,23 @@
 import Link from 'next/link';
 import { Building2 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
-import { formatCurrency, formatDateRange, getStatusColor, getStatusLabel, calculateKpiProgress, formatNumber } from '@/shared/lib/formatters';
+import {
+  formatCurrency,
+  formatDateRange,
+  getStatusColor,
+  getStatusLabel,
+  calculateKpiProgress,
+  formatNumber,
+} from '@/shared/lib/formatters';
 import { FavoriteButton } from './favorite-button';
 
 interface ProjectCardProps {
@@ -48,7 +62,7 @@ export function ProjectCard({ project, userId }: ProjectCardProps) {
             <CardTitle className="truncate">{project.name}</CardTitle>
             <CardDescription className="flex items-center gap-2 mt-1">
               <span>{project.country}</span>
-              {project.organization && (
+              {project.organization ? (
                 <>
                   <span>•</span>
                   <span className="flex items-center gap-1">
@@ -56,13 +70,13 @@ export function ProjectCard({ project, userId }: ProjectCardProps) {
                     {project.organization}
                   </span>
                 </>
-              )}
+              ) : null}
               <span>•</span>
               <span>{project.projectType}</span>
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            {userId && <FavoriteButton projectId={project.id} isFavorite={isFavorite} />}
+            {userId ? <FavoriteButton projectId={project.id} isFavorite={isFavorite} /> : null}
             <Badge variant={getStatusColor(project.status) as any}>
               {getStatusLabel(project.status)}
             </Badge>
@@ -71,9 +85,7 @@ export function ProjectCard({ project, userId }: ProjectCardProps) {
       </CardHeader>
 
       <CardContent className="flex-1 space-y-4">
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {project.description}
-        </p>
+        <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
 
         {primaryKpi ? (
           <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
@@ -88,10 +100,12 @@ export function ProjectCard({ project, userId }: ProjectCardProps) {
                 })}
               </span>
               <span className="text-sm text-blue-700 dark:text-blue-300">
-                / {formatNumber(primaryKpi.targetValue, {
+                /{' '}
+                {formatNumber(primaryKpi.targetValue, {
                   decimals: primaryKpi.decimals,
                   thousandSeparators: primaryKpi.thousandSeparators,
-                })} {primaryKpi.unit}
+                })}{' '}
+                {primaryKpi.unit}
               </span>
               <span className="ml-auto text-sm font-medium text-blue-900 dark:text-blue-100">
                 {calculateKpiProgress(primaryKpi.valueAchieved, primaryKpi.targetValue)}%
@@ -113,12 +127,12 @@ export function ProjectCard({ project, userId }: ProjectCardProps) {
             <span className="text-muted-foreground">Investment:</span>
             <div className="font-medium">{formatCurrency(project.investmentCosts)}</div>
           </div>
-          {project.investmentType && (
+          {project.investmentType ? (
             <div className="col-span-2">
               <span className="text-muted-foreground">Type:</span>
               <div className="font-medium">{project.investmentType}</div>
             </div>
-          )}
+          ) : null}
           <div className="col-span-2">
             <span className="text-muted-foreground">Duration:</span>
             <div className="font-medium">{formatDateRange(project.startDate, project.endDate)}</div>

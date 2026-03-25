@@ -6,13 +6,34 @@ import { signIn } from 'next-auth/react';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { toast } from 'sonner';
 
 const DEMO_ACCOUNTS = [
-  { email: 'viewer@example.com', password: 'demo123', role: 'Viewer', description: 'Read-only access' },
-  { email: 'editor@example.com', password: 'demo123', role: 'Editor', description: 'Can create and edit projects' },
-  { email: 'admin@example.com', password: 'demo123', role: 'Super User', description: 'Full system access' },
+  {
+    email: 'viewer@example.com',
+    password: 'demo123',
+    role: 'Viewer',
+    description: 'Read-only access',
+  },
+  {
+    email: 'editor@example.com',
+    password: 'demo123',
+    role: 'Editor',
+    description: 'Can create and edit projects',
+  },
+  {
+    email: 'admin@example.com',
+    password: 'demo123',
+    role: 'Super User',
+    description: 'Full system access',
+  },
 ];
 
 export function LoginForm() {
@@ -88,7 +109,7 @@ export function LoginForm() {
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               disabled={isPending}
               required
             />
@@ -101,7 +122,7 @@ export function LoginForm() {
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               disabled={isPending}
               required
             />
@@ -118,14 +139,12 @@ export function LoginForm() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or use demo account
-              </span>
+              <span className="bg-background px-2 text-muted-foreground">Or use demo account</span>
             </div>
           </div>
 
           <div className="mt-4 space-y-2">
-            {DEMO_ACCOUNTS.map((account) => (
+            {DEMO_ACCOUNTS.map(account => (
               <Button
                 key={account.email}
                 type="button"

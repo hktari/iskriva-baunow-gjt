@@ -5,7 +5,12 @@ import { Star, TrendingUp, TrendingDown, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
-import { calculateKpiProgress, formatNumber, getKpiProgressColor, getKpiProgressBgColor } from '@/shared/lib/formatters';
+import {
+  calculateKpiProgress,
+  formatNumber,
+  getKpiProgressColor,
+  getKpiProgressBgColor,
+} from '@/shared/lib/formatters';
 import { updateKpi, deleteKpi, setPrimaryKpi } from '@/server/actions/kpis';
 import { toast } from 'sonner';
 
@@ -83,7 +88,7 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              {isAuthenticated && (
+              {isAuthenticated ? (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -95,15 +100,15 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
                     className={`h-4 w-4 ${kpi.isPrimary ? 'fill-blue-500 text-blue-500' : ''}`}
                   />
                 </Button>
-              )}
+              ) : null}
               <h4 className="font-medium">{kpi.indicatorName}</h4>
             </div>
-            {kpi.updated && (
+            {kpi.updated ? (
               <p className="text-xs text-muted-foreground mt-1">Updated: {kpi.updated}</p>
-            )}
+            ) : null}
           </div>
 
-          {canEdit && (
+          {canEdit ? (
             <div className="flex gap-1">
               <Button
                 variant="ghost"
@@ -124,7 +129,7 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
-          )}
+          ) : null}
         </div>
 
         {isEditing ? (
@@ -136,7 +141,7 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
                   type="number"
                   step="any"
                   value={targetValue}
-                  onChange={(e) => setTargetValue(e.target.value)}
+                  onChange={e => setTargetValue(e.target.value)}
                   className="h-8"
                 />
               </div>
@@ -146,7 +151,7 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
                   type="number"
                   step="any"
                   value={valueAchieved}
-                  onChange={(e) => setValueAchieved(e.target.value)}
+                  onChange={e => setValueAchieved(e.target.value)}
                   className="h-8"
                 />
               </div>

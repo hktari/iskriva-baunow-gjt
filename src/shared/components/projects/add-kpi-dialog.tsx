@@ -41,7 +41,8 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
 
   const isCustom = selectedIndicator === 'custom';
   const indicatorName = isCustom ? customIndicator : selectedIndicator;
-  const metadata = selectedIndicator && !isCustom ? KPI_INDICATOR_METADATA[selectedIndicator] : null;
+  const metadata =
+    selectedIndicator && !isCustom ? KPI_INDICATOR_METADATA[selectedIndicator] : null;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,7 +104,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
                 <SelectValue placeholder="Select indicator" />
               </SelectTrigger>
               <SelectContent>
-                {KPI_INDICATORS.map((indicator) => (
+                {KPI_INDICATORS.map(indicator => (
                   <SelectItem key={indicator} value={indicator}>
                     {indicator}
                   </SelectItem>
@@ -112,63 +113,59 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
               </SelectContent>
             </Select>
 
-            {isCustom && (
+            {isCustom ? (
               <Input
                 placeholder="Enter custom indicator name"
                 value={customIndicator}
-                onChange={(e) => setCustomIndicator(e.target.value)}
+                onChange={e => setCustomIndicator(e.target.value)}
               />
-            )}
+            ) : null}
           </div>
 
-          {metadata && (
+          {metadata ? (
             <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
               <div className="flex items-center gap-2 text-blue-900 dark:text-blue-100 font-medium">
                 <Info className="h-4 w-4" />
                 <span>KPI Information</span>
               </div>
-              {metadata.description && (
+              {metadata.description ? (
                 <div>
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Description:</span>
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                    Description:
+                  </span>
                   <p className="text-sm text-blue-800 dark:text-blue-200">{metadata.description}</p>
                 </div>
-              )}
-              {metadata.formula && (
+              ) : null}
+              {metadata.formula ? (
                 <div>
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Formula:</span>
-                  <p className="text-sm text-blue-800 dark:text-blue-200 font-mono">{metadata.formula}</p>
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                    Formula:
+                  </span>
+                  <p className="text-sm text-blue-800 dark:text-blue-200 font-mono">
+                    {metadata.formula}
+                  </p>
                 </div>
-              )}
-              {metadata.target && (
+              ) : null}
+              {metadata.target ? (
                 <div>
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">Recommended Target:</span>
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                    Recommended Target:
+                  </span>
                   <p className="text-sm text-blue-800 dark:text-blue-200">{metadata.target}</p>
                 </div>
-              )}
+              ) : null}
             </div>
-          )}
+          ) : null}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="targetValue">Target Value *</Label>
-              <Input
-                id="targetValue"
-                name="targetValue"
-                type="number"
-                step="any"
-                required
-              />
+              <Input id="targetValue" name="targetValue" type="number" step="any" required />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="valueAchieved">Value Achieved *</Label>
-              <Input
-                id="valueAchieved"
-                name="valueAchieved"
-                type="number"
-                step="any"
-                required
-              />
+              <Input id="valueAchieved" name="valueAchieved" type="number" step="any" required />
             </div>
           </div>
 
@@ -179,7 +176,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
                 <SelectValue placeholder="Select unit" />
               </SelectTrigger>
               <SelectContent>
-                {configurableFields.KPI_UNIT?.map((unit) => (
+                {configurableFields.KPI_UNIT?.map(unit => (
                   <SelectItem key={unit} value={unit}>
                     {unit}
                   </SelectItem>
@@ -190,11 +187,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
 
           <div className="space-y-2">
             <Label htmlFor="updated">Updated Date</Label>
-            <Input
-              id="updated"
-              name="updated"
-              placeholder="e.g., Q1/2025, 02/2025"
-            />
+            <Input id="updated" name="updated" placeholder="e.g., Q1/2025, 02/2025" />
           </div>
 
           <div className="space-y-2">
@@ -204,7 +197,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
                 <input
                   type="checkbox"
                   checked={useDecimals}
-                  onChange={(e) => setUseDecimals(e.target.checked)}
+                  onChange={e => setUseDecimals(e.target.checked)}
                   className="rounded"
                 />
                 <span className="text-sm">Use decimals</span>
@@ -213,7 +206,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
                 <input
                   type="checkbox"
                   checked={useThousandSeparators}
-                  onChange={(e) => setUseThousandSeparators(e.target.checked)}
+                  onChange={e => setUseThousandSeparators(e.target.checked)}
                   className="rounded"
                 />
                 <span className="text-sm">Use thousand separators</span>
@@ -225,11 +218,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
             <Button type="submit" disabled={isPending}>
               {isPending ? 'Adding...' : 'Add KPI'}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
           </div>

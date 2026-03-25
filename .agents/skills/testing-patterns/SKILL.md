@@ -1,265 +1,465 @@
 ---
 name: testing-patterns
-description: "Jest testing patterns, factory functions, mocking strategies, and TDD workflow. Use when writing unit tests, creating test factories, or following TDD red-green-refactor cycle."
-risk: unknown
-source: community
-date_added: "2026-02-27"
+description: "Testing guidelines for the EU Project Manager application. Use when writing unit, integration, and E2E tests. Best practices on testing patterns and how to structure tests."
 ---
+# Testing Guidelines
 
-# Testing Patterns and Utilities
+Comprehensive testing strategy for the EU Project Manager application.
+
+## Table of Contents
+
+- [Testing Philosophy](#testing-philosophy)
+- [Test Types](#test-types)
+- [Writing Unit Tests](#writing-unit-tests)
+- [Writing E2E Tests](#writing-e2e-tests)
+- [Test Utilities](#test-utilities)
+- [Best Practices](#best-practices)
 
 ## Testing Philosophy
 
-**Test-Driven Development (TDD):**
-- Write failing test FIRST
-- Implement minimal code to pass
-- Refactor after green
-- Never write production code without a failing test
+Our testing strategy focuses on:
 
-**Behavior-Driven Testing:**
-- Test behavior, not implementation
-- Focus on public APIs and business requirements
-- Avoid testing implementation details
-- Use descriptive test names that describe behavior
+1. **Catching errors early** - Tests should catch bugs before they reach production
+2. **Confidence in refactoring** - Tests enable safe code changes
+3. **Documentation** - Tests serve as living documentation
+4. **Fast feedback** - Tests should run quickly during development
 
-**Factory Pattern:**
-- Create `getMockX(overrides?: Partial<X>)` functions
-- Provide sensible defaults
-- Allow overriding specific properties
-- Keep tests DRY and maintainable
+## Test Types
 
-## Test Utilities
+### Unit Tests (Vitest)
 
-### Custom Render Function
+**Purpose**: Test individual components and functions in isolation
 
-Create a custom render that wraps components with required providers:
+**When to write**:
+- All shared components (`src/shared/components/`)
+- Utility functions (`src/shared/lib/`)
+- Server Actions with business logic
+- Complex data transformations
 
-```typescript
-// src/utils/testUtils.tsx
-import { render } from '@testing-library/react-native';
-import { ThemeProvider } from './theme';
+**Coverage target**: 80%+ for shared code
 
-export const renderWithTheme = (ui: React.ReactElement) => {
-  return render(
-    <ThemeProvider>{ui}</ThemeProvider>
-  );
-};
-```
+### Integration Tests (Vitest)
 
-**Usage:**
-```typescript
-import { renderWithTheme } from 'utils/testUtils';
-import { screen } from '@testing-library/react-native';
+**Purpose**: Test how components work together
 
-it('should render component', () => {
-  renderWithTheme(<MyComponent />);
-  expect(screen.getByText('Hello')).toBeTruthy();
+**When to write**:
+- Form submission flows
+- Multi-component interactions
+- Data fetching and state management
+
+### E2E Tests (Playwright)
+
+**Purpose**: Test complete user workflows
+
+**When to write**:
+- Critical user journeys (login, create project, etc.)
+- Multi-page workflows
+- Complex interactions
+
+**Note**: Follow the memory guidelines - run tests efficiently, one at a time initially.
+
+## Writing Unit Tests
+
+### Component Test Structure
+
+```tsx
+import { render, screen, fireEvent } from '@/tests/utils/custom-render';
+import { describe, it, expect, vi } from 'vitest';
+import { createMockProject } from '@/tests/utils/test-factories';
+import { ProjectCard } from './project-card';
+
+describe('ProjectCard', () => {
+  it('renders project information correctly', () => {
+    const project = createMockProject();
+    render(<ProjectCard project={project} />);
+    
+    expect(screen.getByText(project.name)).toBeInTheDocument();
+    expect(screen.getByText(project.country)).toBeInTheDocument();
+  });
+  
+  it('handles missing optional data gracefully', () => {
+    const project = createMockProject({ organization: null });
+    render(<ProjectCard project={project} />);
+    
+    // Should not crash
+    expect(screen.getByText(project.name)).toBeInTheDocument();
+  });
+  
+  it('handles user interactions', async () => {
+    const project = createMockProject();
+    const user = userEvent.setup();
+    
+    render(<ProjectCard project={project} />);
+    
+    const button = screen.getByRole('button', { name: /view details/i });
+    await user.click(button);
+    
+    // Assert expected behavior
+  });
 });
 ```
 
-## Factory Pattern
+### Testing Async Components
 
-### Component Props Factory
+```tsx
+import { waitFor } from '@testing-library/react';
 
-```typescript
-import { ComponentProps } from 'react';
-
-const getMockMyComponentProps = (
-  overrides?: Partial<ComponentProps<typeof MyComponent>>
-) => {
-  return {
-    title: 'Default Title',
-    count: 0,
-    onPress: jest.fn(),
-    isLoading: false,
-    ...overrides,
-  };
-};
-
-// Usage in tests
-it('should render with custom title', () => {
-  const props = getMockMyComponentProps({ title: 'Custom Title' });
-  renderWithTheme(<MyComponent {...props} />);
-  expect(screen.getByText('Custom Title')).toBeTruthy();
+it('loads and displays data', async () => {
+  const mockData = createMockProject();
+  vi.mocked(fetchProject).mockResolvedValue(mockData);
+  
+  render(<AsyncComponent />);
+  
+  // Initially shows loading
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  
+  // Wait for data to load
+  await waitFor(() => {
+    expect(screen.getByText(mockData.name)).toBeInTheDocument();
+  });
 });
 ```
 
-### Data Factory
+### Testing Error States
 
-```typescript
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'user';
-}
-
-const getMockUser = (overrides?: Partial<User>): User => {
-  return {
-    id: '123',
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'user',
-    ...overrides,
-  };
-};
-
-// Usage
-it('should display admin badge for admin users', () => {
-  const user = getMockUser({ role: 'admin' });
-  renderWithTheme(<UserCard user={user} />);
-  expect(screen.getByText('Admin')).toBeTruthy();
+```tsx
+it('displays error message when fetch fails', async () => {
+  vi.mocked(fetchProject).mockRejectedValue(new Error('Network error'));
+  
+  render(<AsyncComponent />);
+  
+  await waitFor(() => {
+    expect(screen.getByText(/error/i)).toBeInTheDocument();
+  });
 });
 ```
 
-## Mocking Patterns
+### Testing Server Actions
 
-### Mocking Modules
+```tsx
+import { describe, it, expect, vi } from 'vitest';
+import { createProject } from './actions';
 
-```typescript
-// Mock entire module
-jest.mock('utils/analytics');
-
-// Mock with factory function
-jest.mock('utils/analytics', () => ({
-  Analytics: {
-    logEvent: jest.fn(),
+// Mock Prisma
+vi.mock('@/server/db', () => ({
+  db: {
+    project: {
+      create: vi.fn(),
+    },
   },
 }));
 
-// Access mock in test
-const mockLogEvent = jest.requireMock('utils/analytics').Analytics.logEvent;
-```
-
-### Mocking GraphQL Hooks
-
-```typescript
-jest.mock('./GetItems.generated', () => ({
-  useGetItemsQuery: jest.fn(),
-}));
-
-const mockUseGetItemsQuery = jest.requireMock(
-  './GetItems.generated'
-).useGetItemsQuery as jest.Mock;
-
-// In test
-mockUseGetItemsQuery.mockReturnValue({
-  data: { items: [] },
-  loading: false,
-  error: undefined,
-});
-```
-
-## Test Structure
-
-```typescript
-describe('ComponentName', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe('createProject', () => {
+  it('creates project successfully', async () => {
+    const mockProject = createMockProject();
+    vi.mocked(db.project.create).mockResolvedValue(mockProject);
+    
+    const result = await createProject(createMockProjectFormData());
+    
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual(mockProject);
   });
-
-  describe('Rendering', () => {
-    it('should render component with default props', () => {});
-    it('should render loading state when loading', () => {});
-  });
-
-  describe('User interactions', () => {
-    it('should call onPress when button is clicked', async () => {});
-  });
-
-  describe('Edge cases', () => {
-    it('should handle empty data gracefully', () => {});
+  
+  it('handles database errors', async () => {
+    vi.mocked(db.project.create).mockRejectedValue(new Error('DB Error'));
+    
+    const result = await createProject(createMockProjectFormData());
+    
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
   });
 });
 ```
 
-## Query Patterns
+## Writing E2E Tests
 
-```typescript
-// Element must exist
-expect(screen.getByText('Hello')).toBeTruthy();
+### E2E Test Structure
 
-// Element should not exist
-expect(screen.queryByText('Goodbye')).toBeNull();
+```tsx
+import { test, expect } from '@playwright/test';
 
-// Element appears asynchronously
-await waitFor(() => {
-  expect(screen.findByText('Loaded')).toBeTruthy();
-});
-```
-
-## User Interaction Patterns
-
-```typescript
-import { fireEvent, screen } from '@testing-library/react-native';
-
-it('should submit form on button click', async () => {
-  const onSubmit = jest.fn();
-  renderWithTheme(<LoginForm onSubmit={onSubmit} />);
-
-  fireEvent.changeText(screen.getByLabelText('Email'), 'user@example.com');
-  fireEvent.changeText(screen.getByLabelText('Password'), 'password123');
-  fireEvent.press(screen.getByTestId('login-button'));
-
-  await waitFor(() => {
-    expect(onSubmit).toHaveBeenCalled();
+test.describe('Project Management', () => {
+  test.beforeEach(async ({ page }) => {
+    // Login before each test
+    await page.goto('/login');
+    await page.fill('[name="email"]', 'editor@example.com');
+    await page.fill('[name="password"]', 'demo123');
+    await page.click('button[type="submit"]');
+    await expect(page).toHaveURL('/');
+  });
+  
+  test('creates a new project', async ({ page }) => {
+    await page.goto('/projects');
+    await page.click('text=New Project');
+    
+    // Fill form
+    await page.fill('[name="name"]', 'Test Project');
+    await page.fill('[name="country"]', 'Germany');
+    await page.selectOption('[name="status"]', 'PLANNED');
+    
+    // Submit
+    await page.click('button[type="submit"]');
+    
+    // Verify success
+    await expect(page).toHaveURL(/\/project\/.+/);
+    await expect(page.locator('h1')).toContainText('Test Project');
   });
 });
 ```
 
-## Anti-Patterns to Avoid
+### E2E Best Practices
 
-### Testing Mock Behavior Instead of Real Behavior
+1. **Start small**: Run single test first, then whole file
+2. **Use data-testid for stable selectors**:
+   ```tsx
+   <button data-testid="submit-project">Submit</button>
+   ```
+   ```tsx
+   await page.click('[data-testid="submit-project"]');
+   ```
 
-```typescript
-// Bad - testing the mock
-expect(mockFetchData).toHaveBeenCalled();
+3. **Wait for network requests**:
+   ```tsx
+   await page.waitForResponse(response => 
+     response.url().includes('/api/projects')
+   );
+   ```
 
-// Good - testing actual behavior
-expect(screen.getByText('John Doe')).toBeTruthy();
+4. **Take screenshots on failure** (already configured):
+   ```tsx
+   test('example', async ({ page }) => {
+     // Test will auto-screenshot on failure
+   });
+   ```
+
+## Test Utilities
+
+### Test Factories
+
+Use factories for consistent mock data:
+
+```tsx
+import { 
+  createMockProject, 
+  createMockKpi,
+  createMockUser,
+  createMockProjectWithKpis 
+} from '@/tests/utils/test-factories';
+
+// Basic usage
+const project = createMockProject();
+
+// With overrides
+const project = createMockProject({ 
+  name: 'Custom Name',
+  status: 'COMPLETED' 
+});
+
+// With related data
+const projectWithKpis = createMockProjectWithKpis({}, 3); // 3 KPIs
 ```
 
-### Not Using Factories
+### Custom Render
 
-```typescript
-// Bad - duplicated, inconsistent test data
-it('test 1', () => {
-  const user = { id: '1', name: 'John', email: 'john@test.com', role: 'user' };
-});
-it('test 2', () => {
-  const user = { id: '2', name: 'Jane', email: 'jane@test.com' }; // Missing role!
-});
+Use custom render for components that need providers:
 
-// Good - reusable factory
-const user = getMockUser({ name: 'Custom Name' });
+```tsx
+import { render } from '@/tests/utils/custom-render';
+
+// Automatically wraps with necessary providers
+render(<MyComponent />);
+```
+
+### Mock Server Actions
+
+```tsx
+import { 
+  createMockServerAction,
+  createMockServerActionError 
+} from '@/tests/utils/mock-server-actions';
+
+// Mock successful action
+const mockAction = createMockServerAction({ id: '123' });
+
+// Mock error action
+const mockError = createMockServerActionError('Something went wrong');
 ```
 
 ## Best Practices
 
-1. **Always use factory functions** for props and data
-2. **Test behavior, not implementation**
-3. **Use descriptive test names**
-4. **Organize with describe blocks**
-5. **Clear mocks between tests**
-6. **Keep tests focused** - one behavior per test
+### DO ✅
+
+1. **Use test factories** for mock data
+   ```tsx
+   const project = createMockProject();
+   ```
+
+2. **Test user behavior, not implementation**
+   ```tsx
+   // Good - tests what user sees
+   expect(screen.getByRole('button', { name: /submit/i }));
+   
+   // Bad - tests implementation
+   expect(component.state.isSubmitting).toBe(false);
+   ```
+
+3. **Use semantic queries**
+   ```tsx
+   screen.getByRole('button', { name: /submit/i })
+   screen.getByLabelText(/email/i)
+   screen.getByText(/welcome/i)
+   ```
+
+4. **Test error states**
+   ```tsx
+   it('shows error when API fails', async () => {
+     mockApi.mockRejectedValue(new Error());
+     render(<Component />);
+     await waitFor(() => {
+       expect(screen.getByText(/error/i)).toBeInTheDocument();
+     });
+   });
+   ```
+
+5. **Clean up after tests**
+   ```tsx
+   afterEach(() => {
+     vi.clearAllMocks();
+   });
+   ```
+
+### DON'T ❌
+
+1. **Don't test implementation details**
+   ```tsx
+   // Bad
+   expect(wrapper.find('.className')).toHaveLength(1);
+   
+   // Good
+   expect(screen.getByRole('button')).toBeInTheDocument();
+   ```
+
+2. **Don't use arbitrary waits**
+   ```tsx
+   // Bad
+   await new Promise(resolve => setTimeout(resolve, 1000));
+   
+   // Good
+   await waitFor(() => {
+     expect(screen.getByText(/loaded/i)).toBeInTheDocument();
+   });
+   ```
+
+3. **Don't test external libraries**
+   ```tsx
+   // Bad - testing React Router
+   it('navigates correctly', () => {
+     // Testing library behavior
+   });
+   
+   // Good - testing your component's behavior
+   it('calls onNavigate when button clicked', () => {
+     const onNavigate = vi.fn();
+     render(<Component onNavigate={onNavigate} />);
+     fireEvent.click(screen.getByRole('button'));
+     expect(onNavigate).toHaveBeenCalled();
+   });
+   ```
+
+4. **Don't write tests that can pass when they should fail**
+   ```tsx
+   // Bad - might pass even if element doesn't exist
+   expect(screen.queryByText('Hello')).not.toBeNull();
+   
+   // Good
+   expect(screen.getByText('Hello')).toBeInTheDocument();
+   ```
 
 ## Running Tests
 
-```bash
-# Run all tests
-npm test
+### Unit Tests
 
-# Run with coverage
-npm run test:coverage
+```bash
+# Run all unit tests
+pnpm test
+
+# Run in watch mode
+pnpm test:watch
+
+# Run with UI
+pnpm test:ui
 
 # Run specific file
-npm test ComponentName.test.tsx
+pnpm test src/shared/components/project-card.test.tsx
+
+# Run with coverage
+pnpm test --coverage
 ```
 
-## Integration with Other Skills
+### E2E Tests
 
-- **react-ui-patterns**: Test all UI states (loading, error, empty, success)
-- **systematic-debugging**: Write test that reproduces bug before fixing
+```bash
+# Run all e2e tests
+pnpm test:e2e
 
-## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+# Run with UI
+pnpm test:e2e:ui
+
+# Run specific test
+pnpm test:e2e tests/e2e/projects.spec.ts
+
+# Run in headed mode (see browser)
+pnpm test:e2e --headed
+```
+
+**Important**: Before running e2e tests:
+1. Ensure app is running on port 3005
+2. Start with single test, then expand
+3. Check `tmp/test-results` for screenshots on failure
+
+## Debugging Tests
+
+### Unit Tests
+
+```tsx
+import { screen, debug } from '@testing-library/react';
+
+it('test', () => {
+  render(<Component />);
+  
+  // Print current DOM
+  screen.debug();
+  
+  // Print specific element
+  screen.debug(screen.getByRole('button'));
+});
+```
+
+### E2E Tests
+
+```tsx
+test('example', async ({ page }) => {
+  // Pause execution
+  await page.pause();
+  
+  // Take screenshot
+  await page.screenshot({ path: 'debug.png' });
+  
+  // Console logs
+  page.on('console', msg => console.log(msg.text()));
+});
+```
+
+## Coverage Goals
+
+- **Shared Components**: 80%+
+- **Business Logic**: 90%+
+- **Server Actions**: 100%
+- **Overall**: 70%+
+
+## Questions?
+
+If you need help with testing, refer to:
+- [Vitest Documentation](https://vitest.dev/)
+- [Testing Library](https://testing-library.com/)
+- [Playwright Documentation](https://playwright.dev/)

@@ -1,12 +1,54 @@
 export const PROJECT_COUNTRIES = [
-  'Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium',
-  'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic',
-  'Denmark', 'Estonia', 'Finland', 'France', 'Georgia', 'Germany', 'Greece',
-  'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Latvia', 'Liechtenstein',
-  'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro',
-  'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania',
-  'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden',
-  'Switzerland', 'Turkey', 'Ukraine', 'United Kingdom', 'Vatican City'
+  'Albania',
+  'Andorra',
+  'Armenia',
+  'Austria',
+  'Azerbaijan',
+  'Belarus',
+  'Belgium',
+  'Bosnia and Herzegovina',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Georgia',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Iceland',
+  'Ireland',
+  'Italy',
+  'Kazakhstan',
+  'Latvia',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Moldova',
+  'Monaco',
+  'Montenegro',
+  'Netherlands',
+  'North Macedonia',
+  'Norway',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Russia',
+  'San Marino',
+  'Serbia',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+  'Switzerland',
+  'Turkey',
+  'Ukraine',
+  'United Kingdom',
+  'Vatican City',
 ] as const;
 
 export const PROJECT_STATUSES = [
@@ -16,13 +58,7 @@ export const PROJECT_STATUSES = [
   { value: 'ON_HOLD', label: 'On Hold' },
 ] as const;
 
-export const PROGRAMS = [
-  'Interreg',
-  'Horizon',
-  'LIFE',
-  'Nacionalni',
-  'Regionalni',
-] as const;
+export const PROGRAMS = ['Interreg', 'Horizon', 'LIFE', 'Nacionalni', 'Regionalni'] as const;
 
 export const TARGET_GROUPS = [
   'Municipalities',
@@ -65,7 +101,10 @@ export const KPI_INDICATORS = [
   'Number of adopted solutions',
 ] as const;
 
-export const KPI_INDICATOR_METADATA: Record<string, { formula?: string; target?: string; description?: string }> = {
+export const KPI_INDICATOR_METADATA: Record<
+  string,
+  { formula?: string; target?: string; description?: string }
+> = {
   'Fulfilment of contractual obligations': {
     formula: '(Completed milestones / Total milestones) × 100',
     target: '≥ 95%',

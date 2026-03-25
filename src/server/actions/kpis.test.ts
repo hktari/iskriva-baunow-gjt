@@ -26,7 +26,7 @@ vi.mock('@/shared/lib/db', () => ({
 
 vi.mock('@/shared/lib/validations/project', () => ({
   kpiSchema: {
-    parse: vi.fn((data) => data),
+    parse: vi.fn(data => data),
   },
 }));
 
