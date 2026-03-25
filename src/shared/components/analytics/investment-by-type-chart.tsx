@@ -1,19 +1,19 @@
 'use client';
 
+import { formatCurrencyMillions } from '@/shared/lib/formatters';
+import type { InvestmentByType } from '@/types/analytics';
 import {
-  ComposedChart,
   Bar,
+  CartesianGrid,
+  ComposedChart,
+  Legend,
   Line,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from 'recharts';
-import type { InvestmentByType } from '@/types/analytics';
 import { ChartContainer } from './chart-container';
-import { formatCurrencyMillions } from '@/shared/lib/formatters';
 
 interface InvestmentByTypeChartProps {
   data: InvestmentByType[];
@@ -66,14 +66,14 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
           <Bar
             yAxisId="left"
             dataKey="valueInMillions"
-            fill="hsl(var(--primary))"
+            fill="var(--color-primary)"
             name="Investment (M EUR)"
           />
           <Line
             yAxisId="right"
             type="monotone"
             dataKey="count"
-            stroke="hsl(var(--destructive))"
+            stroke="var(--color-destructive)"
             name="Project Count"
           />
         </ComposedChart>

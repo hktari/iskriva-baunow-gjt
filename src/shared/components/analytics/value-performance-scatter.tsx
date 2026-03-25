@@ -20,10 +20,10 @@ interface ValuePerformanceScatterProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'hsl(var(--muted))',
-  IN_PROGRESS: 'hsl(var(--primary))',
-  COMPLETED: 'hsl(var(--chart-2))',
-  ON_HOLD: 'hsl(var(--destructive))',
+  PLANNING: 'var(--color-muted)',
+  IN_PROGRESS: 'var(--color-primary)',
+  COMPLETED: 'var(--color-chart-2)',
+  ON_HOLD: 'var(--color-destructive)',
 };
 
 export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) {
@@ -91,7 +91,7 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={STATUS_COLORS[entry.status] || 'hsl(var(--primary))'}
+                fill={STATUS_COLORS[entry.status] || 'var(--color-primary)'}
               />
             ))}
           </Scatter>

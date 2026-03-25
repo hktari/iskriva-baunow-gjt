@@ -1,9 +1,9 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import type { KpiPerformanceData } from '@/types/analytics';
-import { ChartContainer } from './chart-container';
 import { formatChartValue } from '@/shared/lib/formatters';
+import type { KpiPerformanceData } from '@/types/analytics';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { ChartContainer } from './chart-container';
 
 interface KpiPerformanceChartProps {
   data: KpiPerformanceData[];
@@ -59,7 +59,7 @@ export function KpiPerformanceChart({ data }: KpiPerformanceChartProps) {
               return null;
             }}
           />
-          <Bar dataKey="avgAchievement" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="avgAchievement" fill="var(--color-primary)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

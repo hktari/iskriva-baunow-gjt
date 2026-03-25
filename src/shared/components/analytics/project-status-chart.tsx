@@ -10,10 +10,10 @@ interface ProjectStatusChartProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'hsl(var(--muted))',
-  IN_PROGRESS: 'hsl(var(--primary))',
-  COMPLETED: 'hsl(var(--secondary))',
-  ON_HOLD: 'hsl(var(--destructive))',
+  PLANNING: 'var(--color-muted)',
+  IN_PROGRESS: 'var(--color-primary)',
+  COMPLETED: 'var(--color-secondary)',
+  ON_HOLD: 'var(--color-destructive)',
 };
 
 export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
@@ -55,7 +55,7 @@ export function ProjectStatusChart({ data }: ProjectStatusChartProps) {
               return (
                 <Cell
                   key={`cell-${index}`}
-                  fill={STATUS_COLORS[originalStatus] || 'hsl(var(--primary))'}
+                  fill={STATUS_COLORS[originalStatus] || 'var(--color-primary)'}
                 />
               );
             })}

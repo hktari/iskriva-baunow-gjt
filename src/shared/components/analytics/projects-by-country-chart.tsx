@@ -1,7 +1,7 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { ProjectsByCountry } from '@/types/analytics';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartContainer } from './chart-container';
 
 interface ProjectsByCountryChartProps {
@@ -30,7 +30,7 @@ export function ProjectsByCountryChart({ data }: ProjectsByCountryChartProps) {
           <XAxis dataKey="country" angle={-45} textAnchor="end" height={100} fontSize={12} />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="count" fill="hsl(var(--primary))" />
+          <Bar dataKey="count" fill="var(--color-primary)" />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

@@ -1,9 +1,9 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import type { EnvironmentalImpactData } from '@/types/analytics';
-import { ChartContainer } from './chart-container';
 import { formatChartValue } from '@/shared/lib/formatters';
+import type { EnvironmentalImpactData } from '@/types/analytics';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { ChartContainer } from './chart-container';
 
 interface EnvironmentalImpactChartProps {
   data: EnvironmentalImpactData[];
@@ -36,7 +36,7 @@ export function EnvironmentalImpactChart({ data }: EnvironmentalImpactChartProps
               return [formatChartValue(value, props.payload.unit), 'Total Achieved'];
             }}
           />
-          <Bar dataKey="value" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="value" fill="var(--color-chart-2)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>
