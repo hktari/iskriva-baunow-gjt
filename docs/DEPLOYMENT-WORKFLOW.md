@@ -31,7 +31,6 @@ Create the following environment variables:
 ```bash
 # Neon Configuration
 export NEON_PROJECT_ID=your-neon-project-id
-export NEON_API_KEY=your-neon-api-key
 ```
 
 To find your Neon project ID:
