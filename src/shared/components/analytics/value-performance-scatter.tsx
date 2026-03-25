@@ -54,13 +54,18 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
             type="number"
             dataKey="valueInMillions"
             name="Investment"
-            label={{ value: 'Investment (M EUR)', position: 'insideBottom', offset: -5 }}
+            label={{ value: 'Investment (M EUR)', position: 'insideBottom', offset: -25 }}
           />
           <YAxis
             type="number"
             dataKey="avgKpi"
             name="KPI Achievement"
-            label={{ value: 'Avg KPI Achievement (%)', angle: -90, position: 'insideLeft' }}
+            label={{
+              value: 'Avg KPI Achievement (%)',
+              angle: -90,
+              position: 'outsideLeft',
+              dx: -30,
+            }}
           />
           <Tooltip
             cursor={{ strokeDasharray: '3 3' }}
@@ -86,7 +91,7 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
               return null;
             }}
           />
-          <Legend />
+          <Legend align="right" />
           <Scatter name="Projects" data={chartData}>
             {chartData.map((entry, index) => (
               <Cell
