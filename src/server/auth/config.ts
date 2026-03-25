@@ -18,7 +18,6 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     authorized({ auth, request: { nextUrl } }: any) {
       const isLoggedIn = !!auth?.user;
       const isOnUsers = nextUrl.pathname.startsWith('/users');
@@ -39,7 +38,7 @@ export const authConfig = {
 
       return true;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
@@ -48,7 +47,7 @@ export const authConfig = {
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     session({ session, token }: any) {
       if (token && session.user) {
         session.user.id = token.id as string;

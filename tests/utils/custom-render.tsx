@@ -1,3 +1,5 @@
+//  eslint-disable no-unused-vars
+
 /**
  * Custom render utilities for testing React components with providers
  */

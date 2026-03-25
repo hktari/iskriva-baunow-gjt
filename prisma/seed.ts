@@ -1,4 +1,6 @@
-import { PrismaClient, UserRole, UserStatus, ProjectStatus, FieldCategory } from '@prisma/client';
+/* eslint-disable no-console */
+
+import { FieldCategory, PrismaClient, ProjectStatus, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();

@@ -9,11 +9,10 @@ export const { auth: edgeAuth } = NextAuth({
   session: { strategy: 'jwt' },
   secret: process.env.AUTH_SECRET,
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jwt({ token }: any) {
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     session({ session, token }: any) {
       if (token && session.user) {
         session.user.id = token.id as string;
