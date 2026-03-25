@@ -4,15 +4,6 @@ This document tracks known issues and bugs discovered during development and tes
 
 ## Active Issues
 
-### BUG-001: Advanced Filters Failing on Projects Page
-
-- **Component**: Projects Page - Advanced Filters
-- **Severity**: High
-- **Status**: Open
-- **Description**: Components fail on the projects page, specifically the advanced filters functionality.
-- **Steps to Reproduce**: TBD
-- **Notes**: Issue discovered during testing phase
-
 ### BUG-002: Missing Button Hover Effects
 
 - **Component**: UI Buttons
@@ -89,9 +80,14 @@ This document tracks known issues and bugs discovered during development and tes
 
 ## Resolved Issues
 
-_None yet_
-BUG-003
+### BUG-001: Advanced Filters Failing on Projects Page
+
+- Fixed by updating SelectItem values from empty strings to "all" with proper conversion logic
+
+### BUG-003: Edit Project Button Fails
+
+- Fixed by mapping optional select "None" values to `null` before validation
 
 ---
 
-_Last updated: March 2026 (BUG-003 resolved)_
+_Last updated: March 2026 (BUG-001, BUG-003 resolved)_

@@ -108,14 +108,14 @@ export function ProjectFilters({
               <div className="space-y-2">
                 <Label>Country</Label>
                 <Select
-                  value={filters.country}
-                  onValueChange={value => onFilterChange('country', value)}
+                  value={filters.country || 'all'}
+                  onValueChange={value => onFilterChange('country', value === 'all' ? '' : value)}
                 >
                   <SelectTrigger aria-label="Country">
                     <SelectValue placeholder="All countries" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All countries</SelectItem>
+                    <SelectItem value="all">All countries</SelectItem>
                     {PROJECT_COUNTRIES.map(country => (
                       <SelectItem key={country} value={country}>
                         {country}
@@ -128,14 +128,16 @@ export function ProjectFilters({
               <div className="space-y-2">
                 <Label>Project Type</Label>
                 <Select
-                  value={filters.projectType}
-                  onValueChange={value => onFilterChange('projectType', value)}
+                  value={filters.projectType || 'all'}
+                  onValueChange={value =>
+                    onFilterChange('projectType', value === 'all' ? '' : value)
+                  }
                 >
                   <SelectTrigger aria-label="Project Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All types</SelectItem>
+                    <SelectItem value="all">All types</SelectItem>
                     {(configurableFields.PROJECT_TYPE || []).map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
@@ -148,14 +150,16 @@ export function ProjectFilters({
               <div className="space-y-2">
                 <Label>Investment Type</Label>
                 <Select
-                  value={filters.investmentType}
-                  onValueChange={value => onFilterChange('investmentType', value)}
+                  value={filters.investmentType || 'all'}
+                  onValueChange={value =>
+                    onFilterChange('investmentType', value === 'all' ? '' : value)
+                  }
                 >
                   <SelectTrigger aria-label="Investment Type">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All types</SelectItem>
+                    <SelectItem value="all">All types</SelectItem>
                     {(configurableFields.INVESTMENT_TYPE || []).map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
@@ -168,14 +172,14 @@ export function ProjectFilters({
               <div className="space-y-2">
                 <Label>Status</Label>
                 <Select
-                  value={filters.status}
-                  onValueChange={value => onFilterChange('status', value)}
+                  value={filters.status || 'all'}
+                  onValueChange={value => onFilterChange('status', value === 'all' ? '' : value)}
                 >
                   <SelectTrigger aria-label="Status">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All statuses</SelectItem>
+                    <SelectItem value="all">All statuses</SelectItem>
                     {PROJECT_STATUSES.map(status => (
                       <SelectItem key={status.value} value={status.value}>
                         {status.label}
@@ -188,14 +192,16 @@ export function ProjectFilters({
               <div className="space-y-2">
                 <Label>Organization</Label>
                 <Select
-                  value={filters.organization}
-                  onValueChange={value => onFilterChange('organization', value)}
+                  value={filters.organization || 'all'}
+                  onValueChange={value =>
+                    onFilterChange('organization', value === 'all' ? '' : value)
+                  }
                 >
                   <SelectTrigger aria-label="Organization">
                     <SelectValue placeholder="All organizations" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All organizations</SelectItem>
+                    <SelectItem value="all">All organizations</SelectItem>
                     {(configurableFields.ORGANIZATION || []).map(org => (
                       <SelectItem key={org} value={org}>
                         {org}
