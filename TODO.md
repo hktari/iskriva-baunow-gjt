@@ -1,3 +1,8 @@
 # TODO
 
-Building: ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+1. Fix build warning
+   Building: ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+
+2. fix deployment workflow: preview deployment, e2e test, promote to production
+
+3. test phase 4 implementation
