@@ -40,10 +40,7 @@ export const createDeferred = <T = void>() => {
 /**
  * Assert that a function throws an error with a specific message
  */
-export const expectToThrow = async (
-  fn: () => Promise<any> | any,
-  expectedMessage?: string
-) => {
+export const expectToThrow = async (fn: () => Promise<any> | any, expectedMessage?: string) => {
   let error: Error | null = null;
   try {
     await fn();

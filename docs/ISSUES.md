@@ -5,6 +5,7 @@ This document tracks known issues and bugs discovered during development and tes
 ## Active Issues
 
 ### BUG-001: Advanced Filters Failing on Projects Page
+
 - **Component**: Projects Page - Advanced Filters
 - **Severity**: High
 - **Status**: Open
@@ -13,6 +14,7 @@ This document tracks known issues and bugs discovered during development and tes
 - **Notes**: Issue discovered during testing phase
 
 ### BUG-002: Missing Button Hover Effects
+
 - **Component**: UI Buttons
 - **Severity**: Medium
 - **Status**: Open
@@ -21,6 +23,7 @@ This document tracks known issues and bugs discovered during development and tes
 - **Notes**: Issue discovered during testing phase
 
 ### BUG-003: Edit Project Button Fails
+
 - **Component**: Projects Page - Edit Project Button
 - **Severity**: High
 - **Status**: Open
@@ -29,6 +32,7 @@ This document tracks known issues and bugs discovered during development and tes
 - **Notes**: Issue discovered during testing phase
 
 ### BUG-004: URL Redirect Defaults to Port 3000
+
 - **Component**: Auth/Navigation
 - **Severity**: High
 - **Status**: Open
@@ -37,6 +41,7 @@ This document tracks known issues and bugs discovered during development and tes
 - **Notes**: Hardcoded port in redirect logic
 
 ### BUG-005: Project Type Enumerations Missing
+
 - **Component**: Data Types/Schema
 - **Severity**: Medium
 - **Status**: Open
@@ -50,4 +55,4 @@ _None yet_
 
 ---
 
-*Last updated: March 2026*
+_Last updated: March 2026_

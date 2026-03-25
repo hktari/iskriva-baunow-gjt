@@ -1,9 +1,9 @@
 ---
 name: playwright-skill
-description: "IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below."
+description: 'IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below.'
 risk: unknown
 source: community
-date_added: "2026-02-27"
+date_added: '2026-02-27'
 ---
 
 **IMPORTANT - Path Resolution:**
@@ -256,9 +256,7 @@ const TARGET_URL = 'http://localhost:3001'; // Auto-detected
   ];
 
   for (const viewport of viewports) {
-    console.log(
-      `Testing ${viewport.name} (${viewport.width}x${viewport.height})`,
-    );
+    console.log(`Testing ${viewport.name} (${viewport.width}x${viewport.height})`);
 
     await page.setViewportSize({
       width: viewport.width,
@@ -367,7 +365,7 @@ For scripts using raw Playwright API, use the injected `getContextOptionsWithHea
 
 ```javascript
 const context = await browser.newContext(
-  getContextOptionsWithHeaders({ viewport: { width: 1920, height: 1080 } }),
+  getContextOptionsWithHeaders({ viewport: { width: 1920, height: 1080 } })
 );
 ```
 
@@ -456,4 +454,5 @@ User: "Use 3001"
 - Progressive disclosure - API_REFERENCE.md loaded only when advanced features needed
 
 ## When to Use
+
 This skill is applicable to execute the workflow or actions described in the overview.

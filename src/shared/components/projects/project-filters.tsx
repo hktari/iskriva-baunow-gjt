@@ -1,25 +1,25 @@
 'use client';
 
-import { Search, SlidersHorizontal, X, Heart } from 'lucide-react';
-import { Input } from '@/shared/components/ui/input';
-import { Button } from '@/shared/components/ui/button';
-import { Badge } from '@/shared/components/ui/badge';
-import { Checkbox } from '@/shared/components/ui/checkbox';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from '@/shared/components/ui/accordion';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Checkbox } from '@/shared/components/ui/checkbox';
+import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/shared/components/ui/select';
 import { PROJECT_COUNTRIES, PROJECT_STATUSES } from '@/shared/lib/constants';
+import { Heart, Search, SlidersHorizontal, X } from 'lucide-react';
 
 interface ProjectFiltersProps {
   filters: {
@@ -224,7 +224,7 @@ export function ProjectFilters({
               </div>
             </div>
 
-            {hasActiveFilters ? (
+            {(hasActiveFilters === true) ? (
               <div className="mt-4 pt-4 border-t">
                 <Button variant="outline" onClick={onClearFilters} className="gap-2">
                   <X className="h-4 w-4" />

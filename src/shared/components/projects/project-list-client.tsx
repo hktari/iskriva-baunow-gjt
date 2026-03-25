@@ -18,14 +18,14 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
   const searchParams = useSearchParams();
 
   const filters = {
-    search: searchParams.get('search') || '',
-    country: searchParams.get('country') || '',
-    projectType: searchParams.get('projectType') || '',
-    investmentType: searchParams.get('investmentType') || '',
-    status: searchParams.get('status') || '',
-    organization: searchParams.get('organization') || '',
-    minValue: searchParams.get('minValue') || '',
-    maxValue: searchParams.get('maxValue') || '',
+    search: searchParams.get('search') ?? '',
+    country: searchParams.get('country') ?? '',
+    projectType: searchParams.get('projectType') ?? '',
+    investmentType: searchParams.get('investmentType') ?? '',
+    status: searchParams.get('status') ?? '',
+    organization: searchParams.get('organization') ?? '',
+    minValue: searchParams.get('minValue') ?? '',
+    maxValue: searchParams.get('maxValue') ?? '',
     favoritesOnly: searchParams.get('favoritesOnly') === 'true',
   };
 

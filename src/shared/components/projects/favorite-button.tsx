@@ -1,9 +1,9 @@
 'use client';
 
-import { useTransition } from 'react';
-import { Heart } from 'lucide-react';
-import { Button } from '@/shared/components/ui/button';
 import { toggleFavorite } from '@/server/actions/projects';
+import { Button } from '@/shared/components/ui/button';
+import { Heart } from 'lucide-react';
+import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 interface FavoriteButtonProps {
@@ -21,7 +21,7 @@ export function FavoriteButton({ projectId, isFavorite }: FavoriteButtonProps) {
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(result.isFavorite ? 'Added to favorites' : 'Removed from favorites');
+        toast.success(result.isFavorite === true ? 'Added to favorites' : 'Removed from favorites');
       }
     });
   };

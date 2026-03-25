@@ -1,19 +1,19 @@
 'use client';
 
+import { formatCurrencyMillions, formatPercentage } from '@/shared/lib/formatters';
+import type { ValueVsPerformanceData } from '@/types/analytics';
 import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
   CartesianGrid,
-  Tooltip,
+  Cell,
   Legend,
   ResponsiveContainer,
-  Cell,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
-import type { ValueVsPerformanceData } from '@/types/analytics';
 import { ChartContainer } from './chart-container';
-import { formatCurrencyMillions, formatPercentage } from '@/shared/lib/formatters';
 
 interface ValuePerformanceScatterProps {
   data: ValueVsPerformanceData[];

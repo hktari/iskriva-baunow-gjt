@@ -210,7 +210,6 @@ async function main() {
 
     // Note: Temp file will be cleaned up on next run
     // This allows long-running async operations to complete safely
-
   } catch (error) {
     console.error('❌ Execution failed:', error.message);
     if (error.stack) {

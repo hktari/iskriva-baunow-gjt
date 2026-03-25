@@ -13,10 +13,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
  * Custom render function that wraps components with necessary providers
  * Use this instead of the default render from @testing-library/react
  */
-export function renderWithProviders(
-  ui: ReactElement,
-  options?: CustomRenderOptions
-) {
+export function renderWithProviders(ui: ReactElement, options?: CustomRenderOptions) {
   const { session, initialProps, ...renderOptions } = options || {};
 
   function Wrapper({ children }: { children: ReactNode }) {

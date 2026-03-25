@@ -27,7 +27,10 @@ test.describe('Viewer Permissions', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Should see project details
     await expect(page.getByRole('heading').first()).toBeVisible();
@@ -41,7 +44,10 @@ test.describe('Viewer Permissions', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Should not see edit button
     await expect(page.getByRole('button', { name: /edit project/i })).not.toBeVisible();
@@ -51,7 +57,10 @@ test.describe('Viewer Permissions', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
@@ -64,7 +73,10 @@ test.describe('Viewer Permissions', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
@@ -78,7 +90,10 @@ test.describe('Viewer Permissions', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Should see favorite button
     const favoriteButton = page.getByRole('button', { name: /favorite/i });

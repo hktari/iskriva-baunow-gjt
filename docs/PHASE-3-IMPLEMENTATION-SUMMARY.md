@@ -17,6 +17,7 @@ Successfully implemented comprehensive analytics dashboards with both General An
 **Selected Approach:** Server-side aggregation with React Server Components
 
 **Rationale:**
+
 - **Performance**: Heavy calculations done on server, reducing client bundle size
 - **Scalability**: Handles large datasets efficiently without blocking UI
 - **Caching**: Leverages Next.js cache and React Server Components for automatic memoization
@@ -26,11 +27,13 @@ Successfully implemented comprehensive analytics dashboards with both General An
 ### 2. Files Created
 
 #### Core Infrastructure
+
 - `src/types/analytics.ts` - Complete TypeScript type definitions for all analytics data structures
 - `src/shared/lib/analytics-storage.ts` - localStorage utilities for user preferences
 - `src/shared/lib/formatters.ts` - Extended with analytics-specific formatters (percentage, large numbers, currency millions, chart values)
 
 #### Server-Side Aggregation
+
 - `src/server/queries/analytics.ts` - Core aggregation services
   - `getGeneralAnalytics()` - Aggregates data for General Analytics with filters
   - `getOrganizationAnalytics()` - Organization-specific analytics
@@ -38,11 +41,13 @@ Successfully implemented comprehensive analytics dashboards with both General An
   - Helper functions for all chart data calculations
 
 #### Route Structure
+
 - `src/app/(app)/analytics/page.tsx` - Main analytics page (Server Component)
 - `src/app/(app)/analytics/general-analytics-client.tsx` - General Analytics tab
 - `src/app/(app)/analytics/organization-analytics-client.tsx` - Organization Analytics tab
 
 #### Reusable Chart Components
+
 - `src/shared/components/analytics/chart-container.tsx` - Wrapper with consistent styling
 - `src/shared/components/analytics/projects-by-country-chart.tsx` - Bar chart
 - `src/shared/components/analytics/project-status-chart.tsx` - Pie chart
@@ -55,7 +60,9 @@ Successfully implemented comprehensive analytics dashboards with both General An
 ### 3. Features Implemented
 
 #### General Analytics Dashboard
+
 ✅ **Filters Section**
+
 - Country dropdown filter
 - Project Type dropdown filter
 - Favorites only toggle (authenticated users)
@@ -63,11 +70,13 @@ Successfully implemented comprehensive analytics dashboards with both General An
 - Active project count display
 
 ✅ **Key Metrics Cards** (3 cards)
+
 - Total Projects (count + countries)
 - Total Project Value (EUR formatted)
 - Total Investment Cost (EUR formatted)
 
 ✅ **Charts** (7 types using Recharts)
+
 1. **Projects by Country** - Bar chart showing distribution
 2. **Project Status** - Pie chart with percentage labels
 3. **Investment by Project Type** - Dual-axis chart (value in M EUR + count)
@@ -77,17 +86,21 @@ Successfully implemented comprehensive analytics dashboards with both General An
 7. **Top Performing Projects** - Ranked list (top 5) with medal icons
 
 #### Organization Analytics Dashboard
+
 ✅ **Organization Selector**
+
 - Dropdown pre-filled from user's organization
 - Persisted to localStorage (`analytics_org`)
 
 ✅ **Chart Customization**
+
 - Toggle switches for each chart (show/hide)
 - Persisted to localStorage (`analytics_org_charts`)
 - Default: all charts visible
 - Settings panel with gear icon
 
 ✅ **Charts** (5 types, organization-filtered)
+
 1. Project Status Distribution
 2. Investment by Project Type
 3. KPI Performance
@@ -95,6 +108,7 @@ Successfully implemented comprehensive analytics dashboards with both General An
 5. Top Performing Projects
 
 ✅ **Authentication**
+
 - Login prompt for unauthenticated users
 - Pre-fill organization from session user data
 
@@ -113,6 +127,7 @@ All implemented in `src/server/queries/analytics.ts`:
 ### 5. Technical Features
 
 #### Performance Optimizations
+
 - React `cache()` for request memoization
 - Server Components for initial data fetch
 - Loading skeletons for better UX
@@ -120,6 +135,7 @@ All implemented in `src/server/queries/analytics.ts`:
 - Debounced filter inputs (planned for future enhancement)
 
 #### Responsive Design
+
 - Mobile (<640px): Single column, stacked charts
 - Tablet (640px-1024px): 2-column grid
 - Desktop (>1024px): Full grid layout
@@ -127,6 +143,7 @@ All implemented in `src/server/queries/analytics.ts`:
 - Horizontal scrolling for wide charts
 
 #### Error Handling
+
 - Empty state handling for all charts
 - Failed data fetch error messages
 - Missing organization data handling
@@ -134,6 +151,7 @@ All implemented in `src/server/queries/analytics.ts`:
 - Graceful degradation
 
 #### Number Formatting (European Convention)
+
 - Currency: EUR with space thousands separator
 - Percentages: 0-1 decimal places
 - Large numbers: K/M abbreviations
@@ -142,10 +160,12 @@ All implemented in `src/server/queries/analytics.ts`:
 ### 6. localStorage Persistence
 
 **Keys Used:**
+
 - `analytics_org` - Selected organization ID
 - `analytics_org_charts` - Chart visibility settings (JSON object)
 
 **Features:**
+
 - SSR-safe (checks `typeof window !== 'undefined'`)
 - Error handling for quota exceeded
 - Default values when not set
@@ -154,6 +174,7 @@ All implemented in `src/server/queries/analytics.ts`:
 ### 7. Chart Specifications
 
 All charts use:
+
 - **Library**: Recharts v2.15.0
 - **Responsive**: ResponsiveContainer for fluid sizing
 - **Colors**: Tailwind CSS theme colors via HSL variables
@@ -172,6 +193,7 @@ All charts use:
 ## Testing & Verification
 
 ### Setup Required
+
 ```bash
 # 1. Environment variables are configured in .env
 # 2. Database should be initialized:
@@ -186,6 +208,7 @@ http://localhost:3000/analytics
 ```
 
 ### Manual Testing Checklist
+
 - [ ] General Analytics tab loads without errors
 - [ ] All 7 charts render with seed data
 - [ ] Filters update charts correctly
@@ -198,7 +221,9 @@ http://localhost:3000/analytics
 - [ ] Number formatting follows European conventions
 
 ### Automated Testing (Future)
+
 Recommended test files to create:
+
 - `tests/unit/analytics/aggregations.test.ts` - Test calculation functions
 - `tests/unit/analytics/storage.test.ts` - Test localStorage utilities
 - `tests/e2e/analytics.spec.ts` - E2E user journeys
@@ -206,6 +231,7 @@ Recommended test files to create:
 ## Known Limitations & Future Enhancements
 
 ### Current Limitations
+
 1. **No chart export** - Users cannot download charts as images/PDFs
 2. **No date range filtering** - Analytics show all-time data only
 3. **No drill-down** - Cannot click chart elements to see details
@@ -213,6 +239,7 @@ Recommended test files to create:
 5. **No comparison mode** - Cannot compare multiple organizations side-by-side
 
 ### Recommended Enhancements
+
 1. **Debounced filters** - Add 300ms debounce to filter inputs
 2. **URL state** - Persist filters to URL for shareable links
 3. **Chart export** - Add download as PNG/SVG/PDF functionality
@@ -225,6 +252,7 @@ Recommended test files to create:
 ## Dependencies
 
 **No new dependencies added** - All required packages were already in `package.json`:
+
 - `recharts` (v2.15.0) ✅
 - `lucide-react` (icons) ✅
 - `sonner` (toasts) ✅
@@ -233,6 +261,7 @@ Recommended test files to create:
 ## File Statistics
 
 **Total Files Created:** 17
+
 - Types: 1
 - Server queries: 1
 - Client components: 2
@@ -242,6 +271,7 @@ Recommended test files to create:
 - Documentation: 1 (this file)
 
 **Lines of Code:** ~2,500+ lines
+
 - TypeScript: ~2,300 lines
 - Documentation: ~200 lines
 
@@ -258,17 +288,19 @@ Recommended test files to create:
 ✅ Empty states guide users when no data matches filters  
 ✅ Number formatting follows European conventions  
 ✅ Server-side aggregation for performance  
-✅ Type-safe end-to-end implementation  
+✅ Type-safe end-to-end implementation
 
 ## Next Steps
 
 1. **Initialize Database** (if not done):
+
    ```bash
    pnpm db:push
    pnpm db:seed
    ```
 
 2. **Start Development Server**:
+
    ```bash
    pnpm dev
    ```

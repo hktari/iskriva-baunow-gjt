@@ -3,6 +3,7 @@
 ## Current Status
 
 ✅ **Project Setup Complete**
+
 - Next.js 15 with App Router configured
 - TypeScript with strict mode enabled
 - Tailwind CSS v4 configured
@@ -54,6 +55,7 @@ Visit http://localhost:3000 - you should see a placeholder page.
 According to `docs/PLAN.md`, implement features in this order:
 
 ### Phase 1: Core Infrastructure (Week 1)
+
 - [x] Project scaffolding
 - [x] Database schema
 - [x] Authentication setup
@@ -62,6 +64,7 @@ According to `docs/PLAN.md`, implement features in this order:
 - [x] **Login page with demo account shortcuts**
 
 ### Phase 2: Project Management (Week 2)
+
 - [ ] Project list page with search and filters
 - [ ] Project detail page (view/edit modes)
 - [ ] KPI management (add, edit, delete, set primary)
@@ -69,18 +72,21 @@ According to `docs/PLAN.md`, implement features in this order:
 - [ ] Form validation with Zod
 
 ### Phase 3: Analytics (Week 3)
+
 - [ ] General Analytics dashboard with Recharts
 - [ ] Organization Analytics dashboard
 - [ ] Chart customization and localStorage persistence
 - [ ] Aggregation services for KPI calculations
 
 ### Phase 4: Admin & Configuration (Week 4)
+
 - [ ] User management (super user only)
 - [ ] Field configuration (enum editing)
 - [ ] Audit logging
 - [ ] User invitation system
 
 ### Phase 5: Polish & Testing (Week 5)
+
 - [ ] News page (static content)
 - [ ] Methodology page (static content)
 - [ ] Error handling and loading states
@@ -95,6 +101,7 @@ According to `docs/PLAN.md`, implement features in this order:
 **File**: `src/app/(app)/layout.tsx`
 
 Create the authenticated app layout with:
+
 - Header with logo and navigation
 - User info area (name, role badge, logout)
 - Responsive mobile navigation
@@ -105,6 +112,7 @@ Create the authenticated app layout with:
 **File**: `src/app/(auth)/login/page.tsx`
 
 Implement:
+
 - Email/password form
 - Demo account quick-login buttons
 - Server action for authentication
@@ -116,6 +124,7 @@ Implement:
 **File**: `src/app/(app)/page.tsx`
 
 Build the home page with:
+
 - Landing banner
 - Search functionality
 - Advanced filters (collapsible)
@@ -137,18 +146,18 @@ import { revalidatePath } from 'next/cache';
 
 export async function createProject(data: ProjectFormData) {
   const session = await auth();
-  
+
   if (!session || session.user.role === 'VIEWER') {
     throw new Error('Unauthorized');
   }
-  
+
   const project = await db.project.create({
     data: {
       ...data,
       createdById: session.user.id,
     },
   });
-  
+
   revalidatePath('/');
   return project;
 }
@@ -166,7 +175,7 @@ import { createProject } from '../actions/create-project';
 
 export function ProjectForm() {
   const [isPending, startTransition] = useTransition();
-  
+
   const handleSubmit = (formData: FormData) => {
     startTransition(async () => {
       try {
@@ -177,7 +186,7 @@ export function ProjectForm() {
       }
     });
   };
-  
+
   return <form action={handleSubmit}>...</form>;
 }
 ```
@@ -192,10 +201,12 @@ import { cache } from 'react';
 export const getProjects = cache(async (filters?: ProjectFilters) => {
   return db.project.findMany({
     where: {
-      name: filters?.search ? {
-        contains: filters.search,
-        mode: 'insensitive',
-      } : undefined,
+      name: filters?.search
+        ? {
+            contains: filters.search,
+            mode: 'insensitive',
+          }
+        : undefined,
       country: filters?.country,
       projectType: filters?.projectType,
     },
@@ -212,22 +223,26 @@ export const getProjects = cache(async (filters?: ProjectFilters) => {
 ## Important Considerations
 
 ### Authentication
+
 - All protected routes should check `await auth()` in Server Components
 - Use middleware for route-level protection
 - Role checks: `session.user.role === 'SUPER_USER'`
 
 ### Database Queries
+
 - Use Prisma's `include` for relations
 - Add indexes for frequently queried fields (already done in schema)
 - Use `cache()` from React for request memoization
 
 ### Error Handling
+
 - Use try/catch in server actions
 - Return `{ error: string }` for form validation errors
 - Log errors with Pino logger
 - Send critical errors to Sentry in production
 
 ### Performance
+
 - Use Server Components by default
 - Only add 'use client' when needed (interactivity, hooks)
 - Implement loading.tsx for route segments
@@ -236,16 +251,19 @@ export const getProjects = cache(async (filters?: ProjectFilters) => {
 ## Testing Strategy
 
 ### Unit Tests (Vitest)
+
 - Test server actions
 - Test utility functions
 - Test data transformations
 
 ### Integration Tests
+
 - Test API routes
 - Test database operations
 - Test authentication flows
 
 ### E2E Tests (Playwright)
+
 - Test critical user journeys
 - Test role-based access
 - Test form submissions

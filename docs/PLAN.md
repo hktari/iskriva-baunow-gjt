@@ -23,4 +23,3 @@ Build the EU Project Manager as a production-ready full-stack web app using a mo
 - [ ] Configure deployment on `Vercel` with EU-hosted Postgres, environment variable templates, preview deployments, and production rollout settings.
 - [ ] Add automated tests with `Vitest`, `React Testing Library`, integration coverage for server actions and route handlers, and `Playwright` end-to-end coverage for key user journeys.
 - [ ] Validate the implementation with linting, typechecking, test runs, and deployment smoke checks before release.
-

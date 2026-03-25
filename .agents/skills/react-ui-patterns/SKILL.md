@@ -1,9 +1,9 @@
 ---
 name: react-ui-patterns
-description: "Modern React UI patterns for loading states, error handling, and data fetching. Use when building UI components, handling async data, or managing UI states."
+description: 'Modern React UI patterns for loading states, error handling, and data fetching. Use when building UI components, handling async data, or managing UI states.'
 risk: unknown
 source: community
-date_added: "2026-02-27"
+date_added: '2026-02-27'
 ---
 
 # React UI Patterns
@@ -57,12 +57,12 @@ Do we have data?
 
 ### Skeleton vs Spinner
 
-| Use Skeleton When | Use Spinner When |
-|-------------------|------------------|
-| Known content shape | Unknown content shape |
-| List/card layouts | Modal actions |
-| Initial page load | Button submissions |
-| Content placeholders | Inline operations |
+| Use Skeleton When    | Use Spinner When      |
+| -------------------- | --------------------- |
+| Known content shape  | Unknown content shape |
+| List/card layouts    | Modal actions         |
+| Initial page load    | Button submissions    |
+| Content placeholders | Inline operations     |
 
 ## Error Handling Patterns
 
@@ -85,7 +85,7 @@ const [createItem, { loading }] = useCreateItemMutation({
   onCompleted: () => {
     toast.success({ title: 'Item created' });
   },
-  onError: (error) => {
+  onError: error => {
     console.error('createItem failed:', error);
     toast.error({ title: 'Failed to create item' });
   },
@@ -93,7 +93,7 @@ const [createItem, { loading }] = useCreateItemMutation({
 
 // WRONG - Error silently caught, user has no idea
 const [createItem] = useCreateItemMutation({
-  onError: (error) => {
+  onError: error => {
     console.error(error); // User sees nothing!
   },
 });
@@ -125,11 +125,7 @@ const ErrorState = ({ error, onRetry, title }: ErrorStateProps) => (
 ### Button Loading State
 
 ```tsx
-<Button
-  onClick={handleSubmit}
-  isLoading={isSubmitting}
-  disabled={!isValid || isSubmitting}
->
+<Button onClick={handleSubmit} isLoading={isSubmitting} disabled={!isValid || isSubmitting}>
   Submit
 </Button>
 ```
@@ -165,12 +161,7 @@ Every list/collection MUST have an empty state:
 return <FlatList data={items} />;
 
 // CORRECT - Explicit empty state
-return (
-  <FlatList
-    data={items}
-    ListEmptyComponent={<EmptyState />}
-  />
-);
+return <FlatList data={items} ListEmptyComponent={<EmptyState />} />;
 ```
 
 ### Contextual Empty States
@@ -252,10 +243,10 @@ try {
 }
 
 // CORRECT - Error surfaced
-onError: (error) => {
+onError: error => {
   console.error('operation failed:', error);
   toast.error({ title: 'Operation failed' });
-}
+};
 ```
 
 ### Button States
@@ -275,6 +266,7 @@ onError: (error) => {
 Before completing any UI component:
 
 **UI States:**
+
 - [ ] Error state handled and shown to user
 - [ ] Loading state shown only when no data exists
 - [ ] Empty state provided for collections
@@ -282,6 +274,7 @@ Before completing any UI component:
 - [ ] Buttons show loading indicator when appropriate
 
 **Data & Mutations:**
+
 - [ ] Mutations have onError handler
 - [ ] All user actions have feedback (toast/visual)
 
@@ -292,4 +285,5 @@ Before completing any UI component:
 - **formik-patterns**: Apply form submission patterns
 
 ## When to Use
+
 This skill is applicable to execute the workflow or actions described in the overview.

@@ -107,6 +107,7 @@ vercel --prod
 ```
 
 Ensure environment variables are set in Vercel dashboard:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `AUTH_SECRET` - Auth.js secret key
 

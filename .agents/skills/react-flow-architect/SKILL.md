@@ -1,9 +1,9 @@
 ---
 name: react-flow-architect
-description: "Build production-ready ReactFlow applications with hierarchical navigation, performance optimization, and advanced state management."
+description: 'Build production-ready ReactFlow applications with hierarchical navigation, performance optimization, and advanced state management.'
 risk: unknown
 source: community
-date_added: "2026-02-27"
+date_added: '2026-02-27'
 ---
 
 # ReactFlow Architect
@@ -15,14 +15,14 @@ Build production-ready ReactFlow applications with hierarchical navigation, perf
 Create basic interactive graph:
 
 ```tsx
-import ReactFlow, { Node, Edge } from "reactflow";
+import ReactFlow, { Node, Edge } from 'reactflow';
 
 const nodes: Node[] = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "Node 1" } },
-  { id: "2", position: { x: 100, y: 100 }, data: { label: "Node 2" } },
+  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
+  { id: '2', position: { x: 100, y: 100 }, data: { label: 'Node 2' } },
 ];
 
-const edges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
+const edges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
 
 export default function Graph() {
   return <ReactFlow nodes={nodes} edges={edges} />;
@@ -45,7 +45,7 @@ interface TreeNode extends Node {
     hasChildren: boolean;
     isExpanded: boolean;
     childCount: number;
-    category: "root" | "category" | "process" | "detail";
+    category: 'root' | 'category' | 'process' | 'detail';
   };
 }
 ```
@@ -59,26 +59,26 @@ const buildVisibleNodes = useCallback(
     const visibleEdges = new Map<string, TreeEdge>();
 
     // Start with root nodes
-    const rootNodes = allNodes.filter((n) => n.data.level === 0);
+    const rootNodes = allNodes.filter(n => n.data.level === 0);
 
     // Recursively add visible nodes
     const addVisibleChildren = (node: TreeNode) => {
       visibleNodes.set(node.id, node);
 
       if (expandedIds.has(node.id)) {
-        const children = allNodes.filter((n) => n.parentNode === node.id);
-        children.forEach((child) => addVisibleChildren(child));
+        const children = allNodes.filter(n => n.parentNode === node.id);
+        children.forEach(child => addVisibleChildren(child));
       }
     };
 
-    rootNodes.forEach((root) => addVisibleChildren(root));
+    rootNodes.forEach(root => addVisibleChildren(root));
 
     return {
       nodes: Array.from(visibleNodes.values()),
       edges: Array.from(visibleEdges.values()),
     };
   },
-  [],
+  []
 );
 ```
 
@@ -89,11 +89,7 @@ Handle large datasets with incremental rendering and memoization.
 #### Incremental Rendering
 
 ```typescript
-const useIncrementalGraph = (
-  allNodes: Node[],
-  allEdges: Edge[],
-  expandedList: string[],
-) => {
+const useIncrementalGraph = (allNodes: Node[], allEdges: Edge[], expandedList: string[]) => {
   const prevExpandedListRef = useRef<Set<string>>(new Set());
   const prevOtherDepsRef = useRef<any[]>([]);
 
@@ -115,7 +111,7 @@ const useIncrementalGraph = (
         allNodes,
         allEdges,
         currentExpandedSet,
-        prevExpandedSet,
+        prevExpandedSet
       );
     } else {
       // Full rebuild needed
@@ -168,24 +164,24 @@ Complex node/edge state patterns with undo/redo and persistence.
 
 ```typescript
 type GraphAction =
-  | { type: "SELECT_NODE"; payload: string }
-  | { type: "SELECT_EDGE"; payload: string }
-  | { type: "TOGGLE_EXPAND"; payload: string }
-  | { type: "UPDATE_NODES"; payload: Node[] }
-  | { type: "UPDATE_EDGES"; payload: Edge[] }
-  | { type: "UNDO" }
-  | { type: "REDO" };
+  | { type: 'SELECT_NODE'; payload: string }
+  | { type: 'SELECT_EDGE'; payload: string }
+  | { type: 'TOGGLE_EXPAND'; payload: string }
+  | { type: 'UPDATE_NODES'; payload: Node[] }
+  | { type: 'UPDATE_EDGES'; payload: Edge[] }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 const graphReducer = (state: GraphState, action: GraphAction): GraphState => {
   switch (action.type) {
-    case "SELECT_NODE":
+    case 'SELECT_NODE':
       return {
         ...state,
         selectedNodeId: action.payload,
         selectedEdgeId: null,
       };
 
-    case "TOGGLE_EXPAND":
+    case 'TOGGLE_EXPAND':
       const newExpanded = new Set(state.expandedNodeIds);
       if (newExpanded.has(action.payload)) {
         newExpanded.delete(action.payload);
@@ -207,10 +203,7 @@ const graphReducer = (state: GraphState, action: GraphAction): GraphState => {
 #### History Management
 
 ```typescript
-const useHistoryManager = (
-  state: GraphState,
-  dispatch: Dispatch<GraphAction>,
-) => {
+const useHistoryManager = (state: GraphState, dispatch: Dispatch<GraphAction>) => {
   const canUndo = state.historyIndex > 0;
   const canRedo = state.historyIndex < state.history.length - 1;
 
@@ -220,7 +213,7 @@ const useHistoryManager = (
       const historyEntry = state.history[newIndex];
 
       dispatch({
-        type: "RESTORE_FROM_HISTORY",
+        type: 'RESTORE_FROM_HISTORY',
         payload: {
           ...historyEntry,
           historyIndex: newIndex,
@@ -230,7 +223,7 @@ const useHistoryManager = (
   }, [canUndo, state.historyIndex, state.history]);
 
   const saveToHistory = useCallback(() => {
-    dispatch({ type: "SAVE_TO_HISTORY" });
+    dispatch({ type: 'SAVE_TO_HISTORY' });
   }, [dispatch]);
 
   return { canUndo, canRedo, undo, redo, saveToHistory };
@@ -244,10 +237,10 @@ const useHistoryManager = (
 Integrate Dagre for automatic graph layout:
 
 ```typescript
-import dagre from "dagre";
+import dagre from 'dagre';
 
 const layoutOptions = {
-  rankdir: "TB", // Top to Bottom
+  rankdir: 'TB', // Top to Bottom
   nodesep: 100, // Node separation
   ranksep: 150, // Rank separation
   marginx: 50,
@@ -261,12 +254,12 @@ const applyLayout = (nodes: Node[], edges: Edge[]) => {
   g.setDefaultEdgeLabel(() => ({}));
 
   // Add nodes to graph
-  nodes.forEach((node) => {
+  nodes.forEach(node => {
     g.setNode(node.id, { width: 200, height: 100 });
   });
 
   // Add edges to graph
-  edges.forEach((edge) => {
+  edges.forEach(edge => {
     g.setEdge(edge.source, edge.target);
   });
 
@@ -274,7 +267,7 @@ const applyLayout = (nodes: Node[], edges: Edge[]) => {
   dagre.layout(g);
 
   // Apply positions
-  return nodes.map((node) => ({
+  return nodes.map(node => ({
     ...node,
     position: {
       x: g.node(node.id).x - 100,
@@ -292,11 +285,7 @@ const debouncedLayout = useMemo(() => debounce(applyLayout, 150), []);
 Isolate selected nodes and their direct connections:
 
 ```typescript
-const useFocusMode = (
-  selectedNodeId: string,
-  allNodes: Node[],
-  allEdges: Edge[],
-) => {
+const useFocusMode = (selectedNodeId: string, allNodes: Node[], allEdges: Edge[]) => {
   return useMemo(() => {
     if (!selectedNodeId) return { nodes: allNodes, edges: allEdges };
 
@@ -304,7 +293,7 @@ const useFocusMode = (
     const connectedNodeIds = new Set([selectedNodeId]);
     const focusedEdges: Edge[] = [];
 
-    allEdges.forEach((edge) => {
+    allEdges.forEach(edge => {
       if (edge.source === selectedNodeId || edge.target === selectedNodeId) {
         focusedEdges.push(edge);
         connectedNodeIds.add(edge.source);
@@ -313,7 +302,7 @@ const useFocusMode = (
     });
 
     // Get connected nodes
-    const focusedNodes = allNodes.filter((n) => connectedNodeIds.has(n.id));
+    const focusedNodes = allNodes.filter(n => connectedNodeIds.has(n.id));
 
     return { nodes: focusedNodes, edges: focusedEdges };
   }, [selectedNodeId, allNodes, allEdges]);
@@ -321,9 +310,9 @@ const useFocusMode = (
 
 // Smooth transitions for focus mode
 const focusModeStyles = {
-  transition: "all 0.3s ease-in-out",
+  transition: 'all 0.3s ease-in-out',
   opacity: isInFocus ? 1 : 0.3,
-  filter: isInFocus ? "none" : "blur(2px)",
+  filter: isInFocus ? 'none' : 'blur(2px)',
 };
 ```
 
@@ -337,18 +326,18 @@ const searchNodes = useCallback((nodes: Node[], query: string) => {
 
   const lowerQuery = query.toLowerCase();
   return nodes.filter(
-    (node) =>
+    node =>
       node.data.label.toLowerCase().includes(lowerQuery) ||
-      node.data.description?.toLowerCase().includes(lowerQuery),
+      node.data.description?.toLowerCase().includes(lowerQuery)
   );
 }, []);
 
 const navigateToSearchResult = (nodeId: string) => {
   // Expand parent nodes
   const nodePath = calculateBreadcrumbPath(nodeId, allNodes);
-  const parentIds = nodePath.slice(0, -1).map((n) => n.id);
+  const parentIds = nodePath.slice(0, -1).map(n => n.id);
 
-  setExpandedIds((prev) => new Set([...prev, ...parentIds]));
+  setExpandedIds(prev => new Set([...prev, ...parentIds]));
   setSelectedNodeId(nodeId);
 
   // Fit view to node
@@ -389,16 +378,13 @@ class GraphAnalyzer {
   }
 
   countNodes(content) {
-    const nodePatterns = [
-      /nodes:\s*\[.*?\]/gs,
-      /const\s+\w+\s*=\s*\[.*?id:.*?position:/gs,
-    ];
+    const nodePatterns = [/nodes:\s*\[.*?\]/gs, /const\s+\w+\s*=\s*\[.*?id:.*?position:/gs];
 
     let totalCount = 0;
-    nodePatterns.forEach((pattern) => {
+    nodePatterns.forEach(pattern => {
       const matches = content.match(pattern);
       if (matches) {
-        matches.forEach((match) => {
+        matches.forEach(match => {
           const nodeMatches = match.match(/id:\s*['"`][^'"`]+['"`]/g);
           if (nodeMatches) {
             totalCount += nodeMatches.length;
@@ -427,19 +413,19 @@ class GraphAnalyzer {
 
     if (metrics.nodeCount > 500) {
       analysis.issues.push({
-        type: "HIGH_NODE_COUNT",
-        severity: "high",
+        type: 'HIGH_NODE_COUNT',
+        severity: 'high',
         message: `Too many nodes (${metrics.nodeCount}). Consider virtualization.`,
-        suggestion: "Implement virtualization or reduce visible nodes",
+        suggestion: 'Implement virtualization or reduce visible nodes',
       });
     }
 
     if (metrics.renderTime > 16) {
       analysis.issues.push({
-        type: "SLOW_RENDER",
-        severity: "high",
+        type: 'SLOW_RENDER',
+        severity: 'high',
         message: `Render time (${metrics.renderTime.toFixed(2)}ms) exceeds 60fps.`,
-        suggestion: "Optimize with memoization and incremental rendering",
+        suggestion: 'Optimize with memoization and incremental rendering',
       });
     }
   }
@@ -460,10 +446,7 @@ class GraphAnalyzer {
 
 ```typescript
 // Use Map for O(1) lookups instead of array.find
-const nodesById = useMemo(
-  () => new Map(allNodes.map((n) => [n.id, n])),
-  [allNodes],
-);
+const nodesById = useMemo(() => new Map(allNodes.map(n => [n.id, n])), [allNodes]);
 
 // Cache layout results
 const layoutCacheRef = useRef<Map<string, Node[]>>(new Map());
@@ -616,4 +599,5 @@ export default function InteractiveGraph() {
 This comprehensive skill provides everything needed to build production-ready ReactFlow applications with hierarchical navigation, performance optimization, and advanced state management patterns.
 
 ## When to Use
+
 This skill is applicable to execute the workflow or actions described in the overview.

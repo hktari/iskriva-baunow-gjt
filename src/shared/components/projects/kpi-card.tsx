@@ -1,17 +1,17 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { Star, TrendingUp, TrendingDown, Pencil, Trash2 } from 'lucide-react';
-import { Card, CardContent } from '@/shared/components/ui/card';
+import { deleteKpi, setPrimaryKpi, updateKpi } from '@/server/actions/kpis';
 import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import {
-  calculateKpiProgress,
-  formatNumber,
-  getKpiProgressColor,
-  getKpiProgressBgColor,
+    calculateKpiProgress,
+    formatNumber,
+    getKpiProgressBgColor,
+    getKpiProgressColor,
 } from '@/shared/lib/formatters';
-import { updateKpi, deleteKpi, setPrimaryKpi } from '@/server/actions/kpis';
+import { Pencil, Star, Trash2, TrendingDown, TrendingUp } from 'lucide-react';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 interface KpiCardProps {
@@ -77,7 +77,7 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(result.isPrimary ? 'Set as primary KPI' : 'Removed as primary KPI');
+        toast.success(result.isPrimary === true ? 'Set as primary KPI' : 'Removed as primary KPI');
       }
     });
   };

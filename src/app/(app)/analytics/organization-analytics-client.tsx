@@ -1,6 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { getOrganizationAnalytics } from '@/server/actions/analytics';
+import { InvestmentByTypeChart } from '@/shared/components/analytics/investment-by-type-chart';
+import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performance-chart';
+import { ProjectStatusChart } from '@/shared/components/analytics/project-status-chart';
+import { TopProjectsList } from '@/shared/components/analytics/top-projects-list';
+import { ValuePerformanceScatter } from '@/shared/components/analytics/value-performance-scatter';
 import {
   Card,
   CardContent,
@@ -8,27 +13,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { Label } from '@/shared/components/ui/label';
 import { Checkbox } from '@/shared/components/ui/checkbox';
-import { ProjectStatusChart } from '@/shared/components/analytics/project-status-chart';
-import { InvestmentByTypeChart } from '@/shared/components/analytics/investment-by-type-chart';
-import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performance-chart';
-import { ValuePerformanceScatter } from '@/shared/components/analytics/value-performance-scatter';
-import { TopProjectsList } from '@/shared/components/analytics/top-projects-list';
-import { getOrganizationAnalytics } from '@/server/actions/analytics';
-import { formatCurrency, formatLargeNumber } from '@/shared/lib/formatters';
+import { Label } from '@/shared/components/ui/label';
 import {
-  getSelectedOrganization,
-  setSelectedOrganization,
   getEnabledCharts,
+  getSelectedOrganization,
   setEnabledCharts,
+  setSelectedOrganization,
 } from '@/shared/lib/analytics-storage';
+import { formatCurrency, formatLargeNumber } from '@/shared/lib/formatters';
 import type {
+  ChartVisibilitySettings,
   OrganizationAnalyticsData,
   OrganizationOption,
-  ChartVisibilitySettings,
 } from '@/types/analytics';
-import { Building2, TrendingUp, Euro, Settings2 } from 'lucide-react';
+import { Building2, Euro, Settings2, TrendingUp } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface OrganizationAnalyticsClientProps {
   userOrganization?: string;

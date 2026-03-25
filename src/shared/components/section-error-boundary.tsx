@@ -1,7 +1,7 @@
 'use client';
 
-import React, { Component, ReactNode } from 'react';
 import { AlertCircle } from 'lucide-react';
+import React, { Component, ReactNode } from 'react';
 import { Button } from './ui/button';
 
 interface SectionErrorBoundaryProps {
@@ -43,7 +43,7 @@ export class SectionErrorBoundary extends Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (process.env.NODE_ENV === 'development') {
-      console.error(`Error in section "${this.props.sectionName || 'Unknown'}":`, error);
+      console.error(`Error in section "${this.props.sectionName ?? 'Unknown'}":`, error);
     }
 
     this.props.onError?.(error, errorInfo);
@@ -54,7 +54,7 @@ export class SectionErrorBoundary extends Component<
   };
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasError === true) {
       if (this.props.fallback) {
         return this.props.fallback;
       }

@@ -26,7 +26,7 @@ Server Components are the default in Next.js App Router. Use them when:
 // ✅ Server Component (default)
 async function ProjectList() {
   const projects = await db.project.findMany();
-  
+
   return (
     <div>
       {projects.map(project => (
@@ -53,12 +53,8 @@ import { useState } from 'react';
 
 function InteractiveButton() {
   const [count, setCount] = useState(0);
-  
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      Clicked {count} times
-    </button>
-  );
+
+  return <button onClick={() => setCount(count + 1)}>Clicked {count} times</button>;
 }
 ```
 
@@ -70,7 +66,7 @@ Keep client components small and compose them with server components:
 // ✅ Good - Server component wraps client component
 async function ProjectPage({ id }: { id: string }) {
   const project = await db.project.findUnique({ where: { id } });
-  
+
   return (
     <div>
       <h1>{project.name}</h1>
@@ -92,11 +88,11 @@ async function ProjectList() {
     include: { kpis: true },
     orderBy: { createdAt: 'desc' },
   });
-  
+
   if (projects.length === 0) {
     return <EmptyState />;
   }
-  
+
   return (
     <div>
       {projects.map(project => (
@@ -118,7 +114,7 @@ function ClientDataComponent() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetch('/api/data')
       .then(res => res.json())
@@ -126,11 +122,11 @@ function ClientDataComponent() {
       .catch(setError)
       .finally(() => setLoading(false));
   }, []);
-  
+
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
   if (!data) return <EmptyState />;
-  
+
   return <DataDisplay data={data} />;
 }
 ```
@@ -145,7 +141,7 @@ async function DashboardPage() {
     getAnalytics(),
     getUsers(),
   ]);
-  
+
   return (
     <div>
       <ProjectsSection projects={projects} />
@@ -171,15 +167,15 @@ export async function createProject(formData: FormData) {
       country: formData.get('country') as string,
       // ... other fields
     };
-    
+
     // Validate
     if (!data.name || !data.country) {
       return { success: false, error: 'Missing required fields' };
     }
-    
+
     const project = await db.project.create({ data });
     revalidatePath('/projects');
-    
+
     return { success: true, data: project };
   } catch (error) {
     console.error('Failed to create project:', error);
@@ -197,7 +193,7 @@ import { createProject } from './actions';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  
+
   return (
     <Button type="submit" disabled={pending}>
       {pending ? 'Creating...' : 'Create Project'}
@@ -208,16 +204,16 @@ function SubmitButton() {
 export function ProjectForm() {
   async function handleSubmit(formData: FormData) {
     const result = await createProject(formData);
-    
+
     if (!result.success) {
       toast.error(result.error);
       return;
     }
-    
+
     toast.success('Project created successfully');
     router.push(`/project/${result.data.id}`);
   }
-  
+
   return (
     <form action={handleSubmit}>
       <input name="name" required />
@@ -241,38 +237,35 @@ export function ControlledForm() {
     country: '',
   });
   const [errors, setErrors] = useState({});
-  
+
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error for this field
     setErrors(prev => ({ ...prev, [field]: undefined }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate
     const newErrors = {};
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.country) newErrors.country = 'Country is required';
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     // Submit
     const result = await createProject(formData);
     // Handle result...
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <input
-          value={formData.name}
-          onChange={e => handleChange('name', e.target.value)}
-        />
+        <input value={formData.name} onChange={e => handleChange('name', e.target.value)} />
         {errors.name && <span className="error">{errors.name}</span>}
       </div>
       <button type="submit">Submit</button>
@@ -309,7 +302,7 @@ function Dashboard() {
       <SectionErrorBoundary sectionName="Analytics">
         <AnalyticsSection />
       </SectionErrorBoundary>
-      
+
       <SectionErrorBoundary sectionName="Recent Projects">
         <RecentProjects />
       </SectionErrorBoundary>
@@ -323,7 +316,7 @@ function Dashboard() {
 ```tsx
 function DataComponent() {
   const [error, setError] = useState(null);
-  
+
   if (error) {
     return (
       <div className="error-container">
@@ -333,7 +326,7 @@ function DataComponent() {
       </div>
     );
   }
-  
+
   return <DataDisplay />;
 }
 ```
@@ -383,7 +376,7 @@ function LoadingSkeleton() {
 
 function ActionButton() {
   const [loading, setLoading] = useState(false);
-  
+
   const handleClick = async () => {
     setLoading(true);
     try {
@@ -392,7 +385,7 @@ function ActionButton() {
       setLoading(false);
     }
   };
-  
+
   return (
     <Button onClick={handleClick} disabled={loading}>
       {loading ? (
@@ -424,7 +417,7 @@ function ProjectList({ projects }: { projects: Project[] }) {
       </div>
     );
   }
-  
+
   return (
     <div className="grid gap-4">
       {projects.map(project => (
@@ -443,7 +436,7 @@ function UserProfile({ user }: { user: User | null }) {
   if (!user) {
     return <LoginPrompt />;
   }
-  
+
   return (
     <div>
       <h1>{user.name}</h1>
@@ -454,20 +447,12 @@ function UserProfile({ user }: { user: User | null }) {
 
 // ❌ Bad - truthy check can render "0"
 function Count({ count }: { count: number }) {
-  return (
-    <div>
-      {count && <span>Count: {count}</span>}
-    </div>
-  );
+  return <div>{count && <span>Count: {count}</span>}</div>;
 }
 
 // ✅ Good - explicit comparison
 function Count({ count }: { count: number }) {
-  return (
-    <div>
-      {count > 0 ? <span>Count: {count}</span> : null}
-    </div>
-  );
+  return <div>{count > 0 ? <span>Count: {count}</span> : null}</div>;
 }
 ```
 
@@ -496,23 +481,23 @@ Card.Body = function CardBody({ children }: { children: ReactNode }) {
   <Card.Body>
     <p>Content</p>
   </Card.Body>
-</Card>
+</Card>;
 ```
 
 ### Render Props Pattern
 
 ```tsx
-function DataFetcher({ 
-  url, 
-  children 
-}: { 
-  url: string; 
+function DataFetcher({
+  url,
+  children,
+}: {
+  url: string;
   children: (data: any, loading: boolean, error: Error | null) => ReactNode;
 }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetch(url)
       .then(res => res.json())
@@ -520,7 +505,7 @@ function DataFetcher({
       .catch(setError)
       .finally(() => setLoading(false));
   }, [url]);
-  
+
   return <>{children(data, loading, error)}</>;
 }
 
@@ -531,7 +516,7 @@ function DataFetcher({
     if (error) return <Error error={error} />;
     return <ProjectList projects={data} />;
   }}
-</DataFetcher>
+</DataFetcher>;
 ```
 
 ### Custom Hook Pattern
@@ -542,24 +527,24 @@ function useProjects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetchProjects()
       .then(setProjects)
       .catch(setError)
       .finally(() => setLoading(false));
   }, []);
-  
+
   return { projects, loading, error };
 }
 
 // Usage
 function ProjectList() {
   const { projects, loading, error } = useProjects();
-  
+
   if (loading) return <Spinner />;
   if (error) return <Error error={error} />;
-  
+
   return <List items={projects} />;
 }
 ```
@@ -576,12 +561,12 @@ function ExpensiveComponent({ data }: { data: any[] }) {
   const processedData = useMemo(() => {
     return data.map(item => expensiveOperation(item));
   }, [data]);
-  
+
   // Memoize callbacks
   const handleClick = useCallback((id: string) => {
     console.log('Clicked:', id);
   }, []);
-  
+
   return (
     <div>
       {processedData.map(item => (
@@ -644,8 +629,12 @@ function Navigation() {
   return (
     <nav>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/projects">Projects</a></li>
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/projects">Projects</a>
+        </li>
       </ul>
     </nav>
   );
@@ -682,13 +671,13 @@ function Dialog({ isOpen, onClose }: DialogProps) {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    
+
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
     }
   }, [isOpen, onClose]);
-  
+
   return isOpen ? <div role="dialog">...</div> : null;
 }
 ```
@@ -704,5 +693,6 @@ function Dialog({ isOpen, onClose }: DialogProps) {
 - Keep components focused and composable
 
 For more patterns, see:
+
 - [React Documentation](https://react.dev/learn)
 - [Next.js Documentation](https://nextjs.org/docs)

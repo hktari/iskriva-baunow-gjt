@@ -1,9 +1,9 @@
 ---
 name: react-flow-node-ts
-description: "Create React Flow node components following established patterns with proper TypeScript types and store integration."
+description: 'Create React Flow node components following established patterns with proper TypeScript types and store integration.'
 risk: unknown
 source: community
-date_added: "2026-02-27"
+date_added: '2026-02-27'
 ---
 
 # React Flow Node
@@ -13,6 +13,7 @@ Create React Flow node components following established patterns with proper Typ
 ## Quick Start
 
 Copy templates from assets/ and replace placeholders:
+
 - `{{NodeName}}` → PascalCase component name (e.g., `VideoNode`)
 - `{{nodeType}}` → kebab-case type identifier (e.g., `video-node`)
 - `{{NodeData}}` → Data interface name (e.g., `VideoNodeData`)
@@ -25,16 +26,10 @@ Copy templates from assets/ and replace placeholders:
 ## Node Component Pattern
 
 ```tsx
-export const MyNode = memo(function MyNode({
-  id,
-  data,
-  selected,
-  width,
-  height,
-}: MyNodeProps) {
-  const updateNode = useAppStore((state) => state.updateNode);
-  const canvasMode = useAppStore((state) => state.canvasMode);
-  
+export const MyNode = memo(function MyNode({ id, data, selected, width, height }: MyNodeProps) {
+  const updateNode = useAppStore(state => state.updateNode);
+  const canvasMode = useAppStore(state => state.canvasMode);
+
   return (
     <>
       <NodeResizer isVisible={selected && canvasMode === 'editing'} />
@@ -69,4 +64,5 @@ export type MyNode = Node<MyNodeData, 'my-node'>;
 6. Add to AddBlockMenu and ConnectMenu
 
 ## When to Use
+
 This skill is applicable to execute the workflow or actions described in the overview.

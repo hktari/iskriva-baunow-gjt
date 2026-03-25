@@ -1,7 +1,8 @@
 ---
 name: testing-patterns
-description: "Testing guidelines for the EU Project Manager application. Use when writing unit, integration, and E2E tests. Best practices on testing patterns and how to structure tests."
+description: 'Testing guidelines for the EU Project Manager application. Use when writing unit, integration, and E2E tests. Best practices on testing patterns and how to structure tests.'
 ---
+
 # Testing Guidelines
 
 Comprehensive testing strategy for the EU Project Manager application.
@@ -31,6 +32,7 @@ Our testing strategy focuses on:
 **Purpose**: Test individual components and functions in isolation
 
 **When to write**:
+
 - All shared components (`src/shared/components/`)
 - Utility functions (`src/shared/lib/`)
 - Server Actions with business logic
@@ -43,6 +45,7 @@ Our testing strategy focuses on:
 **Purpose**: Test how components work together
 
 **When to write**:
+
 - Form submission flows
 - Multi-component interactions
 - Data fetching and state management
@@ -52,6 +55,7 @@ Our testing strategy focuses on:
 **Purpose**: Test complete user workflows
 
 **When to write**:
+
 - Critical user journeys (login, create project, etc.)
 - Multi-page workflows
 - Complex interactions
@@ -72,28 +76,28 @@ describe('ProjectCard', () => {
   it('renders project information correctly', () => {
     const project = createMockProject();
     render(<ProjectCard project={project} />);
-    
+
     expect(screen.getByText(project.name)).toBeInTheDocument();
     expect(screen.getByText(project.country)).toBeInTheDocument();
   });
-  
+
   it('handles missing optional data gracefully', () => {
     const project = createMockProject({ organization: null });
     render(<ProjectCard project={project} />);
-    
+
     // Should not crash
     expect(screen.getByText(project.name)).toBeInTheDocument();
   });
-  
+
   it('handles user interactions', async () => {
     const project = createMockProject();
     const user = userEvent.setup();
-    
+
     render(<ProjectCard project={project} />);
-    
+
     const button = screen.getByRole('button', { name: /view details/i });
     await user.click(button);
-    
+
     // Assert expected behavior
   });
 });
@@ -107,12 +111,12 @@ import { waitFor } from '@testing-library/react';
 it('loads and displays data', async () => {
   const mockData = createMockProject();
   vi.mocked(fetchProject).mockResolvedValue(mockData);
-  
+
   render(<AsyncComponent />);
-  
+
   // Initially shows loading
   expect(screen.getByText(/loading/i)).toBeInTheDocument();
-  
+
   // Wait for data to load
   await waitFor(() => {
     expect(screen.getByText(mockData.name)).toBeInTheDocument();
@@ -125,9 +129,9 @@ it('loads and displays data', async () => {
 ```tsx
 it('displays error message when fetch fails', async () => {
   vi.mocked(fetchProject).mockRejectedValue(new Error('Network error'));
-  
+
   render(<AsyncComponent />);
-  
+
   await waitFor(() => {
     expect(screen.getByText(/error/i)).toBeInTheDocument();
   });
@@ -153,18 +157,18 @@ describe('createProject', () => {
   it('creates project successfully', async () => {
     const mockProject = createMockProject();
     vi.mocked(db.project.create).mockResolvedValue(mockProject);
-    
+
     const result = await createProject(createMockProjectFormData());
-    
+
     expect(result.success).toBe(true);
     expect(result.data).toEqual(mockProject);
   });
-  
+
   it('handles database errors', async () => {
     vi.mocked(db.project.create).mockRejectedValue(new Error('DB Error'));
-    
+
     const result = await createProject(createMockProjectFormData());
-    
+
     expect(result.success).toBe(false);
     expect(result.error).toBeDefined();
   });
@@ -187,19 +191,19 @@ test.describe('Project Management', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL('/');
   });
-  
+
   test('creates a new project', async ({ page }) => {
     await page.goto('/projects');
     await page.click('text=New Project');
-    
+
     // Fill form
     await page.fill('[name="name"]', 'Test Project');
     await page.fill('[name="country"]', 'Germany');
     await page.selectOption('[name="status"]', 'PLANNED');
-    
+
     // Submit
     await page.click('button[type="submit"]');
-    
+
     // Verify success
     await expect(page).toHaveURL(/\/project\/.+/);
     await expect(page.locator('h1')).toContainText('Test Project');
@@ -211,18 +215,19 @@ test.describe('Project Management', () => {
 
 1. **Start small**: Run single test first, then whole file
 2. **Use data-testid for stable selectors**:
+
    ```tsx
    <button data-testid="submit-project">Submit</button>
    ```
+
    ```tsx
    await page.click('[data-testid="submit-project"]');
    ```
 
 3. **Wait for network requests**:
+
    ```tsx
-   await page.waitForResponse(response => 
-     response.url().includes('/api/projects')
-   );
+   await page.waitForResponse(response => response.url().includes('/api/projects'));
    ```
 
 4. **Take screenshots on failure** (already configured):
@@ -239,20 +244,20 @@ test.describe('Project Management', () => {
 Use factories for consistent mock data:
 
 ```tsx
-import { 
-  createMockProject, 
+import {
+  createMockProject,
   createMockKpi,
   createMockUser,
-  createMockProjectWithKpis 
+  createMockProjectWithKpis,
 } from '@/tests/utils/test-factories';
 
 // Basic usage
 const project = createMockProject();
 
 // With overrides
-const project = createMockProject({ 
+const project = createMockProject({
   name: 'Custom Name',
-  status: 'COMPLETED' 
+  status: 'COMPLETED',
 });
 
 // With related data
@@ -273,9 +278,9 @@ render(<MyComponent />);
 ### Mock Server Actions
 
 ```tsx
-import { 
+import {
   createMockServerAction,
-  createMockServerActionError 
+  createMockServerActionError,
 } from '@/tests/utils/mock-server-actions';
 
 // Mock successful action
@@ -290,27 +295,31 @@ const mockError = createMockServerActionError('Something went wrong');
 ### DO ✅
 
 1. **Use test factories** for mock data
+
    ```tsx
    const project = createMockProject();
    ```
 
 2. **Test user behavior, not implementation**
+
    ```tsx
    // Good - tests what user sees
    expect(screen.getByRole('button', { name: /submit/i }));
-   
+
    // Bad - tests implementation
    expect(component.state.isSubmitting).toBe(false);
    ```
 
 3. **Use semantic queries**
+
    ```tsx
-   screen.getByRole('button', { name: /submit/i })
-   screen.getByLabelText(/email/i)
-   screen.getByText(/welcome/i)
+   screen.getByRole('button', { name: /submit/i });
+   screen.getByLabelText(/email/i);
+   screen.getByText(/welcome/i);
    ```
 
 4. **Test error states**
+
    ```tsx
    it('shows error when API fails', async () => {
      mockApi.mockRejectedValue(new Error());
@@ -331,19 +340,21 @@ const mockError = createMockServerActionError('Something went wrong');
 ### DON'T ❌
 
 1. **Don't test implementation details**
+
    ```tsx
    // Bad
    expect(wrapper.find('.className')).toHaveLength(1);
-   
+
    // Good
    expect(screen.getByRole('button')).toBeInTheDocument();
    ```
 
 2. **Don't use arbitrary waits**
+
    ```tsx
    // Bad
    await new Promise(resolve => setTimeout(resolve, 1000));
-   
+
    // Good
    await waitFor(() => {
      expect(screen.getByText(/loaded/i)).toBeInTheDocument();
@@ -351,12 +362,13 @@ const mockError = createMockServerActionError('Something went wrong');
    ```
 
 3. **Don't test external libraries**
+
    ```tsx
    // Bad - testing React Router
    it('navigates correctly', () => {
      // Testing library behavior
    });
-   
+
    // Good - testing your component's behavior
    it('calls onNavigate when button clicked', () => {
      const onNavigate = vi.fn();
@@ -367,10 +379,11 @@ const mockError = createMockServerActionError('Something went wrong');
    ```
 
 4. **Don't write tests that can pass when they should fail**
+
    ```tsx
    // Bad - might pass even if element doesn't exist
    expect(screen.queryByText('Hello')).not.toBeNull();
-   
+
    // Good
    expect(screen.getByText('Hello')).toBeInTheDocument();
    ```
@@ -413,6 +426,7 @@ pnpm test:e2e --headed
 ```
 
 **Important**: Before running e2e tests:
+
 1. Ensure app is running on port 3005
 2. Start with single test, then expand
 3. Check `tmp/test-results` for screenshots on failure
@@ -426,10 +440,10 @@ import { screen, debug } from '@testing-library/react';
 
 it('test', () => {
   render(<Component />);
-  
+
   // Print current DOM
   screen.debug();
-  
+
   // Print specific element
   screen.debug(screen.getByRole('button'));
 });
@@ -441,10 +455,10 @@ it('test', () => {
 test('example', async ({ page }) => {
   // Pause execution
   await page.pause();
-  
+
   // Take screenshot
   await page.screenshot({ path: 'debug.png' });
-  
+
   // Console logs
   page.on('console', msg => console.log(msg.text()));
 });
@@ -460,6 +474,7 @@ test('example', async ({ page }) => {
 ## Questions?
 
 If you need help with testing, refer to:
+
 - [Vitest Documentation](https://vitest.dev/)
 - [Testing Library](https://testing-library.com/)
 - [Playwright Documentation](https://playwright.dev/)

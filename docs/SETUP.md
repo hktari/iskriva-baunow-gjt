@@ -87,11 +87,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 After seeding, you can log in with these accounts:
 
-| Role       | Email                  | Password | Permissions                    |
-|------------|------------------------|----------|--------------------------------|
-| Viewer     | viewer@example.com     | demo123  | Read-only access               |
-| Editor     | editor@example.com     | demo123  | Create/edit projects and KPIs  |
-| Super User | admin@example.com      | demo123  | Full access + user management  |
+| Role       | Email              | Password | Permissions                   |
+| ---------- | ------------------ | -------- | ----------------------------- |
+| Viewer     | viewer@example.com | demo123  | Read-only access              |
+| Editor     | editor@example.com | demo123  | Create/edit projects and KPIs |
+| Super User | admin@example.com  | demo123  | Full access + user management |
 
 ## Project Structure
 
@@ -126,22 +126,22 @@ iskriva-baunow-gjt/
 
 ## Available Scripts
 
-| Command              | Description                                    |
-|----------------------|------------------------------------------------|
-| `pnpm dev`           | Start development server on port 3000          |
-| `pnpm build`         | Build for production                           |
-| `pnpm start`         | Start production server                        |
-| `pnpm lint`          | Run ESLint                                     |
-| `pnpm typecheck`     | Run TypeScript compiler check                  |
-| `pnpm test`          | Run unit tests with Vitest                     |
-| `pnpm test:ui`       | Run Vitest with UI                             |
-| `pnpm test:e2e`      | Run end-to-end tests with Playwright           |
-| `pnpm test:e2e:ui`   | Run Playwright with UI                         |
-| `pnpm db:generate`   | Generate Prisma Client                         |
-| `pnpm db:push`       | Push schema changes to database                |
-| `pnpm db:migrate`    | Create and run migrations                      |
-| `pnpm db:seed`       | Seed database with demo data                   |
-| `pnpm db:studio`     | Open Prisma Studio (database GUI)              |
+| Command            | Description                           |
+| ------------------ | ------------------------------------- |
+| `pnpm dev`         | Start development server on port 3000 |
+| `pnpm build`       | Build for production                  |
+| `pnpm start`       | Start production server               |
+| `pnpm lint`        | Run ESLint                            |
+| `pnpm typecheck`   | Run TypeScript compiler check         |
+| `pnpm test`        | Run unit tests with Vitest            |
+| `pnpm test:ui`     | Run Vitest with UI                    |
+| `pnpm test:e2e`    | Run end-to-end tests with Playwright  |
+| `pnpm test:e2e:ui` | Run Playwright with UI                |
+| `pnpm db:generate` | Generate Prisma Client                |
+| `pnpm db:push`     | Push schema changes to database       |
+| `pnpm db:migrate`  | Create and run migrations             |
+| `pnpm db:seed`     | Seed database with demo data          |
+| `pnpm db:studio`   | Open Prisma Studio (database GUI)     |
 
 ## Development Workflow
 

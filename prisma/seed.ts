@@ -145,7 +145,8 @@ async function main() {
       status: ProjectStatus.IN_PROGRESS,
       startDate: new Date('2024-01-15'),
       endDate: new Date('2026-12-31'),
-      description: 'Large-scale solar panel installation across rural Bavaria to increase renewable energy production and reduce carbon emissions.',
+      description:
+        'Large-scale solar panel installation across rural Bavaria to increase renewable energy production and reduce carbon emissions.',
       organization: 'Central EU Energy Partners',
       program: 'Horizon',
       targetGroup: ['Municipalities', 'Citizens'],
@@ -193,7 +194,8 @@ async function main() {
       status: ProjectStatus.COMPLETED,
       startDate: new Date('2023-03-01'),
       endDate: new Date('2024-11-30'),
-      description: 'Comprehensive energy efficiency upgrades for public buildings in Stockholm region.',
+      description:
+        'Comprehensive energy efficiency upgrades for public buildings in Stockholm region.',
       organization: 'Nordic Green Alliance',
       program: 'Interreg',
       targetGroup: ['Public authorities', 'Municipalities'],
@@ -274,7 +276,8 @@ async function main() {
       status: ProjectStatus.IN_PROGRESS,
       startDate: new Date('2024-09-01'),
       endDate: new Date('2027-08-31'),
-      description: 'Expansion of electric public transport and cycling infrastructure in Amsterdam metropolitan area.',
+      description:
+        'Expansion of electric public transport and cycling infrastructure in Amsterdam metropolitan area.',
       organization: 'EcoUrban Consortium',
       program: 'Nacionalni',
       targetGroup: ['Municipalities', 'Citizens'],
@@ -368,7 +371,7 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error('❌ Error seeding database:', e);
     process.exit(1);
   })

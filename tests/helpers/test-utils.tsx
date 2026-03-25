@@ -6,10 +6,7 @@ import { vi } from 'vitest';
  * Custom render function that includes providers
  * Add providers here as needed (e.g., ThemeProvider, SessionProvider)
  */
-export function renderWithProviders(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
+export function renderWithProviders(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
   return render(ui, { ...options });
 }
 

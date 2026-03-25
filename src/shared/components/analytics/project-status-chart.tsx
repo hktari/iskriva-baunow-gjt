@@ -1,9 +1,9 @@
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import type { ProjectStatusData } from '@/types/analytics';
-import { ChartContainer } from './chart-container';
 import { getStatusLabel } from '@/shared/lib/formatters';
+import type { ProjectStatusData } from '@/types/analytics';
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { ChartContainer } from './chart-container';
 
 interface ProjectStatusChartProps {
   data: ProjectStatusData[];

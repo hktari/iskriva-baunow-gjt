@@ -22,6 +22,7 @@ Comprehensive guide for implementing robust testing strategies in JavaScript/Typ
 ### Jest - Full-Featured Testing Framework
 
 **Setup:**
+
 ```typescript
 // jest.config.ts
 import type { Config } from 'jest';
@@ -31,11 +32,7 @@ const config: Config = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
-  collectCoverageFrom: [
-    'src/**/*.ts',
-    '!src/**/*.d.ts',
-    '!src/**/*.interface.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/*.interface.ts'],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -53,6 +50,7 @@ export default config;
 ### Vitest - Fast, Vite-Native Testing
 
 **Setup:**
+
 ```typescript
 // vitest.config.ts
 import { defineConfig } from 'vitest/config';
@@ -198,8 +196,7 @@ describe('UserService', () => {
     });
 
     it('should throw error if user not found', () => {
-      expect(() => service.update('999', { name: 'Jane' }))
-        .toThrow('User not found');
+      expect(() => service.update('999', { name: 'Jane' })).toThrow('User not found');
     });
   });
 });
@@ -340,11 +337,7 @@ describe('EmailService', () => {
   });
 
   it('should send email successfully', async () => {
-    await service.sendEmail(
-      'test@example.com',
-      'Test Subject',
-      '<p>Test Body</p>'
-    );
+    await service.sendEmail('test@example.com', 'Test Subject', '<p>Test Body</p>');
 
     expect(service['transporter'].sendMail).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -516,10 +509,7 @@ describe('User API Integration Tests', () => {
         password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(201);
+      const response = await request(app).post('/api/users').send(userData).expect(201);
 
       expect(response.body).toMatchObject({
         name: userData.name,
@@ -536,10 +526,7 @@ describe('User API Integration Tests', () => {
         password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/api/users').send(userData).expect(400);
 
       expect(response.body).toHaveProperty('error');
     });
@@ -553,10 +540,7 @@ describe('User API Integration Tests', () => {
 
       await request(app).post('/api/users').send(userData);
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/api/users').send(userData).expect(409);
 
       expect(response.body.error).toContain('already exists');
     });
@@ -564,19 +548,15 @@ describe('User API Integration Tests', () => {
 
   describe('GET /api/users/:id', () => {
     it('should get user by id', async () => {
-      const createResponse = await request(app)
-        .post('/api/users')
-        .send({
-          name: 'John Doe',
-          email: 'john@example.com',
-          password: 'password123',
-        });
+      const createResponse = await request(app).post('/api/users').send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'password123',
+      });
 
       const userId = createResponse.body.id;
 
-      const response = await request(app)
-        .get(`/api/users/${userId}`)
-        .expect(200);
+      const response = await request(app).get(`/api/users/${userId}`).expect(200);
 
       expect(response.body).toMatchObject({
         id: userId,
@@ -586,35 +566,27 @@ describe('User API Integration Tests', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      await request(app)
-        .get('/api/users/999')
-        .expect(404);
+      await request(app).get('/api/users/999').expect(404);
     });
   });
 
   describe('Authentication', () => {
     it('should require authentication for protected routes', async () => {
-      await request(app)
-        .get('/api/users/me')
-        .expect(401);
+      await request(app).get('/api/users/me').expect(401);
     });
 
     it('should allow access with valid token', async () => {
       // Create user and login
-      await request(app)
-        .post('/api/users')
-        .send({
-          name: 'John Doe',
-          email: 'john@example.com',
-          password: 'password123',
-        });
+      await request(app).post('/api/users').send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'password123',
+      });
 
-      const loginResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'john@example.com',
-          password: 'password123',
-        });
+      const loginResponse = await request(app).post('/api/auth/login').send({
+        email: 'john@example.com',
+        password: 'password123',
+      });
 
       const token = loginResponse.body.token;
 
@@ -803,8 +775,8 @@ import { useState, useCallback } from 'react';
 export function useCounter(initialValue = 0) {
   const [count, setCount] = useState(initialValue);
 
-  const increment = useCallback(() => setCount((c) => c + 1), []);
-  const decrement = useCallback(() => setCount((c) => c - 1), []);
+  const increment = useCallback(() => setCount(c => c + 1), []);
+  const decrement = useCallback(() => setCount(c => c - 1), []);
   const reset = useCallback(() => setCount(initialValue), [initialValue]);
 
   return { count, increment, decrement, reset };

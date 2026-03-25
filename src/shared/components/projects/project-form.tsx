@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { createProject, updateProject } from '@/server/actions/projects';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,8 +12,6 @@ import {
 } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { Button } from '@/shared/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -20,16 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { Badge } from '@/shared/components/ui/badge';
-import { Lock, Info } from 'lucide-react';
+import { Textarea } from '@/shared/components/ui/textarea';
 import {
+  IMPACT_AREAS,
+  PROGRAMS,
   PROJECT_COUNTRIES,
   PROJECT_STATUSES,
-  PROGRAMS,
   TARGET_GROUPS,
-  IMPACT_AREAS,
 } from '@/shared/lib/constants';
-import { createProject, updateProject } from '@/server/actions/projects';
+import { Info, Lock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface ProjectFormProps {
@@ -52,9 +52,11 @@ export function ProjectForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>(
-    project?.targetGroup || []
+    project?.targetGroup ?? []
   );
-  const [selectedImpacts, setSelectedImpacts] = useState<string[]>(project?.impact || []);
+  const [selectedImpacts, setSelectedImpacts] = useState<string[]>(
+    project?.impact ?? []
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,21 +67,21 @@ export function ProjectForm({
       name: formData.get('name') as string,
       country: formData.get('country') as string,
       projectType: formData.get('projectType') as string,
-      investmentType: (formData.get('investmentType') as string) || null,
+      investmentType: (formData.get('investmentType') as string) ?? null,
       projectValue: parseFloat(formData.get('projectValue') as string),
       investmentCosts: formData.get('investmentCosts')
         ? parseFloat(formData.get('investmentCosts') as string)
         : null,
-      status: formData.get('status') as any,
+      status: formData.get('status') as "PLANNING" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD",
       startDate: new Date(formData.get('startDate') as string),
       endDate: formData.get('endDate') ? new Date(formData.get('endDate') as string) : null,
       description: formData.get('description') as string,
-      note: (formData.get('note') as string) || null,
-      projectManager: (formData.get('projectManager') as string) || null,
-      contact: (formData.get('contact') as string) || null,
-      projectWebsite: (formData.get('projectWebsite') as string) || null,
-      program: (formData.get('program') as string) || null,
-      organization: (formData.get('organization') as string) || null,
+      note: formData.get('note') ?? null,
+      projectManager: formData.get('projectManager') ?? null,
+      contact: formData.get('contact') ?? null,
+      projectWebsite: formData.get('projectWebsite') ?? null,
+      program: formData.get('program') ?? null,
+      organization: formData.get('organization') ?? null,
       targetGroup: selectedTargetGroups,
       impact: selectedImpacts,
     };
@@ -149,7 +151,7 @@ export function ProjectForm({
                 Organization
                 <Info className="inline h-3 w-3 ml-1 text-muted-foreground" />
               </Label>
-              <Select name="organization" defaultValue={project?.organization || ''}>
+              <Select name="organization" defaultValue={project?.organization ?? ''}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select organization" />
                 </SelectTrigger>
@@ -184,7 +186,7 @@ export function ProjectForm({
 
             <div className="space-y-2">
               <Label htmlFor="investmentType">Investment Type</Label>
-              <Select name="investmentType" defaultValue={project?.investmentType || ''}>
+              <Select name="investmentType" defaultValue={project?.investmentType ?? ''}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
@@ -202,7 +204,7 @@ export function ProjectForm({
 
           <div className="space-y-2">
             <Label htmlFor="status">Status *</Label>
-            <Select name="status" defaultValue={project?.status || 'PLANNING'} required>
+            <Select name="status" defaultValue={project?.status ?? 'PLANNING'} required>
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
@@ -239,7 +241,7 @@ export function ProjectForm({
                 name="investmentCosts"
                 type="number"
                 step="0.01"
-                defaultValue={project?.investmentCosts || ''}
+                defaultValue={project?.investmentCosts ?? ''}
               />
             </div>
           </div>
@@ -252,7 +254,7 @@ export function ProjectForm({
                 name="startDate"
                 type="date"
                 defaultValue={
-                  project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : ''
+                  project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] ?? '' : ''
                 }
                 required
               />
@@ -265,7 +267,7 @@ export function ProjectForm({
                 name="endDate"
                 type="date"
                 defaultValue={
-                  project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] : ''
+                  project?.endDate ? new Date(project.endDate).toISOString().split('T')[0] ?? '' : ''
                 }
               />
             </div>
@@ -292,7 +294,7 @@ export function ProjectForm({
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="program">Programme</Label>
-            <Select name="program" defaultValue={project?.program || ''}>
+            <Select name="program" defaultValue={project?.program ?? ''}>
               <SelectTrigger>
                 <SelectValue placeholder="Select programme" />
               </SelectTrigger>
@@ -313,7 +315,7 @@ export function ProjectForm({
               <Input
                 id="projectManager"
                 name="projectManager"
-                defaultValue={project?.projectManager || ''}
+                defaultValue={project?.projectManager ?? ''}
               />
             </div>
 
@@ -323,7 +325,7 @@ export function ProjectForm({
                 id="contact"
                 name="contact"
                 type="email"
-                defaultValue={project?.contact || ''}
+                defaultValue={project?.contact ?? ''}
               />
             </div>
           </div>
@@ -334,7 +336,7 @@ export function ProjectForm({
               id="projectWebsite"
               name="projectWebsite"
               type="url"
-              defaultValue={project?.projectWebsite || ''}
+              defaultValue={project?.projectWebsite ?? ''}
             />
           </div>
 
@@ -380,7 +382,7 @@ export function ProjectForm({
                 id="note"
                 name="note"
                 rows={3}
-                defaultValue={project?.note || ''}
+                defaultValue={project?.note ?? ''}
                 placeholder="Visible only to authenticated users"
               />
             </div>

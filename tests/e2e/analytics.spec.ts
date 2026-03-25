@@ -4,7 +4,7 @@ test.describe('Analytics Page', () => {
   test('should not have Prisma client-side errors on analytics page', async ({ page }) => {
     // Listen for console errors
     const consoleErrors: string[] = [];
-    page.on('console', (msg) => {
+    page.on('console', msg => {
       if (msg.type() === 'error') {
         consoleErrors.push(msg.text());
       }
@@ -24,7 +24,7 @@ test.describe('Analytics Page', () => {
     await page.waitForTimeout(2000);
 
     // Check for Prisma browser error
-    const prismaError = consoleErrors.find((err) =>
+    const prismaError = consoleErrors.find(err =>
       err.includes('PrismaClient is unable to run in this browser environment')
     );
 

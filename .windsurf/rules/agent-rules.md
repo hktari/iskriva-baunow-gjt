@@ -3,9 +3,11 @@ trigger: always_on
 ---
 
 # General
+
 - always commit your changes when you've finished a task.
 
 # Testing
+
 - When running e2e tests be efficient. Start small, first run single test, if it passes, then run whole file. Then continue to next file. Don't run all tests at once. This is slow and inefficient, especially for e2e tests. Run tests in parallel if possible.
 - if you fix a failing test, always rerun the test to validate your fix
 - before running e2e tests, make sure the application is running on port 3005. If it's not running, start it with `pnpm dev --port 3005`. Wait 5s for app to fully start. Then continue.

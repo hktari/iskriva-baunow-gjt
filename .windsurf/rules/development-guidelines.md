@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: "Development patterns and principles for the Baunow GJT project. Hooks, composition, performance, Error handling, testing, and TypeScript best practices."
+description: 'Development patterns and principles for the Baunow GJT project. Hooks, composition, performance, Error handling, testing, and TypeScript best practices.'
 ---
 
 # Development Guidelines
@@ -24,7 +24,7 @@ All React components should follow this structure:
 ```tsx
 'use client'; // Only if needed (client components)
 
-import { /* dependencies */ } from 'library';
+import {} from /* dependencies */ 'library';
 
 // 1. Type definitions
 interface ComponentProps {
@@ -36,24 +36,21 @@ interface ComponentProps {
 export function Component({ requiredProp, optionalProp }: ComponentProps) {
   // 3. Hooks (always at the top, never conditional)
   const [state, setState] = useState();
-  
+
   // 4. Event handlers
   const handleClick = () => {
     // ...
   };
-  
+
   // 5. Render logic
-  return (
-    <div>
-      {/* JSX */}
-    </div>
-  );
+  return <div>{/* JSX */}</div>;
 }
 ```
 
 ### Props Validation
 
 1. **Always define TypeScript interfaces for props**
+
    ```tsx
    // ✅ Good
    interface ButtonProps {
@@ -61,16 +58,17 @@ export function Component({ requiredProp, optionalProp }: ComponentProps) {
      onClick: () => void;
      disabled?: boolean;
    }
-   
+
    // ❌ Bad
-   function Button(props: any) { }
+   function Button(props: any) {}
    ```
 
 2. **Use optional chaining for nullable props**
+
    ```tsx
    // ✅ Good
    <div>{user?.name ?? 'Guest'}</div>
-   
+
    // ❌ Bad
    <div>{user && user.name || 'Guest'}</div>
    ```
@@ -103,24 +101,25 @@ Wrap components that might fail with Error Boundaries:
 ### Async Operations
 
 1. **Always handle loading and error states**
+
    ```tsx
    // ✅ Good
    function DataComponent() {
      const [data, setData] = useState(null);
      const [loading, setLoading] = useState(true);
      const [error, setError] = useState(null);
-     
+
      useEffect(() => {
        fetchData()
          .then(setData)
          .catch(setError)
          .finally(() => setLoading(false));
      }, []);
-     
+
      if (loading) return <Spinner />;
      if (error) return <ErrorMessage error={error} />;
      if (!data) return <EmptyState />;
-     
+
      return <DataDisplay data={data} />;
    }
    ```
@@ -139,12 +138,13 @@ Wrap components that might fail with Error Boundaries:
 ### TypeScript Best Practices
 
 1. **Avoid `any` type**
+
    ```tsx
    // ✅ Good
    function processData(data: Project[]): ProcessedData {
      // ...
    }
-   
+
    // ❌ Bad
    function processData(data: any): any {
      // ...
@@ -152,12 +152,13 @@ Wrap components that might fail with Error Boundaries:
    ```
 
 2. **Use strict null checks**
+
    ```tsx
    // ✅ Good
    function getName(user: User | null): string {
      return user?.name ?? 'Unknown';
    }
-   
+
    // ❌ Bad
    function getName(user: User): string {
      return user.name; // Might be null
@@ -175,19 +176,21 @@ Wrap components that might fail with Error Boundaries:
 ### Handling Nullable Data
 
 1. **Use nullish coalescing (`??`) over logical OR (`||`)**
+
    ```tsx
    // ✅ Good - preserves 0, false, ''
    const count = data.count ?? 0;
-   
+
    // ❌ Bad - 0 would become 0
    const count = data.count || 0;
    ```
 
 2. **Use optional chaining for nested properties**
+
    ```tsx
    // ✅ Good
    const city = user?.address?.city;
-   
+
    // ❌ Bad
    const city = user && user.address && user.address.city;
    ```
@@ -207,9 +210,9 @@ export async function createProject(data: ProjectFormData) {
     return { success: true, data: project };
   } catch (error) {
     console.error('Failed to create project:', error);
-    return { 
-      success: false, 
-      error: 'Failed to create project. Please try again.' 
+    return {
+      success: false,
+      error: 'Failed to create project. Please try again.',
     };
   }
 }
@@ -244,10 +247,7 @@ export async function GET(request: Request) {
     return Response.json({ data });
   } catch (error) {
     console.error('API Error:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 ```
@@ -271,13 +271,13 @@ describe('ProjectCard', () => {
     render(<ProjectCard project={project} />);
     expect(screen.getByText(project.name)).toBeInTheDocument();
   });
-  
+
   it('handles missing optional data', () => {
     const project = createMockProject({ organization: null });
     render(<ProjectCard project={project} />);
     // Should not crash
   });
-  
+
   it('displays error state when data is invalid', () => {
     // Test error handling
   });
@@ -305,36 +305,42 @@ const project = createMockProject({ name: 'Custom Name' });
 Before submitting a PR, ensure:
 
 ### Type Safety
+
 - [ ] No `any` types (unless absolutely necessary with comment)
 - [ ] All function parameters and return types defined
 - [ ] Nullable types handled with optional chaining or null checks
 - [ ] No TypeScript errors or warnings
 
 ### Error Handling
+
 - [ ] All async operations have error handling
 - [ ] Loading states implemented for async operations
 - [ ] Error boundaries used where appropriate
 - [ ] User-friendly error messages (no technical jargon)
 
 ### React Best Practices
+
 - [ ] Hooks follow rules (top level, not conditional)
 - [ ] No array index as key (unless static list)
 - [ ] Props destructured in function signature
 - [ ] Components are properly memoized if needed
 
 ### Testing
+
 - [ ] Unit tests added for new components
 - [ ] Tests cover error cases
 - [ ] Tests use test factories for mock data
 - [ ] All tests pass locally
 
 ### Code Quality
+
 - [ ] ESLint passes with no warnings
 - [ ] TypeScript compilation succeeds
 - [ ] Code formatted with Prettier
 - [ ] No console.log statements (use console.error/warn if needed)
 
 ### Performance
+
 - [ ] No unnecessary re-renders
 - [ ] Large lists virtualized if needed
 - [ ] Images optimized (use Next.js Image component)
@@ -343,6 +349,7 @@ Before submitting a PR, ensure:
 ## Common Pitfalls to Avoid
 
 ### 1. Conditional Hook Calls
+
 ```tsx
 // ❌ Bad
 if (condition) {
@@ -357,6 +364,7 @@ if (condition) {
 ```
 
 ### 2. Missing Dependency Arrays
+
 ```tsx
 // ❌ Bad
 useEffect(() => {
@@ -370,6 +378,7 @@ useEffect(() => {
 ```
 
 ### 3. Not Handling Null/Undefined
+
 ```tsx
 // ❌ Bad
 <div>{user.name}</div> // Crashes if user is null
@@ -379,17 +388,25 @@ useEffect(() => {
 ```
 
 ### 4. Truthy/Falsy Rendering Issues
+
 ```tsx
 // ❌ Bad - renders "0" if count is 0
-{count && <div>Count: {count}</div>}
+{
+  count && <div>Count: {count}</div>;
+}
 
 // ✅ Good
-{count > 0 && <div>Count: {count}</div>}
+{
+  count > 0 && <div>Count: {count}</div>;
+}
 // or
-{count !== 0 ? <div>Count: {count}</div> : null}
+{
+  count !== 0 ? <div>Count: {count}</div> : null;
+}
 ```
 
 ### 5. Unhandled Promise Rejections
+
 ```tsx
 // ❌ Bad
 async function onClick() {

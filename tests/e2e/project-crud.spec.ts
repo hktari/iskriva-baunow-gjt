@@ -36,7 +36,10 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project card
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Click edit button
     await page.getByRole('button', { name: /edit project/i }).click();
@@ -60,7 +63,10 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
@@ -92,7 +98,10 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
@@ -113,7 +122,10 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page.getByRole('link', { name: /view details/i }).first().click();
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
 
     // Click favorite button
     const favoriteButton = page.getByRole('button', { name: /favorite/i });

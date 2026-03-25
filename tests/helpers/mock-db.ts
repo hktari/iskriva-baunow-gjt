@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 
 /**
  * Mock Prisma client for unit tests
- * 
+ *
  * Usage:
  * import { mockDb } from '@/tests/helpers/mock-db';
  * vi.mock('@/shared/lib/db', () => ({ db: mockDb }));
@@ -42,7 +42,7 @@ export const mockDb = {
   configurableField: {
     findMany: vi.fn(),
   },
-  $transaction: vi.fn((fn) => fn(mockDb)),
+  $transaction: vi.fn(fn => fn(mockDb)),
   $disconnect: vi.fn(),
 };
 
