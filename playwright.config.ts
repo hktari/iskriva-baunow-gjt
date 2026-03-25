@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: 'list',
   outputDir: 'tmp/test-results',
   use: {
-    baseURL: 'http://localhost:3005',
+    baseURL: process.env.BASE_URL || 'http://localhost:3005',
     trace: 'on-first-retry',
     screenshot: 'on',
   },

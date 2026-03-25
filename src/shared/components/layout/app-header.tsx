@@ -1,11 +1,21 @@
 'use client';
 
-import Link from 'next/link';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import {
+  BarChart3,
+  BookOpen,
+  FileText,
+  FolderKanban,
+  LogOut,
+  Menu,
+  Newspaper,
+  Settings,
+  Users,
+} from 'lucide-react';
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
-import { Button } from '@/shared/components/ui/button';
-import { Badge } from '@/shared/components/ui/badge';
-import { Menu, LogOut, BarChart3, FolderKanban, Users, BookOpen, Newspaper } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface AppHeaderProps {
@@ -39,9 +49,14 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'News', href: '/news', icon: Newspaper },
   ];
 
-  if (isLoggedIn && user.role === 'SUPER_USER') {
-    navigation.push({ name: 'Users', href: '/users', icon: Users });
-  }
+  const adminNavigation = [
+    { name: 'Users', href: '/users', icon: Users },
+    { name: 'Fields', href: '/fields', icon: Settings },
+    { name: 'Audit Logs', href: '/audit-logs', icon: FileText },
+  ];
+
+  const allNavigation =
+    isLoggedIn && user.role === 'SUPER_USER' ? [...navigation, ...adminNavigation] : navigation;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -52,7 +67,7 @@ export function AppHeader({ user }: AppHeaderProps) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navigation.map(item => (
+            {allNavigation.map(item => (
               <Link key={item.name} href={item.href as any}>
                 <Button variant="ghost" size="sm" className="gap-2">
                   <item.icon className="h-4 w-4" />
@@ -115,7 +130,7 @@ export function AppHeader({ user }: AppHeaderProps) {
             ) : null}
 
             <nav className="flex flex-col gap-1">
-              {navigation.map(item => (
+              {allNavigation.map(item => (
                 <Link
                   key={item.name}
                   href={item.href as any}

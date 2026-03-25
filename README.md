@@ -100,16 +100,43 @@ After seeding, you can log in with:
 
 ## Deployment
 
-The application is configured for deployment on Vercel with EU region hosting:
+The application uses a preview deployment workflow with Vercel and Neon:
+
+### Quick Start
 
 ```bash
-vercel --prod
+# 1. Deploy to preview
+pnpm deploy:preview
+
+# 2. Run E2E tests against preview
+pnpm test:e2e:preview
+
+# 3. Deploy to production (if tests pass)
+pnpm deploy:prod
 ```
 
-Ensure environment variables are set in Vercel dashboard:
+### Available Deployment Scripts
 
-- `DATABASE_URL` - PostgreSQL connection string
+- `pnpm deploy:preview` - Deploy to Vercel preview environment
+- `pnpm test:e2e:preview [url]` - Run E2E tests against preview deployment
+- `pnpm deploy:prod` - Deploy to Vercel production (requires confirmation)
+- `pnpm db:reset-preview` - Reset preview database to production state
+
+### Setup
+
+See [DEPLOYMENT-WORKFLOW.md](./docs/DEPLOYMENT-WORKFLOW.md) for detailed setup instructions including:
+
+- Installing Vercel and Neon CLI tools
+- Configuring environment variables
+- Setting up preview and production branches
+
+### Environment Variables
+
+Ensure environment variables are set in Vercel dashboard for each environment:
+
+- `DATABASE_URL` - PostgreSQL connection string (Neon)
 - `AUTH_SECRET` - Auth.js secret key
+- `NEXTAUTH_URL` - Application URL
 
 ## License
 
