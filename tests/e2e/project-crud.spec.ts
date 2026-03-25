@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Project Management Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -56,6 +56,54 @@ test.describe('Project Management Flow', () => {
 
     // Should show updated name
     await expect(page.getByRole('heading', { name: 'Updated E2E Project Name' })).toBeVisible();
+  });
+
+  test('edit form closes after successful update', async ({ page }) => {
+    // Go to home page
+    await page.goto('/');
+
+    // Click on first project card
+    await page
+      .getByRole('link', { name: /view details/i })
+      .first()
+      .click();
+
+    // Wait for navigation to project detail page
+    await expect(page).toHaveURL(/\/project\/[a-z0-9-]+/);
+
+    // Verify we're in read-only view (Edit Project button should be visible)
+    await expect(page.getByRole('button', { name: /^edit project$/i })).toBeVisible();
+
+    // Click edit button to enter edit mode
+    await page.getByRole('button', { name: /^edit project$/i }).click();
+
+    // Verify we're in edit mode (Update Project button should be visible)
+    await expect(page.getByRole('button', { name: /update project/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /cancel/i }).first()).toBeVisible();
+
+    // Make a small change
+    const nameInput = page.getByLabel(/project name/i);
+    const originalName = await nameInput.inputValue();
+    await nameInput.fill(`${originalName} - Edited`);
+
+    // Save changes
+    await page.getByRole('button', { name: /update project/i }).click();
+
+    // Wait for success toast
+    await expect(page.getByText(/project updated successfully/i)).toBeVisible();
+
+    // Verify we're back in read-only view
+    // The Edit Project button should be visible again
+    await expect(page.getByRole('button', { name: /^edit project$/i })).toBeVisible();
+
+    // The Update Project button should NOT be visible
+    await expect(page.getByRole('button', { name: /update project/i })).not.toBeVisible();
+
+    // The form's Cancel button should NOT be visible (checking the first one which is in the edit form)
+    const cancelButtons = page.getByRole('button', { name: /cancel/i });
+    const cancelCount = await cancelButtons.count();
+    // In read-only mode, there should be fewer cancel buttons (no edit form cancel)
+    expect(cancelCount).toBeLessThan(2);
   });
 
   test('add KPI to project', async ({ page }) => {

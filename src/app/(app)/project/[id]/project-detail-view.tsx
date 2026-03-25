@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { ProjectForm } from '@/shared/components/projects/project-form';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,11 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/card';
-import { Button } from '@/shared/components/ui/button';
-import { Badge } from '@/shared/components/ui/badge';
-import { Lock, ExternalLink, Mail, Building2, Calendar, DollarSign, FileText } from 'lucide-react';
 import { formatCurrency, formatDate, getStatusLabel } from '@/shared/lib/formatters';
-import { ProjectForm } from '@/shared/components/projects/project-form';
+import { Building2, Calendar, DollarSign, ExternalLink, FileText, Lock, Mail } from 'lucide-react';
+import { useState } from 'react';
 
 interface ProjectDetailViewProps {
   project: any;
@@ -43,6 +43,7 @@ export function ProjectDetailView({
           configurableFields={configurableFields}
           isEdit
           isAuthenticated={isAuthenticated}
+          onSuccess={() => setIsEditing(false)}
         />
       </div>
     );

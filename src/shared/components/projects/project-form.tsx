@@ -43,6 +43,7 @@ interface ProjectFormProps {
   };
   isEdit?: boolean;
   isAuthenticated: boolean;
+  onSuccess?: () => void;
 }
 
 export function ProjectForm({
@@ -50,6 +51,7 @@ export function ProjectForm({
   configurableFields,
   isEdit = false,
   isAuthenticated,
+  onSuccess,
 }: ProjectFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,7 +104,11 @@ export function ProjectForm({
         toast.error(result.error);
       } else {
         toast.success(isEdit ? 'Project updated successfully' : 'Project created successfully');
-        router.push(`/project/${result.projectId}`);
+        if (isEdit && onSuccess) {
+          onSuccess();
+        } else {
+          router.push(`/project/${result.projectId}`);
+        }
         router.refresh();
       }
     } catch {
