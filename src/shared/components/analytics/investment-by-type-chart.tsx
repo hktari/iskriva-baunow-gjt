@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   ComposedChart,
   Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -52,6 +51,7 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
           <YAxis
             yAxisId="right"
             orientation="right"
+            allowDecimals={false}
             label={{ value: 'Project Count', angle: 90, position: 'insideRight' }}
           />
           <Tooltip
@@ -68,13 +68,6 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
             dataKey="valueInMillions"
             fill="var(--color-primary)"
             name="Investment (M EUR)"
-          />
-          <Line
-            yAxisId="right"
-            type="monotone"
-            dataKey="count"
-            stroke="var(--color-destructive)"
-            name="Project Count"
           />
         </ComposedChart>
       </ResponsiveContainer>
