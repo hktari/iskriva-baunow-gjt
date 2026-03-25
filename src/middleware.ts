@@ -1,26 +1,16 @@
-import { auth } from '@/server/auth';
+import { edgeAuth } from '@/server/auth/edge';
 import { NextResponse } from 'next/server';
 
-export default auth((req: any) => {
+export default edgeAuth((req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  const isAuthRoute = nextUrl.pathname.startsWith('/login');
-  const isPublicRoute = nextUrl.pathname === '/login' || nextUrl.pathname.startsWith('/analytics');
-
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL('/', nextUrl));
-    }
-    return NextResponse.next();
+  // Redirect logged-in users away from login page
+  if (nextUrl.pathname.startsWith('/login') && isLoggedIn) {
+    return NextResponse.redirect(new URL('/', nextUrl));
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
-    const loginUrl = new URL('/login', nextUrl);
-    loginUrl.searchParams.set('callbackUrl', nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
+  // All other routes are publicly accessible
   return NextResponse.next();
 });
 

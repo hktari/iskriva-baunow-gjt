@@ -1,12 +1,12 @@
-import { Suspense } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { GeneralAnalyticsClient } from './general-analytics-client';
-import { OrganizationAnalyticsClient } from './organization-analytics-client';
+import { getGeneralAnalytics, getOrganizationAnalytics } from '@/server/actions/analytics';
 import { auth } from '@/server/auth';
 import { getOrganizationList } from '@/server/queries/analytics';
-import { getGeneralAnalytics, getOrganizationAnalytics } from '@/server/actions/analytics';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { AlertCircle } from 'lucide-react';
+import { Suspense } from 'react';
+import { GeneralAnalyticsClient } from './general-analytics-client';
+import { OrganizationAnalyticsClient } from './organization-analytics-client';
 
 export const metadata = {
   title: 'Analytics | EU Project Manager',
@@ -58,10 +58,16 @@ export default async function AnalyticsPage() {
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
-                <p className="text-muted-foreground text-center max-w-md">
+                <p className="text-muted-foreground text-center max-w-md mb-4">
                   Please log in to access Organization Analytics and view performance metrics for
                   specific organizations.
                 </p>
+                <a
+                  href="/login"
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                >
+                  Log In
+                </a>
               </CardContent>
             </Card>
           )}
