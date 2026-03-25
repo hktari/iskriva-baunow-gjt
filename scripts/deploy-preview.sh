@@ -15,7 +15,7 @@ fi
 
 # Deploy to preview
 echo "📦 Building and deploying..."
-PREVIEW_URL=$(vercel --yes 2>&1 | tee /dev/tty | grep -oP 'https://[^\s]+' | head -1)
+PREVIEW_URL=$(vercel --yes 2>&1 | tee /dev/tty | grep 'Preview:' | grep -oP 'https://[^\s]+' | head -1)
 
 if [ -z "$PREVIEW_URL" ]; then
     echo "❌ Error: Failed to get preview URL"

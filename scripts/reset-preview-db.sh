@@ -32,8 +32,3 @@ echo "🔄 Restoring preview branch from $PRODUCTION_BRANCH..."
 neonctl branch restore "$PREVIEW_BRANCH" "$PRODUCTION_BRANCH" --project-id "$PROJECT_ID"
 
 echo "✅ Preview database reset complete!"
-echo ""
-echo "📝 Next steps:"
-echo "   1. Get the connection string: neonctl connection-string $PREVIEW_BRANCH --project-id $PROJECT_ID"
-echo "   2. Update DATABASE_URL in Vercel preview environment"
-echo "   3. Run migrations if needed: pnpm prisma migrate deploy"
