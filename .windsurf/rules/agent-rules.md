@@ -5,6 +5,7 @@ trigger: always_on
 # General
 
 - always commit your changes when you've finished a task.
+- `pnpm` is the only package manager to use
 
 # Testing
 

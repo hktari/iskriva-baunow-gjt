@@ -6,3 +6,5 @@
 2. fix deployment workflow: preview deployment, e2e test, promote to production
 
 3. test phase 4 implementation
+
+4. review logging and error handling. Should utilize production patterns to ensure proper error tracking and monitoring.
