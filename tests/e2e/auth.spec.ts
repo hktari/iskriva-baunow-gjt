@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Authentication Flow', () => {
   test('login with demo editor account', async ({ page }) => {
@@ -64,7 +64,9 @@ test.describe('Authentication Flow', () => {
     // Try to access protected route without login
     await page.goto('/project/new');
 
-    // Should redirect to login
-    await expect(page).toHaveURL('/login');
+    // Should show authentication required message
+    await expect(page.getByText(/authentication required/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: /create new project/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /log in/i })).toBeVisible();
   });
 });
