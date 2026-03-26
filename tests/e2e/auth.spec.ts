@@ -28,7 +28,7 @@ test.describe('Authentication Flow', () => {
     await expect(page).toHaveURL('/');
 
     // Should show user info in header
-    await expect(page.getByRole('banner').getByText(/viewer/i)).toBeVisible();
+    await expect(page.getByTestId('app-header').getByText('Demo Viewer')).toBeVisible();
   });
 
   test('logout successfully', async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe('Authentication Flow', () => {
     await expect(page).toHaveURL('/');
 
     // Should not show user info
-    await expect(page.getByRole('banner').getByText(/editor/i)).not.toBeVisible();
+    await expect(page.getByTestId('app-header').getByText('Demo Editor')).not.toBeVisible();
   });
 
   test('access protected route when authenticated', async ({ page }) => {
