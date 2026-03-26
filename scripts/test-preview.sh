@@ -37,7 +37,7 @@ fi
 
 # Run Playwright tests
 echo "🎭 Running Playwright tests..."
-BASE_URL="$PREVIEW_URL" pnpm playwright test
+BASE_URL="$PREVIEW_URL" pnpm playwright test "${@:2}"
 
 EXIT_CODE=$?
 

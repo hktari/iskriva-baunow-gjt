@@ -4,7 +4,7 @@ test.describe('Project Management Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login as editor before each test
     await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
+    await page.getByRole('button', { name: 'Editor' }).click();
     await expect(page).toHaveURL('/');
   });
 
@@ -14,14 +14,14 @@ test.describe('Project Management Flow', () => {
     await expect(page).toHaveURL('/project/new');
 
     // Fill required fields
-    await page.getByLabel(/project name/i).fill('E2E Test Project');
-    await page.getByLabel(/country/i).click();
+    await page.getByLabel(/project name \*/i).fill('E2E Test Project');
+    await page.getByText('Select country').click();
     await page.getByRole('option', { name: 'Germany' }).click();
-    await page.getByLabel(/project type/i).click();
+    await page.getByText('Select type').click();
     await page.getByRole('option', { name: 'Research' }).click();
-    await page.getByLabel(/project value/i).fill('1000000');
-    await page.getByLabel(/start date/i).fill('2025-01-01');
-    await page.getByLabel(/description/i).fill('This is an E2E test project');
+    await page.getByLabel(/project value \(eur\) \*/i).fill('1000000');
+    await page.getByLabel(/start date \*/i).fill('2025-01-01');
+    await page.getByLabel(/description \*/i).fill('This is an E2E test project');
 
     // Submit form
     await page.getByRole('button', { name: /create project/i }).click();
@@ -36,10 +36,7 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project card
-    await page
-      .getByRole('link', { name: /view details/i })
-      .first()
-      .click();
+    await page.getByRole('link', { name: 'View Details' }).first().click();
 
     // Click edit button
     await page.getByRole('button', { name: /edit project/i }).click();
@@ -55,7 +52,9 @@ test.describe('Project Management Flow', () => {
     await expect(page.getByText(/project updated successfully/i)).toBeVisible();
 
     // Should show updated name
-    await expect(page.getByRole('heading', { name: 'Updated E2E Project Name' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Updated E2E Project Name' })
+    ).toBeVisible();
   });
 
   test('edit form closes after successful update', async ({ page }) => {
@@ -63,10 +62,7 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project card
-    await page
-      .getByRole('link', { name: /view details/i })
-      .first()
-      .click();
+    await page.getByRole('link', { name: 'View Details' }).first().click();
 
     // Wait for navigation to project detail page
     await expect(page).toHaveURL(/\/project\/[a-z0-9-]+/);
@@ -111,16 +107,16 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page
-      .getByRole('link', { name: /view details/i })
-      .first()
-      .click();
+    await page.getByRole('link', { name: 'View Details' }).first().click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
 
-    // Click add KPI button
-    await page.getByRole('button', { name: /add kpi/i }).click();
+    // Click add KPI button - use the first one in the KPIs tab
+    await page
+      .getByRole('button', { name: /add kpi/i })
+      .first()
+      .click();
 
     // Fill KPI form
     await page.getByLabel(/indicator name/i).click();
@@ -146,20 +142,23 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page
-      .getByRole('link', { name: /view details/i })
-      .first()
-      .click();
+    await page.getByRole('link', { name: 'View Details' }).first().click();
 
     // Go to KPIs tab
     await page.getByRole('tab', { name: /kpis/i }).click();
 
-    // Click star button on first KPI
-    const starButton = page.getByRole('button', { name: /star/i }).first();
+    // Wait for KPIs to load
+    await page.waitForTimeout(1000);
+
+    // Click star button on first KPI - use more specific selector
+    const starButton = page
+      .locator('button')
+      .filter({ has: page.locator('svg') })
+      .first();
     await starButton.click();
 
     // Should show success toast
-    await expect(page.getByText(/set as primary kpi/i)).toBeVisible();
+    await expect(page.getByText(/Set as primary KPI/i)).toBeVisible();
 
     // Star should be filled
     await expect(starButton.locator('svg')).toHaveClass(/fill-blue-500/);
@@ -170,13 +169,13 @@ test.describe('Project Management Flow', () => {
     await page.goto('/');
 
     // Click on first project
-    await page
-      .getByRole('link', { name: /view details/i })
-      .first()
-      .click();
+    await page.getByRole('link', { name: 'View Details' }).first().click();
 
-    // Click favorite button
-    const favoriteButton = page.getByRole('button', { name: /favorite/i });
+    // Click favorite button - use the one in project detail header (not in cards)
+    const favoriteButton = page
+      .locator('main')
+      .getByRole('button', { name: /favorite/i })
+      .first();
     await favoriteButton.click();
 
     // Should show success toast

@@ -1,5 +1,6 @@
 'use client';
 
+import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { ProjectFilters } from './project-filters';
@@ -29,7 +30,7 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
     favoritesOnly: searchParams.get('favoritesOnly') === 'true',
   };
 
-  const onFilterChange = useCallback(
+  const updateUrl = useCallback(
     (key: string, value: string | boolean) => {
       const params = new URLSearchParams(searchParams.toString());
 
@@ -46,6 +47,24 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
       router.push(newUrl as any, { scroll: false });
     },
     [router, searchParams]
+  );
+
+  // Debounced navigation for text inputs (search, minValue, maxValue)
+  const debouncedUpdateUrl = useDebouncedCallback(updateUrl, 300);
+
+  const onFilterChange = useCallback(
+    (key: string, value: string | boolean) => {
+      // Use immediate navigation for dropdown selects and checkboxes
+      // Use debounced navigation for text inputs
+      const textInputs = ['search', 'minValue', 'maxValue'];
+
+      if (textInputs.includes(key)) {
+        debouncedUpdateUrl(key, value);
+      } else {
+        updateUrl(key, value);
+      }
+    },
+    [updateUrl, debouncedUpdateUrl]
   );
 
   const onClearFilters = useCallback(() => {

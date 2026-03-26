@@ -15,7 +15,7 @@
     "test:e2e": "dotenv -e .env.test -- playwright test",
     "test:e2e:ui": "dotenv -e .env.test -- playwright test --ui",
     "test:e2e:setup": "dotenv -e .env.test -- pnpm db:push && dotenv -e .env.test -- pnpm db:seed",
-    "test:e2e:server": "dotenv -e .env.test -- next build && dotenv -e .env.test -- next start --port 3001",
+    "test:e2e:server": "dotenv -e .env.test -- next build && dotenv -e .env.test -- next start --port 3005",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
