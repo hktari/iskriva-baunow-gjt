@@ -2,12 +2,32 @@
 
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
+import { sendInvitationEmail, resendInvitationEmail, EmailConfigurationError } from '@/server/lib/email';
+import logger from '@/shared/lib/logger';
 import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { revalidatePath } from 'next/cache';
 
-export async function inviteUser(email: string, name: string, role: UserRole) {
+const isDemoEnvironment = process.env.NODE_ENV !== 'production';
+const defaultLoginUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+type InvitationSuccessResponse = {
+  success: true;
+  userId: string;
+  message: string;
+  emailStatus: 'sent' | 'skipped' | 'failed';
+  demoCredentials?: {
+    email: string;
+    tempPassword: string;
+  };
+};
+
+type InvitationErrorResponse = {
+  error: string;
+};
+
+export async function inviteUser(email: string, name: string, role: UserRole): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
@@ -56,17 +76,47 @@ export async function inviteUser(email: string, name: string, role: UserRole) {
       },
     });
 
-    // In a real application, you would send an email here with the temporary password
-    // For now, we'll return it in the response (NOT recommended for production)
-    // TODO: Integrate with email service (SendGrid, AWS SES, etc.)
+    // Send invitation email via Resend
+    let emailStatus: InvitationSuccessResponse['emailStatus'] = 'skipped';
+    try {
+      await sendInvitationEmail({
+        to: email,
+        userName: name,
+        tempPassword,
+        loginUrl: defaultLoginUrl,
+      });
+      emailStatus = 'sent';
+    } catch (emailError) {
+      if (emailError instanceof EmailConfigurationError) {
+        emailStatus = 'skipped';
+        logger.warn({ scope: 'resend.invitation', reason: emailError.message }, 'Resend configuration missing, invitation email skipped');
+      } else {
+        emailStatus = 'failed';
+        logger.error(
+          { scope: 'resend.invitation', error: emailError instanceof Error ? emailError.message : emailError },
+          'Failed to send invitation email'
+        );
+      }
+    }
 
     revalidatePath('/users');
 
     return {
       success: true,
       userId: user.id,
-      tempPassword, // Only for demo purposes
-      message: 'User invited successfully. In production, an email would be sent.',
+      emailStatus,
+      message:
+        emailStatus === 'sent'
+          ? 'User invited successfully. Invitation email sent via Resend.'
+          : emailStatus === 'failed'
+            ? 'User invited, but the email could not be delivered automatically. Please resend later.'
+            : 'User invited successfully. Email notifications are currently disabled.',
+      demoCredentials: isDemoEnvironment
+        ? {
+          email,
+          tempPassword,
+        }
+        : undefined,
     };
   } catch (error) {
     console.error('Invite user error:', error);
@@ -74,7 +124,7 @@ export async function inviteUser(email: string, name: string, role: UserRole) {
   }
 }
 
-export async function resendInvitation(userId: string) {
+export async function resendInvitation(userId: string): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
@@ -117,12 +167,45 @@ export async function resendInvitation(userId: string) {
       },
     });
 
-    // TODO: Send email with new temporary password
+    // Send new invitation email via Resend
+    let emailStatus: InvitationSuccessResponse['emailStatus'] = 'skipped';
+    try {
+      await resendInvitationEmail({
+        to: user.email,
+        userName: user.name || 'User',
+        tempPassword,
+        loginUrl: defaultLoginUrl,
+      });
+      emailStatus = 'sent';
+    } catch (emailError) {
+      if (emailError instanceof EmailConfigurationError) {
+        emailStatus = 'skipped';
+        logger.warn({ scope: 'resend.invitation', reason: emailError.message }, 'Resend configuration missing, invitation email skipped');
+      } else {
+        emailStatus = 'failed';
+        logger.error(
+          { scope: 'resend.invitation', error: emailError instanceof Error ? emailError.message : emailError },
+          'Failed to resend invitation email'
+        );
+      }
+    }
 
     return {
       success: true,
-      tempPassword, // Only for demo purposes
-      message: 'Invitation resent successfully.',
+      userId: user.id,
+      emailStatus,
+      message:
+        emailStatus === 'sent'
+          ? 'Invitation resent successfully via Resend.'
+          : emailStatus === 'failed'
+            ? 'Invitation resent but email delivery failed - please check logs.'
+            : 'Invitation resent. Email notifications are currently disabled.',
+      demoCredentials: isDemoEnvironment
+        ? {
+          email: user.email,
+          tempPassword,
+        }
+        : undefined,
     };
   } catch (error) {
     console.error('Resend invitation error:', error);

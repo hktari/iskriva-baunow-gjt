@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -40,6 +40,18 @@ export function UserFormDialog({ open, onOpenChange, user, onSuccess }: UserForm
     organization: user?.organization || '',
     status: user?.status || UserStatus.ACTIVE,
   });
+
+  // Sync form data when user prop changes
+  useEffect(() => {
+    setFormData({
+      email: user?.email || '',
+      name: user?.name || '',
+      password: '',
+      role: user?.role || UserRole.VIEWER,
+      organization: user?.organization || '',
+      status: user?.status || UserStatus.ACTIVE,
+    });
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

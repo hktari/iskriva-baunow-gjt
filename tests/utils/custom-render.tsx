@@ -16,7 +16,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
  * Use this instead of the default render from @testing-library/react
  */
 export function renderWithProviders(ui: ReactElement, options?: CustomRenderOptions) {
-  const { session, initialProps, ...renderOptions } = options || {};
+  const { session: _session, initialProps: _initialProps, ...renderOptions } = options || {};
 
   function Wrapper({ children }: { children: ReactNode }) {
     // Add providers here as needed (e.g., SessionProvider, QueryClientProvider)
@@ -31,3 +31,4 @@ export function renderWithProviders(ui: ReactElement, options?: CustomRenderOpti
  */
 export * from '@testing-library/react';
 export { renderWithProviders as render };
+
