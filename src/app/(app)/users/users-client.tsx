@@ -2,37 +2,37 @@
 
 import { deleteUser, updateUserStatus } from '@/server/actions/users';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from '@/shared/components/ui/alert-dialog';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { Input } from '@/shared/components/ui/input';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/shared/components/ui/table';
 import { UserRole, UserStatus } from '@prisma/client';
 import { Mail, MoreHorizontal, Plus, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { InviteUserDialog } from './invite-user-dialog';
 import { UserFormDialog } from './user-form-dialog';
@@ -59,17 +59,36 @@ interface UsersClientProps {
 export function UsersClient({ users: initialUsers }: UsersClientProps) {
   const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState(initialUsers);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
-  const filteredUsers = users.filter(
-    user =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.organization?.toLowerCase().includes(search.toLowerCase())
+  // Debounced search function
+  const debouncedSearch = useDebouncedCallback(
+    useCallback((searchValue: string) => {
+      const filtered = users.filter(
+        user =>
+          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.organization?.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }, [users]),
+    300
   );
+
+  // Handle search input change
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    debouncedSearch(value);
+  };
+
+  // Update filtered users when users data changes
+  useEffect(() => {
+    setFilteredUsers(users);
+  }, [users]);
 
   const handleDelete = async (id: string) => {
     const result = await deleteUser(id);
@@ -122,7 +141,7 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
           <Input
             placeholder="Search users..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => handleSearchChange(e.target.value)}
             className="pl-8"
           />
         </div>
