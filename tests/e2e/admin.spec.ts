@@ -1,24 +1,22 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Admin Features', () => {
   test.beforeEach(async ({ page }) => {
-    // Login as super user
-    await page.goto('http://localhost:3005/login');
-    await page.fill('input[name="email"]', 'admin@example.com');
-    await page.fill('input[name="password"]', 'admin123');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('http://localhost:3005/');
+    // Login as super user using demo button
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Super User' }).click();
+    await expect(page).toHaveURL('/');
   });
 
   test.describe('User Management', () => {
     test('should display users page for super user', async ({ page }) => {
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
       await expect(page.locator('h1')).toContainText('User Management');
       await expect(page.locator('text=Total Users')).toBeVisible();
     });
 
     test('should create a new user', async ({ page }) => {
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
 
       // Click Add User button
       await page.click('button:has-text("Add User")');
@@ -36,7 +34,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should invite a user', async ({ page }) => {
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
 
       // Click Invite User button
       await page.click('button:has-text("Invite User")');
@@ -55,7 +53,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should search users', async ({ page }) => {
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
 
       // Type in search box
       await page.fill('input[placeholder="Search users..."]', 'admin');
@@ -65,7 +63,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should update user status', async ({ page }) => {
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
 
       // Find first user row and click actions menu
       await page.locator('table tbody tr').first().locator('button[aria-haspopup="menu"]').click();
@@ -80,13 +78,13 @@ test.describe('Admin Features', () => {
 
   test.describe('Field Configuration', () => {
     test('should display fields page', async ({ page }) => {
-      await page.goto('http://localhost:3005/fields');
+      await page.goto('/fields');
       await expect(page.locator('h1')).toContainText('Field Configuration');
       await expect(page.locator('text=Project Types')).toBeVisible();
     });
 
     test('should add a new field value', async ({ page }) => {
-      await page.goto('http://localhost:3005/fields');
+      await page.goto('/fields');
 
       // Find Project Types card and click Add button
       const projectTypesCard = page.locator('text=Project Types').locator('..');
@@ -103,7 +101,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should edit a field value', async ({ page }) => {
-      await page.goto('http://localhost:3005/fields');
+      await page.goto('/fields');
 
       // Find first field in Project Types and click edit
       const projectTypesCard = page.locator('text=Project Types').locator('..');
@@ -121,7 +119,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should delete a field value', async ({ page }) => {
-      await page.goto('http://localhost:3005/fields');
+      await page.goto('/fields');
 
       // Add a field first
       const projectTypesCard = page.locator('text=Project Types').locator('..');
@@ -145,13 +143,13 @@ test.describe('Admin Features', () => {
 
   test.describe('Audit Logs', () => {
     test('should display audit logs page', async ({ page }) => {
-      await page.goto('http://localhost:3005/audit-logs');
+      await page.goto('/audit-logs');
       await expect(page.locator('h1')).toContainText('Audit Logs');
       await expect(page.locator('text=Total Events')).toBeVisible();
     });
 
     test('should filter audit logs by action', async ({ page }) => {
-      await page.goto('http://localhost:3005/audit-logs');
+      await page.goto('/audit-logs');
 
       // Open action filter dropdown
       await page.click('button:has-text("All Actions")');
@@ -164,7 +162,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should search audit logs', async ({ page }) => {
-      await page.goto('http://localhost:3005/audit-logs');
+      await page.goto('/audit-logs');
 
       // Type in search box
       await page.fill('input[placeholder="Search logs..."]', 'admin');
@@ -175,7 +173,7 @@ test.describe('Admin Features', () => {
     });
 
     test('should view audit log details', async ({ page }) => {
-      await page.goto('http://localhost:3005/audit-logs');
+      await page.goto('/audit-logs');
 
       // Click on first log entry's details button
       await page.locator('table tbody tr').first().locator('button').last().click();
@@ -189,7 +187,7 @@ test.describe('Admin Features', () => {
 
   test.describe('Navigation', () => {
     test('should show admin menu items for super user', async ({ page }) => {
-      await page.goto('http://localhost:3005/');
+      await page.goto('/');
 
       // Verify admin navigation items are visible
       await expect(page.locator('nav >> text=Users')).toBeVisible();
@@ -198,19 +196,19 @@ test.describe('Admin Features', () => {
     });
 
     test('should navigate between admin pages', async ({ page }) => {
-      await page.goto('http://localhost:3005/');
+      await page.goto('/');
 
       // Navigate to Users
       await page.click('nav >> text=Users');
-      await expect(page).toHaveURL('http://localhost:3005/users');
+      await expect(page).toHaveURL('/users');
 
       // Navigate to Fields
       await page.click('nav >> text=Fields');
-      await expect(page).toHaveURL('http://localhost:3005/fields');
+      await expect(page).toHaveURL('/fields');
 
       // Navigate to Audit Logs
       await page.click('nav >> text=Audit Logs');
-      await expect(page).toHaveURL('http://localhost:3005/audit-logs');
+      await expect(page).toHaveURL('/audit-logs');
     });
   });
 
@@ -219,12 +217,10 @@ test.describe('Admin Features', () => {
       // Logout
       await page.click('button:has-text("Logout")');
 
-      // Login as editor
-      await page.goto('http://localhost:3005/login');
-      await page.fill('input[name="email"]', 'editor@example.com');
-      await page.fill('input[name="password"]', 'editor123');
-      await page.click('button[type="submit"]');
-      await page.waitForURL('http://localhost:3005/');
+      // Login as editor using demo button
+      await page.goto('/login');
+      await page.getByRole('button', { name: 'Editor' }).click();
+      await expect(page).toHaveURL('/');
 
       // Verify admin menu items are not visible
       await expect(page.locator('nav >> text=Users')).not.toBeVisible();
@@ -232,10 +228,10 @@ test.describe('Admin Features', () => {
       await expect(page.locator('nav >> text=Audit Logs')).not.toBeVisible();
 
       // Try to access users page directly
-      await page.goto('http://localhost:3005/users');
+      await page.goto('/users');
 
       // Should be redirected or see unauthorized
-      await expect(page).not.toHaveURL('http://localhost:3005/users');
+      await expect(page).not.toHaveURL('/users');
     });
   });
 });

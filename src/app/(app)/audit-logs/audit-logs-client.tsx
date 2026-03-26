@@ -3,27 +3,27 @@
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
 } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/shared/components/ui/select';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/shared/components/ui/table';
 import { ChevronDown, Search } from 'lucide-react';
 import { useState } from 'react';
@@ -68,22 +68,53 @@ export function AuditLogsClient({ logs: initialLogs }: AuditLogsClientProps) {
   const [actionFilter, setActionFilter] = useState<string>('all');
   const [entityFilter, setEntityFilter] = useState<string>('all');
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
+  const [filteredLogs, setFilteredLogs] = useState(initialLogs);
 
   const uniqueActions = Array.from(new Set(logs.map(l => l.action))).sort();
   const uniqueEntities = Array.from(new Set(logs.map(l => l.entityType))).sort();
 
-  const filteredLogs = logs.filter(log => {
-    const matchesSearch =
-      search === '' ||
-      log.action.toLowerCase().includes(search.toLowerCase()) ||
-      log.userEmail?.toLowerCase().includes(search.toLowerCase()) ||
-      log.entityType.toLowerCase().includes(search.toLowerCase());
+  // Debounced search function
+  const debouncedSearch = useDebouncedCallback(
+    useCallback((searchValue: string) => {
+      const filtered = logs.filter(log => {
+        const matchesSearch =
+          searchValue === '' ||
+          log.action.toLowerCase().includes(searchValue.toLowerCase()) ||
+          log.userEmail?.toLowerCase().includes(searchValue.toLowerCase()) ||
+          log.entityType.toLowerCase().includes(searchValue.toLowerCase());
 
-    const matchesAction = actionFilter === 'all' || log.action === actionFilter;
-    const matchesEntity = entityFilter === 'all' || log.entityType === entityFilter;
+        const matchesAction = actionFilter === 'all' || log.action === actionFilter;
+        const matchesEntity = entityFilter === 'all' || log.entityType === entityFilter;
 
-    return matchesSearch && matchesAction && matchesEntity;
-  });
+        return matchesSearch && matchesAction && matchesEntity;
+      });
+      setFilteredLogs(filtered);
+    }, [logs, actionFilter, entityFilter]),
+    300
+  );
+
+  // Handle search input change
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    debouncedSearch(value);
+  };
+
+  // Update filtered logs when filters change
+  useEffect(() => {
+    const filtered = logs.filter(log => {
+      const matchesSearch =
+        search === '' ||
+        log.action.toLowerCase().includes(search.toLowerCase()) ||
+        log.userEmail?.toLowerCase().includes(search.toLowerCase()) ||
+        log.entityType.toLowerCase().includes(search.toLowerCase());
+
+      const matchesAction = actionFilter === 'all' || log.action === actionFilter;
+      const matchesEntity = entityFilter === 'all' || log.entityType === entityFilter;
+
+      return matchesSearch && matchesAction && matchesEntity;
+    });
+    setFilteredLogs(filtered);
+  }, [logs, search, actionFilter, entityFilter]);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -104,7 +135,7 @@ export function AuditLogsClient({ logs: initialLogs }: AuditLogsClientProps) {
           <Input
             placeholder="Search logs..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => handleSearchChange(e.target.value)}
             className="pl-8"
           />
         </div>
