@@ -30,9 +30,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/shared/components/ui/table';
+import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { UserRole, UserStatus } from '@prisma/client';
 import { Mail, MoreHorizontal, Plus, Search } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { InviteUserDialog } from './invite-user-dialog';
 import { UserFormDialog } from './user-form-dialog';

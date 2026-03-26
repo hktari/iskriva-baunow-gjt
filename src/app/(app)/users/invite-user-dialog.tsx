@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { UserRole } from '@prisma/client';
-import { useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 interface InviteUserDialogProps {
@@ -45,7 +45,8 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
     name: '',
     role: UserRole.VIEWER as UserRole,
   });
-  const [tempPassword, setTempPassword] = useState<string | null>(null);
+  const [demoCredentials, setDemoCredentials] = useState<{ email: string; tempPassword: string } | null>(null);
+  const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | 'skipped' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,25 +54,44 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
     startTransition(async () => {
       const result = await inviteUser(formData.email, formData.name, formData.role);
 
-      if (result.error) {
+      if ('error' in result) {
         toast.error(result.error);
-      } else {
+        return;
+      }
+
+      if ('success' in result && result.success) {
         toast.success(result.message || 'User invited successfully');
-        setTempPassword(result.tempPassword || null);
+        setEmailStatus(result.emailStatus);
+        setDemoCredentials(result.demoCredentials || null);
         onSuccess();
+      } else {
+        toast.error('Failed to invite user');
       }
     });
   };
 
   const handleClose = () => {
     setFormData({ email: '', name: '', role: UserRole.VIEWER });
-    setTempPassword(null);
+    setDemoCredentials(null);
+    setEmailStatus(null);
     onOpenChange(false);
   };
 
+  const emailStatusLabel = useMemo(() => {
+    if (!emailStatus) return null;
+    switch (emailStatus) {
+      case 'sent':
+        return 'An invitation email was sent via Resend.';
+      case 'failed':
+        return 'The user was created, but the email could not be delivered automatically.';
+      case 'skipped':
+        return 'Email delivery is disabled in this environment. Share the credentials manually.';
+    }
+  }, [emailStatus]);
+
   return (
     <>
-      <Dialog open={open ? !tempPassword : undefined} onOpenChange={handleClose}>
+      <Dialog open={open ? !demoCredentials : undefined} onOpenChange={handleClose}>
         <DialogContent className="sm:max-w-[500px]">
           <form onSubmit={handleSubmit}>
             <DialogHeader>
@@ -120,13 +140,15 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
                 </Select>
               </div>
 
-              <div className="rounded-md bg-muted p-4 text-sm">
-                <p className="font-medium mb-2">Note:</p>
+              <div className="rounded-md bg-muted p-4 text-sm space-y-2">
+                <p className="font-medium">Delivery</p>
                 <p className="text-muted-foreground">
-                  In production, an email would be sent to the user with login instructions and a
-                  temporary password. For demo purposes, the temporary password will be displayed
-                  after invitation.
+                  Invitations send an email via Resend in production environments. In local/demo
+                  environments, credentials will be shown after sending.
                 </p>
+                {emailStatusLabel ? (
+                  <p className="text-sm text-foreground">{emailStatusLabel}</p>
+                ) : null}
               </div>
             </div>
 
@@ -142,26 +164,30 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!tempPassword} onOpenChange={() => setTempPassword(null)}>
+      <AlertDialog open={!!demoCredentials} onOpenChange={() => setDemoCredentials(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Invitation Sent Successfully</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-4">
                 <p>
-                  The user has been invited. In production, they would receive an email with login
-                  instructions.
+                  The user has been invited. Share the temporary credentials below. In production,
+                  this dialog is hidden because the user receives an email directly.
                 </p>
                 <div className="rounded-md bg-muted p-4">
                   <p className="font-medium mb-2">Demo Information:</p>
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="font-medium">Email:</span>{' '}
-                      <code className="bg-background px-1 py-0.5 rounded">{formData.email}</code>
+                      <code className="bg-background px-1 py-0.5 rounded">
+                        {demoCredentials?.email}
+                      </code>
                     </div>
                     <div>
                       <span className="font-medium">Temporary Password:</span>{' '}
-                      <code className="bg-background px-1 py-0.5 rounded">{tempPassword}</code>
+                      <code className="bg-background px-1 py-0.5 rounded">
+                        {demoCredentials?.tempPassword}
+                      </code>
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">

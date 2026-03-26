@@ -25,8 +25,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/shared/components/ui/table';
+import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { ChevronDown, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface AuditLog {
   id: string;
