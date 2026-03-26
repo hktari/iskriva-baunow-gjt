@@ -6,7 +6,7 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
 
     // Click editor demo button
-    await page.getByRole('button', { name: /editor/i }).click();
+    await page.getByRole('button', { name: 'Editor' }).click();
 
     // Wait for navigation to complete
     await page.waitForURL('/');
@@ -22,7 +22,7 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
 
     // Click viewer demo button
-    await page.getByRole('button', { name: /viewer/i }).click();
+    await page.getByRole('button', { name: 'Viewer' }).click();
 
     // Should redirect to home page
     await expect(page).toHaveURL('/');
@@ -34,7 +34,7 @@ test.describe('Authentication Flow', () => {
   test('logout successfully', async ({ page }) => {
     // Login first
     await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
+    await page.getByRole('button', { name: 'Editor' }).click();
     await expect(page).toHaveURL('/');
 
     // Click logout button
@@ -50,7 +50,7 @@ test.describe('Authentication Flow', () => {
   test('access protected route when authenticated', async ({ page }) => {
     // Login as editor
     await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
+    await page.getByRole('button', { name: 'Editor' }).click();
 
     // Navigate to new project page
     await page.goto('/project/new');
