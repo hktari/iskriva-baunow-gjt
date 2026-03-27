@@ -171,9 +171,6 @@ test.describe('Project Management Flow', () => {
 
       // Wait for success toast
       await expect(page.getByText(/kpi added successfully/i)).toBeVisible();
-
-      // Wait a bit for the KPI to appear
-      await page.waitForTimeout(1000);
     }
 
     // Click star button on first KPI - use more specific selector for star icon

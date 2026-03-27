@@ -30,7 +30,7 @@ test.describe('Admin Features', () => {
       await page.click('button[type="submit"]');
 
       // Wait for success message
-      await expect(page.locator('text=User created successfully')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=User created successfully')).toBeVisible();
     });
 
     test('should invite a user', async ({ page }) => {
@@ -47,9 +47,7 @@ test.describe('Admin Features', () => {
       await page.click('button[type="submit"]');
 
       // Wait for success dialog
-      await expect(page.locator('text=Invitation Sent Successfully')).toBeVisible({
-        timeout: 5000,
-      });
+      await expect(page.locator('text=Invitation Sent Successfully')).toBeVisible();
     });
 
     test('should search users', async ({ page }) => {
@@ -72,7 +70,7 @@ test.describe('Admin Features', () => {
       await page.click('text=Set Inactive');
 
       // Wait for success message
-      await expect(page.locator('text=User status updated')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=User status updated')).toBeVisible();
     });
   });
 
@@ -97,7 +95,7 @@ test.describe('Admin Features', () => {
       await page.keyboard.press('Enter');
 
       // Wait for success message
-      await expect(page.locator('text=Field added successfully')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=Field added successfully')).toBeVisible();
     });
 
     test('should edit a field value', async ({ page }) => {
@@ -115,7 +113,7 @@ test.describe('Admin Features', () => {
       await projectTypesCard.locator('button:has-text("✓")').click();
 
       // Wait for success message
-      await expect(page.locator('text=Field updated successfully')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=Field updated successfully')).toBeVisible();
     });
 
     test('should delete a field value', async ({ page }) => {
@@ -127,7 +125,7 @@ test.describe('Admin Features', () => {
       const testValue = `Delete Test ${Date.now()}`;
       await page.keyboard.type(testValue);
       await page.keyboard.press('Enter');
-      await page.waitForTimeout(1000);
+      await expect(page.locator('text=Field added successfully')).toBeVisible();
 
       // Find and delete the field
       const fieldRow = page.locator(`text=${testValue}`).locator('..');
@@ -137,7 +135,7 @@ test.describe('Admin Features', () => {
       await page.click('button:has-text("Delete")');
 
       // Wait for success message
-      await expect(page.locator('text=Field deleted successfully')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=Field deleted successfully')).toBeVisible();
     });
   });
 

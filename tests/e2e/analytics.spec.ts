@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Analytics Page', () => {
   test('should not have Prisma client-side errors on analytics page', async ({ page }) => {
@@ -20,9 +20,6 @@ test.describe('Analytics Page', () => {
     // Wait for the page to load
     await expect(page.getByRole('heading', { name: /analytics dashboard/i })).toBeVisible();
 
-    // Wait a bit for any async operations to complete
-    await page.waitForTimeout(2000);
-
     // Check for Prisma browser error
     const prismaError = consoleErrors.find(err =>
       err.includes('PrismaClient is unable to run in this browser environment')
@@ -41,7 +38,7 @@ test.describe('Analytics Page', () => {
 
     // Verify general analytics tab is active and loads
     await expect(page.getByRole('tab', { name: /general analytics/i })).toBeInViewport();
-    await expect(page.getByText(/total projects/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/total projects/i)).toBeVisible();
   });
 
   test('should load organization analytics tab successfully', async ({ page }) => {
