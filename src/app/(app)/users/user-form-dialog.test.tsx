@@ -45,12 +45,7 @@ describe('UserFormDialog - Edit User Bug', () => {
     };
 
     const { rerender } = render(
-      <UserFormDialog
-        open
-        onOpenChange={mockOnOpenChange}
-        user={user1}
-        onSuccess={mockOnSuccess}
-      />
+      <UserFormDialog open onOpenChange={mockOnOpenChange} user={user1} onSuccess={mockOnSuccess} />
     );
 
     // Verify first user's data is loaded
@@ -70,12 +65,7 @@ describe('UserFormDialog - Edit User Bug', () => {
 
     // Open dialog with different user
     rerender(
-      <UserFormDialog
-        open
-        onOpenChange={mockOnOpenChange}
-        user={user2}
-        onSuccess={mockOnSuccess}
-      />
+      <UserFormDialog open onOpenChange={mockOnOpenChange} user={user2} onSuccess={mockOnSuccess} />
     );
 
     // This should show user2's data but currently shows user1's data or empty

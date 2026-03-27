@@ -3,27 +3,27 @@
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/shared/components/ui/select';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { ChevronDown, Search } from 'lucide-react';
@@ -76,21 +76,24 @@ export function AuditLogsClient({ logs: initialLogs }: AuditLogsClientProps) {
 
   // Debounced search function
   const debouncedSearch = useDebouncedCallback(
-    useCallback((searchValue: string) => {
-      const filtered = logs.filter(log => {
-        const matchesSearch =
-          searchValue === '' ||
-          log.action.toLowerCase().includes(searchValue.toLowerCase()) ||
-          log.userEmail?.toLowerCase().includes(searchValue.toLowerCase()) ||
-          log.entityType.toLowerCase().includes(searchValue.toLowerCase());
+    useCallback(
+      (searchValue: string) => {
+        const filtered = logs.filter(log => {
+          const matchesSearch =
+            searchValue === '' ||
+            log.action.toLowerCase().includes(searchValue.toLowerCase()) ||
+            log.userEmail?.toLowerCase().includes(searchValue.toLowerCase()) ||
+            log.entityType.toLowerCase().includes(searchValue.toLowerCase());
 
-        const matchesAction = actionFilter === 'all' || log.action === actionFilter;
-        const matchesEntity = entityFilter === 'all' || log.entityType === entityFilter;
+          const matchesAction = actionFilter === 'all' || log.action === actionFilter;
+          const matchesEntity = entityFilter === 'all' || log.entityType === entityFilter;
 
-        return matchesSearch && matchesAction && matchesEntity;
-      });
-      setFilteredLogs(filtered);
-    }, [logs, actionFilter, entityFilter]),
+          return matchesSearch && matchesAction && matchesEntity;
+        });
+        setFilteredLogs(filtered);
+      },
+      [logs, actionFilter, entityFilter]
+    ),
     300
   );
 

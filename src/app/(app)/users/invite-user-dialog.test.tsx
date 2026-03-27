@@ -46,13 +46,7 @@ describe('InviteUserDialog - Resend Email Service', () => {
       },
     });
 
-    render(
-      <InviteUserDialog
-        open
-        onOpenChange={mockOnOpenChange}
-        onSuccess={mockOnSuccess}
-      />
-    );
+    render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
 
     // Fill in the form
     const nameInput = screen.getByLabelText(/name/i);
@@ -78,9 +72,7 @@ describe('InviteUserDialog - Resend Email Service', () => {
       expect(mockToastSuccess).toHaveBeenCalled();
     });
     const lastToastMessage = mockToastSuccess.mock.calls.at(-1)?.[0];
-    expect(lastToastMessage).toEqual(
-      expect.stringContaining('Invitation email sent via Resend')
-    );
+    expect(lastToastMessage).toEqual(expect.stringContaining('Invitation email sent via Resend'));
 
     // Verify onSuccess callback was called
     expect(mockOnSuccess).toHaveBeenCalled();
@@ -95,20 +87,15 @@ describe('InviteUserDialog - Resend Email Service', () => {
       success: true,
       userId: 'new-user-id',
       emailStatus: 'failed',
-      message: 'User invited, but the email could not be delivered automatically. Please resend later.',
+      message:
+        'User invited, but the email could not be delivered automatically. Please resend later.',
       demoCredentials: {
         email: 'newuser@example.com',
         tempPassword: 'temp-password-123',
       },
     });
 
-    render(
-      <InviteUserDialog
-        open
-        onOpenChange={mockOnOpenChange}
-        onSuccess={mockOnSuccess}
-      />
-    );
+    render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
 
     // Fill and submit form
     await userEvent.type(screen.getByLabelText(/name/i), 'New User');
@@ -125,9 +112,7 @@ describe('InviteUserDialog - Resend Email Service', () => {
 
     // Demo credentials dialog should be visible with shared secrets
     await waitFor(() => {
-      expect(
-        screen.getByText(/Share the temporary credentials below/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Share the temporary credentials below/i)).toBeInTheDocument();
     });
     expect(screen.getByText('newuser@example.com')).toBeInTheDocument();
     expect(screen.getByText('temp-password-123')).toBeInTheDocument();
@@ -152,13 +137,7 @@ describe('InviteUserDialog - Resend Email Service', () => {
       },
     });
 
-    render(
-      <InviteUserDialog
-        open
-        onOpenChange={mockOnOpenChange}
-        onSuccess={mockOnSuccess}
-      />
-    );
+    render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
 
     await userEvent.type(screen.getByLabelText(/name/i), 'New User');
     await userEvent.type(screen.getByLabelText(/email/i), 'newuser@example.com');

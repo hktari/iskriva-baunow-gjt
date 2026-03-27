@@ -1,0 +1,767 @@
+➜  iskriva-baunow-gjt git:(main) pnpm test:e2e:preview https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app
+
+> eu-project-manager@0.1.0 test:e2e:preview /home/bostjan/source/projects/clients/iskriva-baunow-gjt
+> dotenv -e .env -- ./scripts/test-preview.sh "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app"
+
+🧪 Running E2E tests against preview deployment...
+🎯 Target URL: https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app
+🎭 Running Playwright tests...
+
+Running 41 tests using 10 workers
+
+  ✘   1 …romium] › tests/e2e/admin.spec.ts:145:5 › Admin Features › Audit Logs › should display audit logs page (12.7s)
+  ✘   2 …s/e2e/admin.spec.ts:12:5 › Admin Features › User Management › should display users page for super user (13.5s)
+  ✘   3 [chromium] › tests/e2e/admin.spec.ts:36:5 › Admin Features › User Management › should invite a user (15.0s)
+  ✘   4 [chromium] › tests/e2e/admin.spec.ts:55:5 › Admin Features › User Management › should search users (15.0s)
+  ✘   5 …um] › tests/e2e/admin.spec.ts:103:5 › Admin Features › Field Configuration › should edit a field value (15.0s)
+  ✘   6 …] › tests/e2e/admin.spec.ts:86:5 › Admin Features › Field Configuration › should add a new field value (15.1s)
+  ✘   7 [chromium] › tests/e2e/admin.spec.ts:18:5 › Admin Features › User Management › should create a new user (15.1s)
+  ✘   8 …um] › tests/e2e/admin.spec.ts:80:5 › Admin Features › Field Configuration › should display fields page (12.4s)
+  ✘   9 …hromium] › tests/e2e/admin.spec.ts:65:5 › Admin Features › User Management › should update user status (15.1s)
+  ✘  10 …] › tests/e2e/admin.spec.ts:121:5 › Admin Features › Field Configuration › should delete a field value (15.1s)
+  ✘  11 …um] › tests/e2e/admin.spec.ts:151:5 › Admin Features › Audit Logs › should filter audit logs by action (15.1s)
+  ✘  12 [chromium] › tests/e2e/admin.spec.ts:164:5 › Admin Features › Audit Logs › should search audit logs (15.0s)
+  ✘  13 …hromium] › tests/e2e/admin.spec.ts:175:5 › Admin Features › Audit Logs › should view audit log details (15.1s)
+  ✘  14 …sts/e2e/admin.spec.ts:189:5 › Admin Features › Navigation › should show admin menu items for super user (9.4s)
+  ✘  15 …m] › tests/e2e/admin.spec.ts:198:5 › Admin Features › Navigation › should navigate between admin pages (15.1s)
+  ✓  16 …2e/analytics.spec.ts:4:3 › Analytics Page › should not have Prisma client-side errors on analytics page (5.0s)
+  ✘  17 …ests/e2e/admin.spec.ts:216:5 › Admin Features › Access Control › should deny access to non-super users (15.1s)
+  ✘  18 …tests/e2e/analytics.spec.ts:47:3 › Analytics Page › should load organization analytics tab successfully (8.0s)
+  ✘  19 [chromium] › tests/e2e/auth.spec.ts:4:3 › Authentication Flow › login with demo editor account (8.4s)
+  ✓  20 …m] › tests/e2e/analytics.spec.ts:34:3 › Analytics Page › should load general analytics tab successfully (2.8s)
+  ✓  21 [chromium] › tests/e2e/auth.spec.ts:21:3 › Authentication Flow › login with demo viewer account (3.5s)
+  ✓  22 [chromium] › tests/e2e/auth.spec.ts:34:3 › Authentication Flow › logout successfully (7.6s)
+  ✓  23 …romium] › tests/e2e/auth.spec.ts:50:3 › Authentication Flow › access protected route when authenticated (2.6s)
+  ✓  24 …hromium] › tests/e2e/auth.spec.ts:63:3 › Authentication Flow › redirect to login when not authenticated (1.7s)
+  ✘  25 [chromium] › tests/e2e/project-crud.spec.ts:34:3 › Project Management Flow › edit an existing project (15.1s)
+  ✘  26 [chromium] › tests/e2e/project-crud.spec.ts:11:3 › Project Management Flow › create a new project (15.1s)
+  ✘  27 …sts/e2e/project-crud.spec.ts:60:3 › Project Management Flow › edit form closes after successful update (10.4s)
+  ✘  28 [chromium] › tests/e2e/project-crud.spec.ts:105:3 › Project Management Flow › add KPI to project (15.1s)
+  ✓  29 [chromium] › tests/e2e/project-crud.spec.ts:214:3 › Project Management Flow › search projects (4.7s)
+  ✘  30 [chromium] › tests/e2e/project-crud.spec.ts:140:3 › Project Management Flow › set primary KPI (15.1s)
+  ✓  31 [chromium] › tests/e2e/project-crud.spec.ts:193:3 › Project Management Flow › toggle favorite (4.4s)
+  ✓  32 [chromium] › tests/e2e/project-crud.spec.ts:224:3 › Project Management Flow › filter projects by status (4.7s)
+  ✓  33 …omium] › tests/e2e/viewer-permissions.spec.ts:11:3 › Viewer Permissions › cannot see add project button (5.4s)
+  ✘  34 …mium] › tests/e2e/viewer-permissions.spec.ts:18:3 › Viewer Permissions › cannot access new project page (9.2s)
+  ✓  35 [chromium] › tests/e2e/viewer-permissions.spec.ts:26:3 › Viewer Permissions › can view project details (5.5s)
+  ✓  36 …m] › tests/e2e/viewer-permissions.spec.ts:43:3 › Viewer Permissions › cannot see edit button on project (4.4s)
+  ✓  37 [chromium] › tests/e2e/viewer-permissions.spec.ts:56:3 › Viewer Permissions › cannot see add KPI button (5.4s)
+  ✓  38 …tests/e2e/viewer-permissions.spec.ts:72:3 › Viewer Permissions › cannot see edit/delete buttons on KPIs (5.2s)
+  ✘  39 [chromium] › tests/e2e/viewer-permissions.spec.ts:89:3 › Viewer Permissions › can toggle favorites (4.5s)
+  ✘  40 [chromium] › tests/e2e/viewer-permissions.spec.ts:107:3 › Viewer Permissions › can filter by favorites (4.4s)
+  ✓  41 …ium] › tests/e2e/viewer-permissions.spec.ts:118:3 › Viewer Permissions › can search and filter projects (4.8s)
+
+
+  1) [chromium] › tests/e2e/admin.spec.ts:12:5 › Admin Features › User Management › should display users page for super user
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('h1')
+    Expected substring: "User Management"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('h1')
+
+
+      12 |     test('should display users page for super user', async ({ page }) => {
+      13 |       await page.goto('/users');
+    > 14 |       await expect(page.locator('h1')).toContainText('User Management');
+         |                                        ^
+      15 |       await expect(page.locator('text=Total Users')).toBeVisible();
+      16 |     });
+      17 |
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:14:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-User--3b90d-y-users-page-for-super-user-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-User--3b90d-y-users-page-for-super-user-chromium/error-context.md
+
+  2) [chromium] › tests/e2e/admin.spec.ts:18:5 › Admin Features › User Management › should create a new user
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('button:has-text("Add User")')
+
+
+      20 |
+      21 |       // Click Add User button
+    > 22 |       await page.click('button:has-text("Add User")');
+         |                  ^
+      23 |
+      24 |       // Fill in the form
+      25 |       await page.fill('input[id="name"]', 'Test User');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:22:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-User--3e53e-nt-should-create-a-new-user-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-User--3e53e-nt-should-create-a-new-user-chromium/error-context.md
+
+  3) [chromium] › tests/e2e/admin.spec.ts:36:5 › Admin Features › User Management › should invite a user
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('button:has-text("Invite User")')
+
+
+      38 |
+      39 |       // Click Invite User button
+    > 40 |       await page.click('button:has-text("Invite User")');
+         |                  ^
+      41 |
+      42 |       // Fill in the form
+      43 |       await page.fill('input[id="name"]', 'Invited User');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:40:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-User-Management-should-invite-a-user-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-User-Management-should-invite-a-user-chromium/error-context.md
+
+  4) [chromium] › tests/e2e/admin.spec.ts:55:5 › Admin Features › User Management › should search users
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.fill: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[placeholder="Search users..."]')
+
+
+      57 |
+      58 |       // Type in search box
+    > 59 |       await page.fill('input[placeholder="Search users..."]', 'admin');
+         |                  ^
+      60 |
+      61 |       // Verify filtered results
+      62 |       await expect(page.locator('table tbody tr')).toHaveCount(1);
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:59:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-User-Management-should-search-users-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-User-Management-should-search-users-chromium/error-context.md
+
+  5) [chromium] › tests/e2e/admin.spec.ts:65:5 › Admin Features › User Management › should update user status
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('table tbody tr').first().locator('button[aria-haspopup="menu"]')
+
+
+      67 |
+      68 |       // Find first user row and click actions menu
+    > 69 |       await page.locator('table tbody tr').first().locator('button[aria-haspopup="menu"]').click();
+         |                                                                                            ^
+      70 |
+      71 |       // Click Set Inactive
+      72 |       await page.click('text=Set Inactive');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:69:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-User--ea224-t-should-update-user-status-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-User--ea224-t-should-update-user-status-chromium/error-context.md
+
+  6) [chromium] › tests/e2e/admin.spec.ts:80:5 › Admin Features › Field Configuration › should display fields page
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('h1')
+    Expected substring: "Field Configuration"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('h1')
+
+
+      80 |     test('should display fields page', async ({ page }) => {
+      81 |       await page.goto('/fields');
+    > 82 |       await expect(page.locator('h1')).toContainText('Field Configuration');
+         |                                        ^
+      83 |       await expect(page.locator('text=Project Types')).toBeVisible();
+      84 |     });
+      85 |
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:82:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Field-eaab5--should-display-fields-page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Field-eaab5--should-display-fields-page-chromium/error-context.md
+
+  7) [chromium] › tests/e2e/admin.spec.ts:86:5 › Admin Features › Field Configuration › should add a new field value
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('text=Project Types').locator('..').locator('button:has-text("Add")')
+
+
+      89 |       // Find Project Types card and click Add button
+      90 |       const projectTypesCard = page.locator('text=Project Types').locator('..');
+    > 91 |       await projectTypesCard.locator('button:has-text("Add")').click();
+         |                                                                ^
+      92 |
+      93 |       // Type new value
+      94 |       await page.keyboard.type(`Test Type ${Date.now()}`);
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:91:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Field-6d1b1-hould-add-a-new-field-value-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Field-6d1b1-hould-add-a-new-field-value-chromium/error-context.md
+
+  8) [chromium] › tests/e2e/admin.spec.ts:103:5 › Admin Features › Field Configuration › should edit a field value
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('text=Project Types').locator('..').locator('button[aria-label="Edit"]').first()
+
+
+      106 |       // Find first field in Project Types and click edit
+      107 |       const projectTypesCard = page.locator('text=Project Types').locator('..');
+    > 108 |       await projectTypesCard.locator('button[aria-label="Edit"]').first().click();
+          |                                                                           ^
+      109 |
+      110 |       // Clear and type new value
+      111 |       await page.keyboard.press('Control+A');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:108:75
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Field-4127f-n-should-edit-a-field-value-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Field-4127f-n-should-edit-a-field-value-chromium/error-context.md
+
+  9) [chromium] › tests/e2e/admin.spec.ts:121:5 › Admin Features › Field Configuration › should delete a field value
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('text=Project Types').locator('..').locator('button:has-text("Add")')
+
+
+      124 |       // Add a field first
+      125 |       const projectTypesCard = page.locator('text=Project Types').locator('..');
+    > 126 |       await projectTypesCard.locator('button:has-text("Add")').click();
+          |                                                                ^
+      127 |       const testValue = `Delete Test ${Date.now()}`;
+      128 |       await page.keyboard.type(testValue);
+      129 |       await page.keyboard.press('Enter');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:126:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Field-ca108-should-delete-a-field-value-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Field-ca108-should-delete-a-field-value-chromium/error-context.md
+
+  10) [chromium] › tests/e2e/admin.spec.ts:145:5 › Admin Features › Audit Logs › should display audit logs page
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('h1')
+    Expected substring: "Audit Logs"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('h1')
+
+
+      145 |     test('should display audit logs page', async ({ page }) => {
+      146 |       await page.goto('/audit-logs');
+    > 147 |       await expect(page.locator('h1')).toContainText('Audit Logs');
+          |                                        ^
+      148 |       await expect(page.locator('text=Total Events')).toBeVisible();
+      149 |     });
+      150 |
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:147:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Audit-68044-uld-display-audit-logs-page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Audit-68044-uld-display-audit-logs-page-chromium/error-context.md
+
+  11) [chromium] › tests/e2e/admin.spec.ts:151:5 › Admin Features › Audit Logs › should filter audit logs by action
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('button:has-text("All Actions")')
+
+
+      153 |
+      154 |       // Open action filter dropdown
+    > 155 |       await page.click('button:has-text("All Actions")');
+          |                  ^
+      156 |
+      157 |       // Select a specific action
+      158 |       await page.click('text=USER_CREATED');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:155:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Audit-fe595-filter-audit-logs-by-action-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Audit-fe595-filter-audit-logs-by-action-chromium/error-context.md
+
+  12) [chromium] › tests/e2e/admin.spec.ts:164:5 › Admin Features › Audit Logs › should search audit logs
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.fill: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[placeholder="Search logs..."]')
+
+
+      166 |
+      167 |       // Type in search box
+    > 168 |       await page.fill('input[placeholder="Search logs..."]', 'admin');
+          |                  ^
+      169 |
+      170 |       // Verify filtered results
+      171 |       const rows = page.locator('table tbody tr');
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:168:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Audit-Logs-should-search-audit-logs-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Audit-Logs-should-search-audit-logs-chromium/error-context.md
+
+  13) [chromium] › tests/e2e/admin.spec.ts:175:5 › Admin Features › Audit Logs › should view audit log details
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('table tbody tr').first().locator('button').last()
+
+
+      177 |
+      178 |       // Click on first log entry's details button
+    > 179 |       await page.locator('table tbody tr').first().locator('button').last().click();
+          |                                                                             ^
+      180 |
+      181 |       // Verify dialog is open
+      182 |       await expect(page.locator('text=Audit Log Details')).toBeVisible();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:179:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Audit-b4218-ould-view-audit-log-details-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Audit-b4218-ould-view-audit-log-details-chromium/error-context.md
+
+  14) [chromium] › tests/e2e/admin.spec.ts:189:5 › Admin Features › Navigation › should show admin menu items for super user
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('nav').locator('text=Users')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('nav').locator('text=Users')
+
+
+      191 |
+      192 |       // Verify admin navigation items are visible
+    > 193 |       await expect(page.locator('nav >> text=Users')).toBeVisible();
+          |                                                       ^
+      194 |       await expect(page.locator('nav >> text=Fields')).toBeVisible();
+      195 |       await expect(page.locator('nav >> text=Audit Logs')).toBeVisible();
+      196 |     });
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:193:55
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Navig-f18b2-n-menu-items-for-super-user-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Navig-f18b2-n-menu-items-for-super-user-chromium/error-context.md
+
+  15) [chromium] › tests/e2e/admin.spec.ts:198:5 › Admin Features › Navigation › should navigate between admin pages
+
+    Test timeout of 15000ms exceeded.
+
+    Error: page.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for locator('nav').locator('text=Users')
+
+
+      200 |
+      201 |       // Navigate to Users
+    > 202 |       await page.click('nav >> text=Users');
+          |                  ^
+      203 |       await expect(page).toHaveURL('/users');
+      204 |
+      205 |       // Navigate to Fields
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:202:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Navig-6eb28-avigate-between-admin-pages-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Navig-6eb28-avigate-between-admin-pages-chromium/error-context.md
+
+  16) [chromium] › tests/e2e/admin.spec.ts:216:5 › Admin Features › Access Control › should deny access to non-super users
+
+    Test timeout of 15000ms exceeded.
+
+    Error: expect(page).not.toHaveURL(expected) failed
+
+    Expected: not "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/users"
+    Received: "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/users"
+
+    Call log:
+      - Expect "not toHaveURL" with timeout 5000ms
+        7 × unexpected value "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/users"
+
+
+      232 |
+      233 |       // Should be redirected or see unauthorized
+    > 234 |       await expect(page).not.toHaveURL('/users');
+          |                              ^
+      235 |     });
+      236 |   });
+      237 | });
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/admin.spec.ts:234:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/admin-Admin-Features-Acces-3f483-y-access-to-non-super-users-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/admin-Admin-Features-Acces-3f483-y-access-to-non-super-users-chromium/error-context.md
+
+  17) [chromium] › tests/e2e/analytics.spec.ts:47:3 › Analytics Page › should load organization analytics tab successfully
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: /organization/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: /organization/i })
+
+
+      57 |
+      58 |     // Wait for content to load - look for the Organization selector card
+    > 59 |     await expect(page.getByRole('heading', { name: /organization/i })).toBeVisible();
+         |                                                                        ^
+      60 |   });
+      61 | });
+      62 |
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/analytics.spec.ts:59:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/analytics-Analytics-Page-s-07048--analytics-tab-successfully-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/analytics-Analytics-Page-s-07048--analytics-tab-successfully-chromium/error-context.md
+
+  18) [chromium] › tests/e2e/auth.spec.ts:4:3 › Authentication Flow › login with demo editor account
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('link', { name: /add new project/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('link', { name: /add new project/i })
+
+
+      13 |
+      14 |     // Should show authenticated content (Add New Project requires auth)
+    > 15 |     await expect(page.getByRole('link', { name: /add new project/i })).toBeVisible();
+         |                                                                        ^
+      16 |
+      17 |     // Should show projects heading
+      18 |     await expect(page.getByRole('heading', { name: /^projects$/i })).toBeVisible();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/auth.spec.ts:15:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/auth-Authentication-Flow-login-with-demo-editor-account-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/auth-Authentication-Flow-login-with-demo-editor-account-chromium/error-context.md
+
+  19) [chromium] › tests/e2e/project-crud.spec.ts:11:3 › Project Management Flow › create a new project
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('link', { name: /add new project/i })
+
+
+      11 |   test('create a new project', async ({ page }) => {
+      12 |     // Navigate to new project page
+    > 13 |     await page.getByRole('link', { name: /add new project/i }).click();
+         |                                                                ^
+      14 |     await expect(page).toHaveURL('/project/new');
+      15 |
+      16 |     // Fill required fields
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/project-crud.spec.ts:13:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/project-crud-Project-Management-Flow-create-a-new-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/project-crud-Project-Management-Flow-create-a-new-project-chromium/error-context.md
+
+  20) [chromium] › tests/e2e/project-crud.spec.ts:34:3 › Project Management Flow › edit an existing project
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /edit project/i })
+
+
+      40 |
+      41 |     // Click edit button
+    > 42 |     await page.getByRole('button', { name: /edit project/i }).click();
+         |                                                               ^
+      43 |
+      44 |     // Change project name
+      45 |     const nameInput = page.getByLabel(/project name \*/i);
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/project-crud.spec.ts:42:63
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/project-crud-Project-Manag-cee17-ow-edit-an-existing-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/project-crud-Project-Manag-cee17-ow-edit-an-existing-project-chromium/error-context.md
+
+  21) [chromium] › tests/e2e/project-crud.spec.ts:60:3 › Project Management Flow › edit form closes after successful update
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: /^edit project$/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('button', { name: /^edit project$/i })
+
+
+      69 |
+      70 |     // Verify we're in read-only view (Edit Project button should be visible)
+    > 71 |     await expect(page.getByRole('button', { name: /^edit project$/i })).toBeVisible();
+         |                                                                         ^
+      72 |
+      73 |     // Click edit button to enter edit mode
+      74 |     await page.getByRole('button', { name: /^edit project$/i }).click();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/project-crud.spec.ts:71:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/project-crud-Project-Manag-eeec8-ses-after-successful-update-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/project-crud-Project-Manag-eeec8-ses-after-successful-update-chromium/error-context.md
+
+  22) [chromium] › tests/e2e/project-crud.spec.ts:105:3 › Project Management Flow › add KPI to project
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /add kpi/i }).first()
+
+
+      117 |       .getByRole('button', { name: /add kpi/i })
+      118 |       .first()
+    > 119 |       .click();
+          |        ^
+      120 |
+      121 |     // Fill KPI form
+      122 |     await page.getByText('Select indicator').click();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/project-crud.spec.ts:119:8
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/project-crud-Project-Management-Flow-add-KPI-to-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/project-crud-Project-Management-Flow-add-KPI-to-project-chromium/error-context.md
+
+  23) [chromium] › tests/e2e/project-crud.spec.ts:140:3 › Project Management Flow › set primary KPI
+
+    Test timeout of 15000ms exceeded.
+
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /add kpi/i }).first()
+
+
+      157 |         .getByRole('button', { name: /add kpi/i })
+      158 |         .first()
+    > 159 |         .click();
+          |          ^
+      160 |
+      161 |       // Fill KPI form
+      162 |       await page.getByText('Select indicator').click();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/project-crud.spec.ts:159:10
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/project-crud-Project-Management-Flow-set-primary-KPI-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/project-crud-Project-Management-Flow-set-primary-KPI-chromium/error-context.md
+
+  24) [chromium] › tests/e2e/viewer-permissions.spec.ts:18:3 › Viewer Permissions › cannot access new project page
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected: "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/"
+    Received: "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/project/new"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        9 × unexpected value "https://iskriva-baunow-6dpezz7iw-hktaris-projects.vercel.app/project/new"
+
+
+      21 |
+      22 |     // Should be redirected to home
+    > 23 |     await expect(page).toHaveURL('/');
+         |                        ^
+      24 |   });
+      25 |
+      26 |   test('can view project details', async ({ page }) => {
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/viewer-permissions.spec.ts:23:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/viewer-permissions-Viewer--691ff-not-access-new-project-page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/viewer-permissions-Viewer--691ff-not-access-new-project-page-chromium/error-context.md
+
+  25) [chromium] › tests/e2e/viewer-permissions.spec.ts:89:3 › Viewer Permissions › can toggle favorites
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: /favorite/i })
+    Expected: visible
+    Error: strict mode violation: getByRole('button', { name: /favorite/i }) resolved to 4 elements:
+        1) <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8">…</button> aka getByRole('button', { name: 'Add to favorites' }).first()
+        2) <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8">…</button> aka getByRole('button', { name: 'Add to favorites' }).nth(1)
+        3) <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8">…</button> aka getByRole('button', { name: 'Add to favorites' }).nth(2)
+        4) <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8">…</button> aka getByRole('button', { name: 'Remove from favorites' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('button', { name: /favorite/i })
+
+
+       98 |     // Should see favorite button
+       99 |     const favoriteButton = page.getByRole('button', { name: /favorite/i });
+    > 100 |     await expect(favoriteButton).toBeVisible();
+          |                                  ^
+      101 |
+      102 |     // Can toggle favorite
+      103 |     await favoriteButton.click();
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/viewer-permissions.spec.ts:100:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/viewer-permissions-Viewer-Permissions-can-toggle-favorites-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/viewer-permissions-Viewer-Permissions-can-toggle-favorites-chromium/error-context.md
+
+  26) [chromium] › tests/e2e/viewer-permissions.spec.ts:107:3 › Viewer Permissions › can filter by favorites
+
+    Error: locator.check: Clicking the checkbox did not change its state
+    Call log:
+      - waiting for getByLabel(/favorites only/i)
+        - locator resolved to <button value="on" type="button" role="checkbox" id="favorites-only" aria-checked="false" data-state="unchecked" class="grid place-content-center peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"></button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+        - navigations have finished
+
+
+      112 |
+      113 |     // Can toggle filter
+    > 114 |     await page.getByLabel(/favorites only/i).check();
+          |                                              ^
+      115 |     await expect(page.getByText(/projects found/i)).toBeVisible();
+      116 |   });
+      117 |
+        at /home/bostjan/source/projects/clients/iskriva-baunow-gjt/tests/e2e/viewer-permissions.spec.ts:114:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    tmp/test-results/viewer-permissions-Viewer--ee1a1-ons-can-filter-by-favorites-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: tmp/test-results/viewer-permissions-Viewer--ee1a1-ons-can-filter-by-favorites-chromium/error-context.md
+
+  26 failed
+    [chromium] › tests/e2e/admin.spec.ts:12:5 › Admin Features › User Management › should display users page for super user
+    [chromium] › tests/e2e/admin.spec.ts:18:5 › Admin Features › User Management › should create a new user
+    [chromium] › tests/e2e/admin.spec.ts:36:5 › Admin Features › User Management › should invite a user
+    [chromium] › tests/e2e/admin.spec.ts:55:5 › Admin Features › User Management › should search users
+    [chromium] › tests/e2e/admin.spec.ts:65:5 › Admin Features › User Management › should update user status
+    [chromium] › tests/e2e/admin.spec.ts:80:5 › Admin Features › Field Configuration › should display fields page
+    [chromium] › tests/e2e/admin.spec.ts:86:5 › Admin Features › Field Configuration › should add a new field value
+    [chromium] › tests/e2e/admin.spec.ts:103:5 › Admin Features › Field Configuration › should edit a field value
+    [chromium] › tests/e2e/admin.spec.ts:121:5 › Admin Features › Field Configuration › should delete a field value
+    [chromium] › tests/e2e/admin.spec.ts:145:5 › Admin Features › Audit Logs › should display audit logs page
+    [chromium] › tests/e2e/admin.spec.ts:151:5 › Admin Features › Audit Logs › should filter audit logs by action
+    [chromium] › tests/e2e/admin.spec.ts:164:5 › Admin Features › Audit Logs › should search audit logs
+    [chromium] › tests/e2e/admin.spec.ts:175:5 › Admin Features › Audit Logs › should view audit log details
+    [chromium] › tests/e2e/admin.spec.ts:189:5 › Admin Features › Navigation › should show admin menu items for super user
+    [chromium] › tests/e2e/admin.spec.ts:198:5 › Admin Features › Navigation › should navigate between admin pages
+    [chromium] › tests/e2e/admin.spec.ts:216:5 › Admin Features › Access Control › should deny access to non-super users
+    [chromium] › tests/e2e/analytics.spec.ts:47:3 › Analytics Page › should load organization analytics tab successfully
+    [chromium] › tests/e2e/auth.spec.ts:4:3 › Authentication Flow › login with demo editor account ─
+    [chromium] › tests/e2e/project-crud.spec.ts:11:3 › Project Management Flow › create a new project
+    [chromium] › tests/e2e/project-crud.spec.ts:34:3 › Project Management Flow › edit an existing project
+    [chromium] › tests/e2e/project-crud.spec.ts:60:3 › Project Management Flow › edit form closes after successful update
+    [chromium] › tests/e2e/project-crud.spec.ts:105:3 › Project Management Flow › add KPI to project
+    [chromium] › tests/e2e/project-crud.spec.ts:140:3 › Project Management Flow › set primary KPI ──
+    [chromium] › tests/e2e/viewer-permissions.spec.ts:18:3 › Viewer Permissions › cannot access new project page
+    [chromium] › tests/e2e/viewer-permissions.spec.ts:89:3 › Viewer Permissions › can toggle favorites
+    [chromium] › tests/e2e/viewer-permissions.spec.ts:107:3 › Viewer Permissions › can filter by favorites
+  15 passed (46.0s)
+ ELIFECYCLE  Command failed with exit code 1.

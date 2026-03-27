@@ -100,7 +100,6 @@ model Project {
   createdBy        User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
   kpis             Kpi[]
   favorites        Favorite[]
-  auditLogs        AuditLog[]
 
   @@index([country])
   @@index([projectType])
@@ -162,7 +161,7 @@ model AuditLog {
   id          String   @id @default(cuid())
   action      String
   entityType  String
-  entityId    String?
+  entityId    String?   // Polymorphic reference - no FK constraint
   userId      String?
   userEmail   String?
   metadata    Json?
@@ -171,7 +170,6 @@ model AuditLog {
   createdAt   DateTime @default(now())
 
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  project     Project? @relation(fields: [entityId], references: [id], onDelete: SetNull)
 
   @@index([action])
   @@index([entityType])

@@ -45,7 +45,10 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
     name: '',
     role: UserRole.VIEWER as UserRole,
   });
-  const [demoCredentials, setDemoCredentials] = useState<{ email: string; tempPassword: string } | null>(null);
+  const [demoCredentials, setDemoCredentials] = useState<{
+    email: string;
+    tempPassword: string;
+  } | null>(null);
   const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | 'skipped' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {

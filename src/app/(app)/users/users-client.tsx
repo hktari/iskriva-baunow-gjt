@@ -2,33 +2,33 @@
 
 import { deleteUser, updateUserStatus } from '@/server/actions/users';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/shared/components/ui/alert-dialog';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { Input } from '@/shared/components/ui/input';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { UserRole, UserStatus } from '@prisma/client';
@@ -68,15 +68,18 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
 
   // Debounced search function
   const debouncedSearch = useDebouncedCallback(
-    useCallback((searchValue: string) => {
-      const filtered = users.filter(
-        user =>
-          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-          user.organization?.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    }, [users]),
+    useCallback(
+      (searchValue: string) => {
+        const filtered = users.filter(
+          user =>
+            user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+            user.organization?.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setFilteredUsers(filtered);
+      },
+      [users]
+    ),
     300
   );
 

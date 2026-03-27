@@ -31,4 +31,3 @@ export function renderWithProviders(ui: ReactElement, options?: CustomRenderOpti
  */
 export * from '@testing-library/react';
 export { renderWithProviders as render };
-

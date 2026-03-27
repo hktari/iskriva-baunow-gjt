@@ -2,7 +2,11 @@
 
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
-import { sendInvitationEmail, resendInvitationEmail, EmailConfigurationError } from '@/server/lib/email';
+import {
+  sendInvitationEmail,
+  resendInvitationEmail,
+  EmailConfigurationError,
+} from '@/server/lib/email';
 import logger from '@/shared/lib/logger';
 import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -27,7 +31,11 @@ type InvitationErrorResponse = {
   error: string;
 };
 
-export async function inviteUser(email: string, name: string, role: UserRole): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
+export async function inviteUser(
+  email: string,
+  name: string,
+  role: UserRole
+): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
@@ -89,11 +97,17 @@ export async function inviteUser(email: string, name: string, role: UserRole): P
     } catch (emailError) {
       if (emailError instanceof EmailConfigurationError) {
         emailStatus = 'skipped';
-        logger.warn({ scope: 'resend.invitation', reason: emailError.message }, 'Resend configuration missing, invitation email skipped');
+        logger.warn(
+          { scope: 'resend.invitation', reason: emailError.message },
+          'Resend configuration missing, invitation email skipped'
+        );
       } else {
         emailStatus = 'failed';
         logger.error(
-          { scope: 'resend.invitation', error: emailError instanceof Error ? emailError.message : emailError },
+          {
+            scope: 'resend.invitation',
+            error: emailError instanceof Error ? emailError.message : emailError,
+          },
           'Failed to send invitation email'
         );
       }
@@ -113,9 +127,9 @@ export async function inviteUser(email: string, name: string, role: UserRole): P
             : 'User invited successfully. Email notifications are currently disabled.',
       demoCredentials: isDemoEnvironment
         ? {
-          email,
-          tempPassword,
-        }
+            email,
+            tempPassword,
+          }
         : undefined,
     };
   } catch (error) {
@@ -124,7 +138,9 @@ export async function inviteUser(email: string, name: string, role: UserRole): P
   }
 }
 
-export async function resendInvitation(userId: string): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
+export async function resendInvitation(
+  userId: string
+): Promise<InvitationSuccessResponse | InvitationErrorResponse> {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
@@ -180,11 +196,17 @@ export async function resendInvitation(userId: string): Promise<InvitationSucces
     } catch (emailError) {
       if (emailError instanceof EmailConfigurationError) {
         emailStatus = 'skipped';
-        logger.warn({ scope: 'resend.invitation', reason: emailError.message }, 'Resend configuration missing, invitation email skipped');
+        logger.warn(
+          { scope: 'resend.invitation', reason: emailError.message },
+          'Resend configuration missing, invitation email skipped'
+        );
       } else {
         emailStatus = 'failed';
         logger.error(
-          { scope: 'resend.invitation', error: emailError instanceof Error ? emailError.message : emailError },
+          {
+            scope: 'resend.invitation',
+            error: emailError instanceof Error ? emailError.message : emailError,
+          },
           'Failed to resend invitation email'
         );
       }
@@ -202,9 +224,9 @@ export async function resendInvitation(userId: string): Promise<InvitationSucces
             : 'Invitation resent. Email notifications are currently disabled.',
       demoCredentials: isDemoEnvironment
         ? {
-          email: user.email,
-          tempPassword,
-        }
+            email: user.email,
+            tempPassword,
+          }
         : undefined,
     };
   } catch (error) {

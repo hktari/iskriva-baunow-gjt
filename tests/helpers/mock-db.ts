@@ -36,8 +36,14 @@ export const mockDb = {
   user: {
     create: vi.fn(),
     update: vi.fn(),
+    delete: vi.fn(),
     findUnique: vi.fn(),
     findMany: vi.fn(),
+  },
+  auditLog: {
+    create: vi.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
   },
   configurableField: {
     findMany: vi.fn(),

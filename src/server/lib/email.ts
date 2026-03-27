@@ -38,7 +38,12 @@ function getResendClient() {
   return cachedResend;
 }
 
-function buildInvitationEmailHtml({ to, userName, tempPassword, loginUrl }: InvitationEmailPayload) {
+function buildInvitationEmailHtml({
+  to,
+  userName,
+  tempPassword,
+  loginUrl,
+}: InvitationEmailPayload) {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #333;">Welcome to the Project Management System!</h2>
@@ -58,7 +63,9 @@ function buildInvitationEmailHtml({ to, userName, tempPassword, loginUrl }: Invi
   `;
 }
 
-export async function sendInvitationEmail(payload: InvitationEmailPayload): Promise<ResendSendResult> {
+export async function sendInvitationEmail(
+  payload: InvitationEmailPayload
+): Promise<ResendSendResult> {
   const resend = getResendClient();
   const fromEmail = getRequiredEnv('RESEND_FROM_EMAIL');
 
