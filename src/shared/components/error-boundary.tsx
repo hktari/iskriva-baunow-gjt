@@ -55,8 +55,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
 
-    // In production, this would be sent to error monitoring service (Sentry)
-    // Sentry is already configured in this project
+    // Capture to Sentry with component context
+    if (typeof window !== 'undefined') {
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.withScope(scope => {
+          scope.setTag('error_boundary', 'root');
+          scope.setTag('component', 'ErrorBoundary');
+          scope.setContext('react_error_info', {
+            componentStack: errorInfo.componentStack,
+          });
+          scope.setLevel('error');
+          Sentry.captureException(error);
+        });
+      });
+    }
   }
 
   componentDidUpdate(prevProps: ErrorBoundaryProps) {

@@ -47,6 +47,25 @@ export class SectionErrorBoundary extends Component<
     }
 
     this.props.onError?.(error, errorInfo);
+
+    // Capture to Sentry with section context
+    if (typeof window !== 'undefined') {
+      import('@sentry/nextjs').then(Sentry => {
+        Sentry.withScope(scope => {
+          scope.setTag('error_boundary', 'section');
+          scope.setTag('component', 'SectionErrorBoundary');
+          if (this.props.sectionName) {
+            scope.setTag('section_name', this.props.sectionName);
+          }
+          scope.setContext('react_error_info', {
+            componentStack: errorInfo.componentStack,
+            sectionName: this.props.sectionName,
+          });
+          scope.setLevel('error');
+          Sentry.captureException(error);
+        });
+      });
+    }
   }
 
   handleReset = () => {

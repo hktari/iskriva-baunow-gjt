@@ -4,6 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
 import { projectSchema, type ProjectFormData } from '@/shared/lib/validations/project';
+import { createChildLogger } from '@/shared/lib/logger';
+import { captureError } from '@/shared/lib/capture-error';
+import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 
 export async function createProject(data: ProjectFormData) {
   const session = await auth();
@@ -11,6 +14,13 @@ export async function createProject(data: ProjectFormData) {
   if (!session || session.user.role === 'VIEWER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'projects',
+    action: 'createProject',
+    userId: extractUserId(session),
+  });
+  const logger = createChildLogger(context);
 
   try {
     const validated = projectSchema.parse(data);
@@ -24,12 +34,22 @@ export async function createProject(data: ProjectFormData) {
       },
     });
 
+    logger.info(
+      { entityId: project.id, entityType: 'Project', projectName: project.name },
+      'Project created successfully'
+    );
+
     revalidatePath('/');
     revalidatePath('/analytics');
 
     return { success: true, projectId: project.id };
   } catch (error) {
-    console.error('Create project error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'create-project-failed',
+      severity: 'error',
+      extra: { projectName: data.name },
+    });
     return { error: 'Failed to create project' };
   }
 }
@@ -40,6 +60,15 @@ export async function updateProject(id: string, data: ProjectFormData) {
   if (!session || session.user.role === 'VIEWER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'projects',
+    action: 'updateProject',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'Project',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const validated = projectSchema.parse(data);
@@ -54,13 +83,19 @@ export async function updateProject(id: string, data: ProjectFormData) {
       },
     });
 
+    logger.info({ projectName: project.name }, 'Project updated successfully');
+
     revalidatePath('/');
     revalidatePath(`/project/${id}`);
     revalidatePath('/analytics');
 
     return { success: true, projectId: project.id };
   } catch (error) {
-    console.error('Update project error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'update-project-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to update project' };
   }
 }
@@ -72,17 +107,32 @@ export async function deleteProject(id: string) {
     return { error: 'Unauthorized' };
   }
 
+  const context = await createObservabilityContext({
+    scope: 'projects',
+    action: 'deleteProject',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'Project',
+  });
+  const logger = createChildLogger(context);
+
   try {
     await db.project.delete({
       where: { id },
     });
+
+    logger.info('Project deleted successfully');
 
     revalidatePath('/');
     revalidatePath('/analytics');
 
     return { success: true };
   } catch (error) {
-    console.error('Delete project error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'delete-project-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to delete project' };
   }
 }
@@ -93,6 +143,15 @@ export async function toggleFavorite(projectId: string) {
   if (!session) {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'projects',
+    action: 'toggleFavorite',
+    userId: extractUserId(session),
+    entityId: projectId,
+    entityType: 'Project',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const existing = await db.favorite.findUnique({
@@ -122,13 +181,19 @@ export async function toggleFavorite(projectId: string) {
       });
     }
 
+    logger.info({ isFavorite: !existing }, 'Favorite toggled successfully');
+
     revalidatePath('/');
     revalidatePath(`/project/${projectId}`);
     revalidatePath('/analytics');
 
     return { success: true, isFavorite: !existing };
   } catch (error) {
-    console.error('Toggle favorite error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'toggle-favorite-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to toggle favorite' };
   }
 }

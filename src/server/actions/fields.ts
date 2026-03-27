@@ -4,6 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
 import { FieldCategory } from '@prisma/client';
+import { createChildLogger } from '@/shared/lib/logger';
+import { captureError } from '@/shared/lib/capture-error';
+import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 
 export async function createField(category: FieldCategory, value: string) {
   const session = await auth();
@@ -11,6 +14,13 @@ export async function createField(category: FieldCategory, value: string) {
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'fields',
+    action: 'createField',
+    userId: extractUserId(session),
+  });
+  const logger = createChildLogger(context);
 
   try {
     const trimmedValue = value.trim();
@@ -40,6 +50,11 @@ export async function createField(category: FieldCategory, value: string) {
       },
     });
 
+    logger.info(
+      { entityId: field.id, entityType: 'ConfigurableField', category, value: trimmedValue },
+      'Field created successfully'
+    );
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -51,6 +66,7 @@ export async function createField(category: FieldCategory, value: string) {
         metadata: {
           category,
           value: trimmedValue,
+          requestId: context.requestId,
         },
       },
     });
@@ -59,7 +75,12 @@ export async function createField(category: FieldCategory, value: string) {
 
     return { success: true, fieldId: field.id };
   } catch (error) {
-    console.error('Create field error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'create-field-failed',
+      severity: 'error',
+      extra: { category, value },
+    });
     return { error: 'Failed to create field' };
   }
 }
@@ -70,6 +91,15 @@ export async function updateField(id: string, value: string) {
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'fields',
+    action: 'updateField',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'ConfigurableField',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const trimmedValue = value.trim();
@@ -83,6 +113,8 @@ export async function updateField(id: string, value: string) {
       data: { value: trimmedValue },
     });
 
+    logger.info({ category: field.category, newValue: trimmedValue }, 'Field updated successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -94,6 +126,7 @@ export async function updateField(id: string, value: string) {
         metadata: {
           category: field.category,
           newValue: trimmedValue,
+          requestId: context.requestId,
         },
       },
     });
@@ -102,7 +135,12 @@ export async function updateField(id: string, value: string) {
 
     return { success: true };
   } catch (error) {
-    console.error('Update field error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'update-field-failed',
+      severity: 'error',
+      extra: { value },
+    });
     return { error: 'Failed to update field' };
   }
 }
@@ -113,6 +151,15 @@ export async function deleteField(id: string) {
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'fields',
+    action: 'deleteField',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'ConfigurableField',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const field = await db.configurableField.findUnique({
@@ -127,6 +174,8 @@ export async function deleteField(id: string) {
       where: { id },
     });
 
+    logger.info({ category: field.category, value: field.value }, 'Field deleted successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -138,6 +187,7 @@ export async function deleteField(id: string) {
         metadata: {
           category: field.category,
           value: field.value,
+          requestId: context.requestId,
         },
       },
     });
@@ -146,7 +196,11 @@ export async function deleteField(id: string) {
 
     return { success: true };
   } catch (error) {
-    console.error('Delete field error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'delete-field-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to delete field' };
   }
 }

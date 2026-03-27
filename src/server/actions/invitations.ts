@@ -7,7 +7,9 @@ import {
   resendInvitationEmail,
   EmailConfigurationError,
 } from '@/server/lib/email';
-import logger from '@/shared/lib/logger';
+import { createChildLogger } from '@/shared/lib/logger';
+import { captureError } from '@/shared/lib/capture-error';
+import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -42,6 +44,13 @@ export async function inviteUser(
     return { error: 'Unauthorized' };
   }
 
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'inviteUser',
+    userId: extractUserId(session),
+  });
+  const logger = createChildLogger(context);
+
   try {
     // Check if user already exists
     const existing = await db.user.findUnique({
@@ -68,6 +77,8 @@ export async function inviteUser(
       },
     });
 
+    logger.info({ entityId: user.id, entityType: 'User', role }, 'User invited successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -80,6 +91,7 @@ export async function inviteUser(
           invitedUserEmail: email,
           invitedUserName: name,
           role,
+          requestId: context.requestId,
         },
       },
     });
@@ -133,7 +145,13 @@ export async function inviteUser(
         : undefined,
     };
   } catch (error) {
-    console.error('Invite user error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'invite-user-failed',
+      severity: 'error',
+      tags: { role },
+      extra: { email, name },
+    });
     return { error: 'Failed to invite user' };
   }
 }
@@ -146,6 +164,15 @@ export async function resendInvitation(
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'resendInvitation',
+    userId: extractUserId(session),
+    entityId: userId,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const user = await db.user.findUnique({
@@ -169,6 +196,8 @@ export async function resendInvitation(
       data: { password: hashedPassword },
     });
 
+    logger.info({ userEmail: user.email }, 'Invitation resent successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -179,6 +208,7 @@ export async function resendInvitation(
         userEmail: session.user.email,
         metadata: {
           userEmail: user.email,
+          requestId: context.requestId,
         },
       },
     });
@@ -230,12 +260,24 @@ export async function resendInvitation(
         : undefined,
     };
   } catch (error) {
-    console.error('Resend invitation error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'resend-invitation-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to resend invitation' };
   }
 }
 
 export async function acceptInvitation(userId: string, newPassword: string) {
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'acceptInvitation',
+    entityId: userId,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
+
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
@@ -260,6 +302,8 @@ export async function acceptInvitation(userId: string, newPassword: string) {
       },
     });
 
+    logger.info({ userEmail: user.email }, 'Invitation accepted successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -270,13 +314,18 @@ export async function acceptInvitation(userId: string, newPassword: string) {
         userEmail: user.email,
         metadata: {
           userEmail: user.email,
+          requestId: context.requestId,
         },
       },
     });
 
     return { success: true, message: 'Invitation accepted successfully' };
   } catch (error) {
-    console.error('Accept invitation error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'accept-invitation-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to accept invitation' };
   }
 }
