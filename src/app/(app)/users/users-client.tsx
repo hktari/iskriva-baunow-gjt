@@ -53,6 +53,25 @@ interface User {
   };
 }
 
+const normalizeUserForList = (
+  user: Partial<User> & Pick<User, 'id' | 'email' | 'name' | 'role'>
+) => {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    organization: user.organization ?? null,
+    status: user.status ?? UserStatus.ACTIVE,
+    invitedAt: user.invitedAt ?? new Date(),
+    createdAt: user.createdAt ?? new Date(),
+    _count: user._count ?? {
+      projects: 0,
+      favorites: 0,
+    },
+  } satisfies User;
+};
+
 interface UsersClientProps {
   users: User[];
 }
@@ -243,7 +262,7 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
         onSuccess={(newUser: User) => {
-          setUsers([newUser, ...users]);
+          setUsers([normalizeUserForList(newUser), ...users]);
           setIsCreateOpen(false);
         }}
       />
