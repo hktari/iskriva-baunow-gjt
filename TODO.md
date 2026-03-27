@@ -8,3 +8,16 @@ Building: ⚠ The Next.js plugin was not detected in your ESLint configuration. 
 [] test phase 4 implementation
 
 [] review logging and error handling. Should utilize production patterns to ensure proper error tracking and monitoring.
+
+## Operations
+
+dangerous commands once in production:
+
+- pnpm prisma db push --force-reset --accept-data-loss && pnpm prisma db seed
+
+### takeaways
+
+- should not keep production config locally
+- should configure MCPs and neonctl, vercel CLI accordingly to prevent agent from making production changes
+
+- prevent agent from reading or editing .env files
