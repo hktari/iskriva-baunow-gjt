@@ -1,13 +1,17 @@
 import { edgeAuth } from '@/server/auth/edge';
 import { NextResponse } from 'next/server';
-import { randomUUID } from 'crypto';
+
+// Edge-compatible UUID generation using Web Crypto API
+function generateRequestId(): string {
+  return crypto.randomUUID();
+}
 
 export default edgeAuth((req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
   // Generate or extract request ID for correlation
-  const requestId = req.headers.get('x-request-id') || randomUUID();
+  const requestId = req.headers.get('x-request-id') || generateRequestId();
 
   // Redirect logged-in users away from login page
   if (nextUrl.pathname.startsWith('/login') && isLoggedIn) {
