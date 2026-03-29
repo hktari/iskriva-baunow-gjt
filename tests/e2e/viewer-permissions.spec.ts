@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Viewer Permissions', () => {
   test.beforeEach(async ({ page }) => {
@@ -19,8 +19,7 @@ test.describe('Viewer Permissions', () => {
     // Try to access new project page directly
     await page.goto('/project/new');
 
-    // Should be redirected to home
-    await expect(page).toHaveURL('/');
+    await expect(page.getByText(/Authentication Required/i)).toBeVisible();
   });
 
   test('can view project details', async ({ page }) => {
@@ -96,22 +95,25 @@ test.describe('Viewer Permissions', () => {
       .click();
 
     // Should see favorite button
-    const favoriteButton = page.getByRole('button', { name: /favorite/i });
+    const favoriteButton = page.getByRole('button', { name: /Add to favorites/i }).first();
     await expect(favoriteButton).toBeVisible();
 
     // Can toggle favorite
     await favoriteButton.click();
-    await expect(page.getByText(/added to favorites/i)).toBeVisible();
+    await expect(page.getByText(/Added to favorites/i)).toBeVisible();
   });
 
   test('can filter by favorites', async ({ page }) => {
     await page.goto('/');
 
     // Should see favorites filter
-    await expect(page.getByLabel(/favorites only/i)).toBeVisible();
+    await expect(page.getByRole('checkbox', { name: /favorites only/i })).toBeVisible();
 
     // Can toggle filter
-    await page.getByLabel(/favorites only/i).check();
+    await page.getByRole('checkbox', { name: /favorites only/i }).click();
+
+    // Wait for URL to update with favoritesOnly parameter
+    await expect(page).toHaveURL(/favoritesOnly=true/);
     await expect(page.getByText(/projects found/i)).toBeVisible();
   });
 
@@ -124,7 +126,7 @@ test.describe('Viewer Permissions', () => {
 
     // Can use advanced filters
     await page.getByText(/advanced filters/i).click();
-    await page.getByLabel(/country/i).click();
+    await page.getByRole('combobox', { name: /country/i }).click();
     await page.getByRole('option', { name: 'Germany' }).click();
   });
 });

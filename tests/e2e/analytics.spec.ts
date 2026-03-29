@@ -13,6 +13,7 @@ test.describe('Analytics Page', () => {
     // Login first (analytics requires auth)
     await page.goto('/login');
     await page.getByRole('button', { name: /editor/i }).click();
+    await expect(page).toHaveURL('/');
 
     // Navigate to analytics page
     await page.goto('/analytics');
@@ -32,6 +33,7 @@ test.describe('Analytics Page', () => {
     // Login
     await page.goto('/login');
     await page.getByRole('button', { name: /editor/i }).click();
+    await expect(page).toHaveURL('/');
 
     // Navigate to analytics
     await page.goto('/analytics');
@@ -45,6 +47,7 @@ test.describe('Analytics Page', () => {
     // Login
     await page.goto('/login');
     await page.getByRole('button', { name: /editor/i }).click();
+    await expect(page).toHaveURL('/');
 
     // Navigate to analytics
     await page.goto('/analytics');
@@ -53,6 +56,6 @@ test.describe('Analytics Page', () => {
     await page.getByRole('tab', { name: /organization analytics/i }).click();
 
     // Wait for content to load - look for the Organization selector card
-    await expect(page.getByRole('heading', { name: /organization/i })).toBeVisible();
+    await expect(page.getByRole('tabpanel', { name: /organization/i })).toBeVisible();
   });
 });

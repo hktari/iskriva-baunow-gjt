@@ -5,9 +5,11 @@ Building: ⚠ The Next.js plugin was not detected in your ESLint configuration. 
 
 [] fix deployment workflow: preview deployment, e2e test, promote to production
 
-[] test phase 4 implementation
+[x] test phase 4 implementation
 
-[] review logging and error handling. Should utilize production patterns to ensure proper error tracking and monitoring.
+[x] review logging and error handling. Should utilize production patterns to ensure proper error tracking and monitoring.
+
+[ ] configure Sentry and logging
 
 ## Operations
 
