@@ -1,3 +1,7 @@
+// This file configures the initialization of Sentry on the server.
+// The config you add here will be used whenever the server handles a request.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+
 import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
@@ -25,44 +29,9 @@ Sentry.init({
       runtime: 'server',
     },
   },
-
-  // Error filtering
-  beforeSend(event, hint) {
-    // Filter out development errors
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Sentry Server Error:', hint.originalException || hint.syntheticException);
-      return null;
-    }
-
-    // Add custom tags
-    event.tags = {
-      ...event.tags,
-      component_type: 'server',
-    };
-
-    // Add server context
-    if (event.request) {
-      event.contexts = {
-        ...event.contexts,
-        server: {
-          node_version: process.version,
-          platform: process.platform,
-        },
-      };
-    }
-
-    return event;
-  },
-
-  // Ignore common errors that are not actionable
-  ignoreErrors: [
-    // Database connection errors (handle separately)
-    'ECONNREFUSED',
-    'ETIMEDOUT',
-    // Auth errors (expected user behavior)
-    'CredentialsSignin',
-    // Next.js expected errors
-    'NEXT_NOT_FOUND',
-    'NEXT_REDIRECT',
-  ],
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
 });
