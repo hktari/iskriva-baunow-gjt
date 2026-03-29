@@ -50,3 +50,6 @@ prisma/dev.db-journal
 
 # playwright
 tmp/test-results
+
+# Sentry Config File
+.env.sentry-build-plugin

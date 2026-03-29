@@ -3,6 +3,9 @@
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
 import { userSchema, type UserFormData } from '@/shared/lib/validations/user';
+import { createChildLogger } from '@/shared/lib/logger';
+import { captureError } from '@/shared/lib/capture-error';
+import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 import { UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
@@ -13,6 +16,13 @@ export async function createUser(data: UserFormData) {
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'users',
+    action: 'createUser',
+    userId: extractUserId(session),
+  });
+  const logger = createChildLogger(context);
 
   try {
     const validated = userSchema.parse(data);
@@ -41,6 +51,11 @@ export async function createUser(data: UserFormData) {
       },
     });
 
+    logger.info(
+      { entityId: user.id, entityType: 'User', role: user.role },
+      'User created successfully'
+    );
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -53,6 +68,7 @@ export async function createUser(data: UserFormData) {
           userName: user.name,
           userEmail: user.email,
           role: user.role,
+          requestId: context.requestId,
         },
       },
     });
@@ -61,7 +77,12 @@ export async function createUser(data: UserFormData) {
 
     return { success: true, userId: user.id };
   } catch (error) {
-    console.error('Create user error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'create-user-failed',
+      severity: 'error',
+      extra: { email: data.email, role: data.role },
+    });
     return { error: 'Failed to create user' };
   }
 }
@@ -72,6 +93,15 @@ export async function updateUser(id: string, data: Partial<UserFormData>) {
   if (session?.user.role !== 'SUPER_USER') {
     return { error: 'Unauthorized' };
   }
+
+  const context = await createObservabilityContext({
+    scope: 'users',
+    action: 'updateUser',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
 
   try {
     const updateData: any = {
@@ -91,6 +121,8 @@ export async function updateUser(id: string, data: Partial<UserFormData>) {
       data: updateData,
     });
 
+    logger.info({ userEmail: user.email }, 'User updated successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -103,6 +135,7 @@ export async function updateUser(id: string, data: Partial<UserFormData>) {
           userName: user.name,
           userEmail: user.email,
           changes: data,
+          requestId: context.requestId,
         },
       },
     });
@@ -111,7 +144,11 @@ export async function updateUser(id: string, data: Partial<UserFormData>) {
 
     return { success: true, userId: user.id };
   } catch (error) {
-    console.error('Update user error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'update-user-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to update user' };
   }
 }
@@ -128,6 +165,15 @@ export async function deleteUser(id: string) {
     return { error: 'Cannot delete your own account' };
   }
 
+  const context = await createObservabilityContext({
+    scope: 'users',
+    action: 'deleteUser',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
+
   try {
     const user = await db.user.findUnique({
       where: { id },
@@ -142,6 +188,8 @@ export async function deleteUser(id: string) {
       where: { id },
     });
 
+    logger.info({ deletedUserEmail: user.email }, 'User deleted successfully');
+
     // Log audit
     await db.auditLog.create({
       data: {
@@ -153,6 +201,7 @@ export async function deleteUser(id: string) {
         metadata: {
           deletedUserName: user.name,
           deletedUserEmail: user.email,
+          requestId: context.requestId,
         },
       },
     });
@@ -161,7 +210,11 @@ export async function deleteUser(id: string) {
 
     return { success: true };
   } catch (error) {
-    console.error('Delete user error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'delete-user-failed',
+      severity: 'error',
+    });
     return { error: 'Failed to delete user' };
   }
 }
@@ -173,11 +226,22 @@ export async function updateUserStatus(id: string, status: UserStatus) {
     return { error: 'Unauthorized' };
   }
 
+  const context = await createObservabilityContext({
+    scope: 'users',
+    action: 'updateUserStatus',
+    userId: extractUserId(session),
+    entityId: id,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
+
   try {
     const user = await db.user.update({
       where: { id },
       data: { status },
     });
+
+    logger.info({ newStatus: status }, 'User status updated successfully');
 
     // Log audit
     await db.auditLog.create({
@@ -190,6 +254,7 @@ export async function updateUserStatus(id: string, status: UserStatus) {
         metadata: {
           userName: user.name,
           newStatus: status,
+          requestId: context.requestId,
         },
       },
     });
@@ -198,7 +263,12 @@ export async function updateUserStatus(id: string, status: UserStatus) {
 
     return { success: true };
   } catch (error) {
-    console.error('Update user status error:', error);
+    captureError(error, {
+      ...context,
+      errorType: 'update-user-status-failed',
+      severity: 'error',
+      extra: { status },
+    });
     return { error: 'Failed to update user status' };
   }
 }
