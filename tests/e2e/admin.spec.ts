@@ -66,10 +66,8 @@ test.describe('Admin Features', () => {
       // Submit form
       await page.getByRole('button', { name: 'Send Invitation' }).click();
 
-      // Wait for success dialog - check for the dialog title in the alert dialog
-      await expect(
-        page.getByRole('heading', { name: 'Invitation Sent Successfully' })
-      ).toBeVisible();
+      // Wait for success toast notification (production behavior)
+      await expect(page.getByText(/User invited successfully/i)).toBeVisible();
     });
 
     test('should search users', async ({ page }) => {
