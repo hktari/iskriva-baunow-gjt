@@ -1,12 +1,13 @@
-import { db } from '@/shared/lib/db';
-import { cache } from 'react';
 import { auth } from '@/server/auth';
+import { db } from '@/shared/lib/db';
+import { redirect } from 'next/navigation';
+import { cache } from 'react';
 
 export const getUsers = cache(async () => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   return db.user.findMany({
@@ -34,7 +35,7 @@ export const getUser = cache(async (id: string) => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   return db.user.findUnique({
@@ -65,7 +66,7 @@ export const getUserStats = cache(async () => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   const [total, active, pending, inactive, byRole] = await Promise.all([

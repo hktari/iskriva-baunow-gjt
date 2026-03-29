@@ -1,6 +1,7 @@
-import { db } from '@/shared/lib/db';
-import { cache } from 'react';
 import { auth } from '@/server/auth';
+import { db } from '@/shared/lib/db';
+import { redirect } from 'next/navigation';
+import { cache } from 'react';
 
 export interface AuditLogFilters {
   action?: string;
@@ -15,7 +16,7 @@ export const getAuditLogs = cache(async (filters?: AuditLogFilters, limit = 100)
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   const where: any = {};
@@ -69,7 +70,7 @@ export const getAuditLogStats = cache(async () => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   const [total, last24h, last7d, byAction] = await Promise.all([
@@ -112,7 +113,7 @@ export const getAuditLogsByEntity = cache(async (entityType: string, entityId: s
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   return db.auditLog.findMany({

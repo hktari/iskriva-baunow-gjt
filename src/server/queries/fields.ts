@@ -1,13 +1,14 @@
-import { db } from '@/shared/lib/db';
-import { cache } from 'react';
 import { auth } from '@/server/auth';
+import { db } from '@/shared/lib/db';
 import { FieldCategory } from '@prisma/client';
+import { redirect } from 'next/navigation';
+import { cache } from 'react';
 
 export const getFieldsByCategory = cache(async (category: FieldCategory) => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   return db.configurableField.findMany({
@@ -20,7 +21,7 @@ export const getAllFields = cache(async () => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   const fields = await db.configurableField.findMany({
@@ -46,7 +47,7 @@ export const getFieldStats = cache(async () => {
   const session = await auth();
 
   if (session?.user.role !== 'SUPER_USER') {
-    throw new Error('Unauthorized');
+    redirect('/');
   }
 
   const stats = await db.configurableField.groupBy({
