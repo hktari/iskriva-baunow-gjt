@@ -66,8 +66,10 @@ test.describe('Admin Features', () => {
       // Submit form
       await page.getByRole('button', { name: 'Send Invitation' }).click();
 
-      // Wait for success dialog
-      await expect(page.getByText('Invitation Sent Successfully')).toBeVisible();
+      // Wait for success dialog - check for the dialog title in the alert dialog
+      await expect(
+        page.getByRole('heading', { name: 'Invitation Sent Successfully' })
+      ).toBeVisible();
     });
 
     test('should search users', async ({ page }) => {
@@ -292,7 +294,7 @@ test.describe('Admin Features - Access Control', () => {
     // Try to access users page directly
     await page.goto('/users');
 
-    // Should see error (access denied at query level, not middleware redirect)
-    await expect(page.getByText('Runtime Error')).toBeVisible();
+    // Should be redirected to home page (user-friendly redirect instead of error)
+    await expect(page).toHaveURL('/');
   });
 });
