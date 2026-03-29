@@ -9,7 +9,7 @@
     "pre_read_code": [
       {
         "command": "python3 /home/bostjan/source/windsurf/hooks/block_read_access.py",
-        "show_output": true
+        "show_output": false
       }
     ],
     "pre_run_command": [

@@ -32,7 +32,7 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
 
   const updateUrl = useCallback(
     (key: string, value: string | boolean) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(window.location.search);
 
       if (value === '' || value === false) {
         params.delete(key);
@@ -46,7 +46,7 @@ export function ProjectListClient({ configurableFields, isAuthenticated }: Proje
       const newUrl = params.toString() ? `/?${params.toString()}` : '/';
       router.push(newUrl as any, { scroll: false });
     },
-    [router, searchParams]
+    [router]
   );
 
   // Debounced navigation for text inputs (search, minValue, maxValue)

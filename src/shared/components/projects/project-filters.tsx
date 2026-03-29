@@ -20,6 +20,7 @@ import {
 } from '@/shared/components/ui/select';
 import { PROJECT_COUNTRIES, PROJECT_STATUSES } from '@/shared/lib/constants';
 import { Heart, Search, SlidersHorizontal, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface ProjectFiltersProps {
   filters: {
@@ -50,6 +51,39 @@ export function ProjectFilters({
   configurableFields,
   isAuthenticated,
 }: ProjectFiltersProps) {
+  // Local state for text inputs to enable immediate UI updates
+  const [searchValue, setSearchValue] = useState(filters.search);
+  const [minValue, setMinValue] = useState(filters.minValue);
+  const [maxValue, setMaxValue] = useState(filters.maxValue);
+
+  // Sync local state when URL changes (e.g., clear filters, back button)
+  useEffect(() => {
+    setSearchValue(filters.search);
+  }, [filters.search]);
+
+  useEffect(() => {
+    setMinValue(filters.minValue);
+  }, [filters.minValue]);
+
+  useEffect(() => {
+    setMaxValue(filters.maxValue);
+  }, [filters.maxValue]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    onFilterChange('search', value);
+  };
+
+  const handleMinValueChange = (value: string) => {
+    setMinValue(value);
+    onFilterChange('minValue', value);
+  };
+
+  const handleMaxValueChange = (value: string) => {
+    setMaxValue(value);
+    onFilterChange('maxValue', value);
+  };
+
   const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
     if (key === 'search' || key === 'favoritesOnly') return false;
     return value !== '' && value !== false;
@@ -64,8 +98,8 @@ export function ProjectFilters({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search projects by name..."
-            value={filters.search}
-            onChange={e => onFilterChange('search', e.target.value)}
+            value={searchValue}
+            onChange={e => handleSearchChange(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -217,14 +251,14 @@ export function ProjectFilters({
                   <Input
                     type="number"
                     placeholder="Min"
-                    value={filters.minValue}
-                    onChange={e => onFilterChange('minValue', e.target.value)}
+                    value={minValue}
+                    onChange={e => handleMinValueChange(e.target.value)}
                   />
                   <Input
                     type="number"
                     placeholder="Max"
-                    value={filters.maxValue}
-                    onChange={e => onFilterChange('maxValue', e.target.value)}
+                    value={maxValue}
+                    onChange={e => handleMaxValueChange(e.target.value)}
                   />
                 </div>
               </div>
