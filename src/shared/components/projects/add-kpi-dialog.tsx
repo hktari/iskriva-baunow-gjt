@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { createKpi } from '@/server/actions/kpis';
+import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
-import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import {
@@ -19,9 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { Plus, Info } from 'lucide-react';
 import { KPI_INDICATORS, KPI_INDICATOR_METADATA } from '@/shared/lib/constants';
-import { createKpi } from '@/server/actions/kpis';
+import { Info, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 interface AddKpiDialogProps {
@@ -32,6 +33,7 @@ interface AddKpiDialogProps {
 }
 
 export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [selectedIndicator, setSelectedIndicator] = useState('');
@@ -71,6 +73,7 @@ export function AddKpiDialog({ projectId, configurableFields }: AddKpiDialogProp
         toast.error(result.error);
       } else {
         toast.success('KPI added successfully');
+        router.refresh();
         setOpen(false);
         setSelectedIndicator('');
         setCustomIndicator('');
