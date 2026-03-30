@@ -282,9 +282,9 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
       <InviteUserDialog
         open={isInviteOpen}
         onOpenChange={setIsInviteOpen}
-        onSuccess={() => {
+        onSuccess={newUser => {
+          setUsers([normalizeUserForList(newUser), ...users]);
           setIsInviteOpen(false);
-          window.location.reload();
         }}
       />
 

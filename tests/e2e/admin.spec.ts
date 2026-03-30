@@ -60,14 +60,18 @@ test.describe('Admin Features', () => {
       await page.getByRole('button', { name: 'Invite User' }).click();
 
       // Fill in the form
+      const invitedEmail = `invited-${Date.now()}@example.com`;
       await page.getByLabel('Name').fill('Invited User');
-      await page.getByLabel('Email').fill(`invited-${Date.now()}@example.com`);
+      await page.getByLabel('Email').fill(invitedEmail);
 
       // Submit form
       await page.getByRole('button', { name: 'Send Invitation' }).click();
 
-      // Wait for success toast notification (production behavior)
+      // Verify success toast appears
       await expect(page.getByText(/User invited successfully/i)).toBeVisible();
+
+      // Verify the invited user appears in the table
+      await expect(page.getByText(invitedEmail)).toBeVisible();
     });
 
     test('should search users', async ({ page }) => {

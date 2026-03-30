@@ -35,7 +35,7 @@ import { toast } from 'sonner';
 interface InviteUserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
+  onSuccess: (user: { id: string; email: string; name: string; role: UserRole }) => void;
 }
 
 export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDialogProps) {
@@ -66,7 +66,13 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
         toast.success(result.message || 'User invited successfully');
         setEmailStatus(result.emailStatus);
         setDemoCredentials(result.demoCredentials || null);
-        onSuccess();
+        // Pass the new user data to parent for state update
+        onSuccess({
+          id: result.userId,
+          email: formData.email,
+          name: formData.name,
+          role: formData.role,
+        });
       } else {
         toast.error('Failed to invite user');
       }
