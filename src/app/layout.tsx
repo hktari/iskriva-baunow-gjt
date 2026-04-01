@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
 import { Toaster } from 'sonner';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,6 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="0576ecaf-7e8b-4af8-ad53-a7466c62ee15"
+        />{' '}
+      </head>
       <body className={inter.className}>
         {children}
         <Toaster position="top-right" richColors />
