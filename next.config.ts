@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cloud.umami.is *.sentry-cdn.com; connect-src 'self' *.sentry.io; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cloud.umami.is *.sentry-cdn.com; connect-src 'self' *.sentry.io https://api-gateway.umami.dev; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:;",
           },
         ],
       },
