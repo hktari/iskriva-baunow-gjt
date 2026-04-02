@@ -23,7 +23,7 @@ export default function RootLayout({
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id="0576ecaf-7e8b-4af8-ad53-a7466c62ee15"
-        />{' '}
+        />
       </head>
       <body className={inter.className}>
         {children}

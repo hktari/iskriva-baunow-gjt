@@ -8,6 +8,7 @@ import {
   FileText,
   FolderKanban,
   LogOut,
+  Map,
   Menu,
   Newspaper,
   Settings,
@@ -45,6 +46,7 @@ export function AppHeader({ user }: AppHeaderProps) {
   const navigation = [
     { name: 'Projects', href: '/', icon: FolderKanban },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+    { name: 'Map', href: '/map', icon: Map },
     { name: 'Methodology', href: '/methodology', icon: BookOpen },
     { name: 'News', href: '/news', icon: Newspaper },
   ];
