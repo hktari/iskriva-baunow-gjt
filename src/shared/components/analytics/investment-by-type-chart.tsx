@@ -44,10 +44,15 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="type" angle={-45} textAnchor="end" height={100} fontSize={12} />
+          <XAxis dataKey="type" angle={-45} textAnchor="end" height={100} fontSize={13} />
           <YAxis
             yAxisId="left"
-            label={{ value: 'Investment (M EUR)', angle: -90, position: 'outsideLeft', dx: -30 }}
+            label={{
+              value: 'Investment (M EUR)',
+              angle: -90,
+              position: 'outsideLeft',
+              dx: -30,
+            }}
           />
           <YAxis
             yAxisId="right"
@@ -57,7 +62,7 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
           />
           <Tooltip
             formatter={(value: number, name: string) => {
-              if (name === 'valueInMillions') {
+              if (name === 'Investment (M EUR)') {
                 return [formatCurrencyMillions(value * 1_000_000), 'Investment'];
               }
               return [value, 'Projects'];
@@ -74,7 +79,7 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
             yAxisId="right"
             type="monotone"
             dataKey="count"
-            stroke="var(--color-destructive)"
+            stroke="var(--color-yellow-600)"
             name="Project Count"
           />
         </ComposedChart>

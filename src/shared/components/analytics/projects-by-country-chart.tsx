@@ -27,10 +27,14 @@ export function ProjectsByCountryChart({ data }: ProjectsByCountryChartProps) {
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="country" angle={-45} textAnchor="end" height={100} fontSize={12} />
-          <YAxis />
+          <XAxis dataKey="country" angle={-45} textAnchor="end" height={100} fontSize={14} />
+          <YAxis allowDecimals={false} />
           <Tooltip />
-          <Bar dataKey="count" fill="var(--color-primary)" />
+          <Bar
+            dataKey="count"
+            fill="var(--color-primary)"
+            label={{ position: 'top', fontSize: 14 }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

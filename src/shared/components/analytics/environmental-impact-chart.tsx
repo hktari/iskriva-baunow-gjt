@@ -36,7 +36,7 @@ export function EnvironmentalImpactChart({ data }: EnvironmentalImpactChartProps
               return [formatChartValue(value, props.payload.unit), 'Total Achieved'];
             }}
           />
-          <Bar dataKey="value" fill="var(--color-chart-2)" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="value" fill="var(--color-green-600)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

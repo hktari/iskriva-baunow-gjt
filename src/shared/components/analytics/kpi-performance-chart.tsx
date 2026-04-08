@@ -33,7 +33,7 @@ export function KpiPerformanceChart({ data }: KpiPerformanceChartProps) {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" unit="%" />
-          <YAxis type="category" dataKey="indicator" width={140} fontSize={12} />
+          <YAxis type="category" dataKey="indicator" width={140} fontSize={14} />
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload?.length) {
