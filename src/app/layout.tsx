@@ -25,7 +25,7 @@ export default function RootLayout({
           data-website-id="0576ecaf-7e8b-4af8-ad53-a7466c62ee15"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className}`}>
         {children}
         <Toaster position="top-right" richColors />
       </body>

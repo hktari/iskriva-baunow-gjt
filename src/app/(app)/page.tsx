@@ -4,7 +4,10 @@ import {
   getProjects,
   type ProjectFilters as ProjectFilterParams,
 } from '@/server/queries/projects';
-import { CollapsibleBanner } from '@/shared/components/layout/collapsible-banner';
+import {
+  CollapsibleBanner,
+  CollapsibleBannerTrigger,
+} from '@/shared/components/layout/collapsible-banner';
 import { ProjectCard } from '@/shared/components/projects/project-card';
 import { ProjectListClient } from '@/shared/components/projects/project-list-client';
 import { Button } from '@/shared/components/ui/button';
@@ -54,7 +57,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   );
 
   return (
-    <main className="container mx-auto px-4 py-8 space-y-6">
+    <main className="container mx-auto px-4 py-8 space-y-6 relative">
       <CollapsibleBanner />
       <div className="flex items-center justify-between">
         <div>
@@ -63,14 +66,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             {projects.length} {projects.length === 1 ? 'project' : 'projects'} found
           </p>
         </div>
-        {canEdit ? (
-          <Button asChild>
-            <Link href="/project/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Add New Project
-            </Link>
-          </Button>
-        ) : null}
+        <div className="flex items-center gap-4">
+          <CollapsibleBannerTrigger />
+          {canEdit ? (
+            <Button asChild>
+              <Link href="/project/new">
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Project
+              </Link>
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <ProjectListClient configurableFields={configurableFields} isAuthenticated={!!session} />

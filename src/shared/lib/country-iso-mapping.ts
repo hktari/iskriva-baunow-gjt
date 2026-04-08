@@ -7,14 +7,14 @@
  * are mapped to null and will be skipped on the map.
  */
 export const COUNTRY_NUMERIC_ISO: Record<string, string | null> = {
-  Albania: '008',
+  Albania: null, // not EU
   Andorra: null, // too small for 110m resolution
-  Armenia: '051',
+  Armenia: null, // not EU
   Austria: '040',
-  Azerbaijan: '031',
-  Belarus: '112',
+  Azerbaijan: null, // not EU
+  Belarus: null, // not EU
   Belgium: '056',
-  'Bosnia and Herzegovina': '070',
+  'Bosnia and Herzegovina': null, // not EU
   Bulgaria: '100',
   Croatia: '191',
   Cyprus: '196',
@@ -23,39 +23,39 @@ export const COUNTRY_NUMERIC_ISO: Record<string, string | null> = {
   Estonia: '233',
   Finland: '246',
   France: '250',
-  Georgia: '268',
+  Georgia: null, // not EU
   Germany: '276',
   Greece: '300',
   Hungary: '348',
-  Iceland: '352',
+  Iceland: null, // not EU
   Ireland: '372',
   Italy: '380',
-  Kazakhstan: '398',
+  Kazakhstan: null, // not EU
   Latvia: '428',
   Liechtenstein: null, // too small for 110m resolution
   Lithuania: '440',
-  Luxembourg: null, // too small for 110m resolution
-  Malta: null, // too small for 110m resolution
-  Moldova: '498',
+  Luxembourg: '442', // too small for 110m resolution
+  Malta: '470', // too small for 110m resolution
+  Moldova: null, // not EU
   Monaco: null, // too small for 110m resolution
-  Montenegro: '499',
+  Montenegro: null, // not EU
   Netherlands: '528',
-  'North Macedonia': '807',
-  Norway: '578',
+  'North Macedonia': null, // not EU
+  Norway: null, // not EU
   Poland: '616',
   Portugal: '620',
   Romania: '642',
-  Russia: '643',
+  Russia: null, // not EU
   'San Marino': null, // too small for 110m resolution
-  Serbia: '688',
+  Serbia: null, // not EU
   Slovakia: '703',
   Slovenia: '705',
   Spain: '724',
   Sweden: '752',
-  Switzerland: '756',
-  Turkey: '792',
-  Ukraine: '804',
-  'United Kingdom': '826',
+  Switzerland: null, // not EU
+  Turkey: null, // not EU
+  Ukraine: null, // not EU
+  'United Kingdom': null, // not EU
   'Vatican City': null, // too small for 110m resolution
 };
 
