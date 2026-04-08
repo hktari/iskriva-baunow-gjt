@@ -46,9 +46,9 @@ function buildInvitationEmailHtml({
 }: InvitationEmailPayload) {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #333;">Welcome to the Project Management System!</h2>
+      <h2 style="color: #333;">Welcome to Baunow GJT!</h2>
       <p>Hi ${userName},</p>
-      <p>You've been invited to join our Project Management System. Here are your login details:</p>
+      <p>You've been invited to join our system. Here are your login details:</p>
       <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
         <p><strong>Email:</strong> ${to}</p>
         <p><strong>Temporary Password:</strong> <code style="background: #eee; padding: 2px 4px;">${tempPassword}</code></p>
@@ -71,9 +71,9 @@ export async function sendInvitationEmail(
 
   try {
     const { data, error } = await resend.emails.send({
-      from: fromEmail,
+      from: `Baunow GJT <${fromEmail}>`,
       to: [payload.to],
-      subject: 'Invitation to Join Project Management System',
+      subject: '[Baunow GJT]: Invitation to Join',
       html: buildInvitationEmailHtml(payload),
       text: `Hello ${payload.userName},\n\nYou've been invited to the Project Management System.\nLogin: ${payload.loginUrl}\nTemporary password: ${payload.tempPassword}\n\nPlease change your password after your first login.`,
     });

@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
 
+  serverExternalPackages: ['pino', 'pino-pretty'],
+
   typedRoutes: true,
   experimental: {
     serverActions: {
