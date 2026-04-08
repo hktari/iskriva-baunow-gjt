@@ -280,7 +280,7 @@ export function ProjectForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
+              <Label htmlFor="endDate">End Date *</Label>
               <Input
                 id="endDate"
                 name="endDate"
@@ -290,6 +290,7 @@ export function ProjectForm({
                     ? (new Date(project.endDate).toISOString().split('T')[0] ?? '')
                     : ''
                 }
+                required
               />
             </div>
           </div>

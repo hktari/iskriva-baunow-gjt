@@ -1,13 +1,10 @@
-export function AppFooter() {
-  const currentYear = new Date().getFullYear();
+import Image from 'next/image';
 
+export function AppFooter() {
   return (
     <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {currentYear} EU Project Manager. All rights reserved.</p>
-          <p>European Project Analytics Platform</p>
-        </div>
+      <div className="container mx-auto flex items-center justify-end">
+        <Image src="/images/logo.png" alt="Baunow GJT" height={300} width={400} />
       </div>
     </footer>
   );

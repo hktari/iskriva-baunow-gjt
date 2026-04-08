@@ -7,6 +7,7 @@ import {
   BookOpen,
   FileText,
   FolderKanban,
+  Info,
   LogOut,
   Map,
   Menu,
@@ -49,6 +50,7 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'Map', href: '/map', icon: Map },
     { name: 'Methodology', href: '/methodology', icon: BookOpen },
     { name: 'News', href: '/news', icon: Newspaper },
+    { name: 'About', href: '/about', icon: Info },
   ];
 
   const adminNavigation = [
@@ -68,7 +70,7 @@ export function AppHeader({ user }: AppHeaderProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
-            <span className="hidden sm:inline">EU Project Manager</span>
+            <span className="hidden sm:inline">Baunow GJT</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">

@@ -65,3 +65,32 @@ export const NUMERIC_ISO_COUNTRY: Record<string, string> = Object.fromEntries(
     .filter(([, code]) => code !== null)
     .map(([name, code]) => [code as string, name])
 );
+
+/** EU member country numeric ISO codes - these are the only interactable countries on the map */
+export const EU_COUNTRY_CODES = new Set([
+  '040', // Austria
+  '056', // Belgium
+  '100', // Bulgaria
+  '191', // Croatia
+  '196', // Cyprus
+  '203', // Czech Republic
+  '208', // Denmark
+  '233', // Estonia
+  '246', // Finland
+  '250', // France
+  '276', // Germany
+  '300', // Greece
+  '348', // Hungary
+  '372', // Ireland
+  '380', // Italy
+  '428', // Latvia
+  '440', // Lithuania
+  '528', // Netherlands
+  '616', // Poland
+  '620', // Portugal
+  '642', // Romania
+  '703', // Slovakia
+  '705', // Slovenia
+  '724', // Spain
+  '752', // Sweden
+]);
