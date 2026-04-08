@@ -74,7 +74,7 @@ export function AppHeader({ user }: AppHeaderProps) {
           <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
             <Image src="/images/logo-header.png" height={150} width={265} alt="Baunow GJT" />
           </Link>
-          <div className="flex items-center h-16">
+          <div className="flex items-center h-16 justify-between">
             <nav className="hidden md:flex items-center gap-1">
               {allNavigation.map(item => (
                 <Link key={item.name} href={item.href as any}>
