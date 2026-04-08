@@ -31,17 +31,31 @@ test.describe('Authentication Flow', () => {
     await expect(page.getByTestId('app-header').getByText('Demo Viewer')).toBeVisible();
   });
 
-  test('logout successfully', async ({ page }) => {
+  test('logout redirects to login page without 404', async ({ page }) => {
     // Login first
     await page.goto('/login');
     await page.getByRole('button', { name: 'Editor' }).click();
     await expect(page).toHaveURL('/');
 
+    // Track any failed responses during logout
+    const failedResponses: { url: string; status: number }[] = [];
+    page.on('response', response => {
+      if (response.status() >= 400) {
+        failedResponses.push({ url: response.url(), status: response.status() });
+      }
+    });
+
     // Click logout button
     await page.getByRole('button', { name: /logout/i }).click();
 
-    // Should redirect to home page
-    await expect(page).toHaveURL('/');
+    // Should redirect to /login (not localhost:3000/login or any other host)
+    await expect(page).toHaveURL('/login');
+
+    // Should not have received any 404 or error responses
+    expect(failedResponses).toHaveLength(0);
+
+    // Login page should be rendered (not a 404/error page)
+    await expect(page.getByRole('heading', { name: /eu project manager/i })).toBeVisible();
 
     // Should not show user info
     await expect(page.getByTestId('app-header').getByText('Demo Editor')).not.toBeVisible();
