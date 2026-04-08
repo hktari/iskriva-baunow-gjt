@@ -69,12 +69,12 @@ export function AppHeader({ user }: AppHeaderProps) {
       className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
       data-testid="app-header"
     >
-      <div className="container mx-auto flex px-4">
-        <div className="flex items-center gap-6">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-[auto_1fr] gap-6">
           <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
             <Image src="/images/logo-header.png" height={150} width={265} alt="Baunow GJT" />
           </Link>
-          <div className="flex items-center h-16 justify-between">
+          <div className="flex items-center h-16 justify-end gap-6">
             <nav className="hidden md:flex items-center gap-1">
               {allNavigation.map(item => (
                 <Link key={item.name} href={item.href as any}>
