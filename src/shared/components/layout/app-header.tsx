@@ -19,10 +19,17 @@ import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 interface AppHeaderProps {
   user?: User;
+}
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  disabled?: boolean;
 }
 
 const ROLE_COLORS = {
@@ -46,16 +53,16 @@ export function AppHeader({ user }: AppHeaderProps) {
     window.location.href = '/login';
   };
 
-  const navigation = [
+  const navigation: NavigationItem[] = [
     { name: 'Projects', href: '/', icon: FolderKanban },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Map', href: '/map', icon: Map },
-    { name: 'Methodology', href: '/methodology', icon: BookOpen },
-    { name: 'News', href: '/news', icon: Newspaper },
-    { name: 'About', href: '/about', icon: Info },
+    { name: 'Methodology', href: '/methodology', icon: BookOpen, disabled: true },
+    { name: 'News', href: '/news', icon: Newspaper, disabled: true },
+    { name: 'About', href: '/about', icon: Info, disabled: true },
   ];
 
-  const adminNavigation = [
+  const adminNavigation: NavigationItem[] = [
     { name: 'Users', href: '/users', icon: Users },
     { name: 'Fields', href: '/fields', icon: Settings },
     { name: 'Audit Logs', href: '/audit-logs', icon: FileText },
@@ -76,14 +83,21 @@ export function AppHeader({ user }: AppHeaderProps) {
           </Link>
           <div className="flex items-center h-16 justify-end gap-6">
             <nav className="hidden md:flex items-center gap-1">
-              {allNavigation.map(item => (
-                <Link key={item.name} href={item.href as any}>
-                  <Button variant="ghost" size="sm" className="gap-2">
+              {allNavigation.map(item =>
+                item.disabled ? (
+                  <Button key={item.name} variant="ghost" size="sm" className="gap-2" disabled>
                     <item.icon className="h-4 w-4" />
                     {item.name}
                   </Button>
-                </Link>
-              ))}
+                ) : (
+                  <Link key={item.name} href={item.href as any}>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Button>
+                  </Link>
+                )
+              )}
             </nav>
             <div className="flex items-center gap-4">
               {isLoggedIn ? (
@@ -139,18 +153,31 @@ export function AppHeader({ user }: AppHeaderProps) {
             ) : null}
 
             <nav className="flex flex-col gap-1">
-              {allNavigation.map(item => (
-                <Link
-                  key={item.name}
-                  href={item.href as any}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+              {allNavigation.map(item =>
+                item.disabled ? (
+                  <Button
+                    key={item.name}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2"
+                    disabled
+                  >
                     <item.icon className="h-4 w-4" />
                     {item.name}
                   </Button>
-                </Link>
-              ))}
+                ) : (
+                  <Link
+                    key={item.name}
+                    href={item.href as any}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Button>
+                  </Link>
+                )
+              )}
             </nav>
 
             {isLoggedIn ? (

@@ -1,5 +1,6 @@
 'use client';
 
+import { resendInvitation } from '@/server/actions/invitations';
 import { deleteUser, updateUserStatus } from '@/server/actions/users';
 import {
   AlertDialog,
@@ -32,7 +33,7 @@ import {
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { UserRole, UserStatus } from '@prisma/client';
-import { Mail, MoreHorizontal, Plus, Search } from 'lucide-react';
+import { Mail, MoreHorizontal, Plus, RefreshCw, Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { InviteUserDialog } from './invite-user-dialog';
@@ -84,6 +85,7 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [resendingUserId, setResendingUserId] = useState<string | null>(null);
 
   // Debounced search function
   const debouncedSearch = useDebouncedCallback(
@@ -131,6 +133,34 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
     } else {
       toast.success('User status updated');
       setUsers(users.map(u => (u.id === id ? { ...u, status } : u)));
+    }
+  };
+
+  const handleResendInvitation = async (id: string) => {
+    setResendingUserId(id);
+
+    try {
+      const result = await resendInvitation(id);
+
+      if ('error' in result) {
+        toast.error(result.error);
+      } else if ('success' in result && result.success) {
+        toast.success(result.message || 'Invitation resent successfully');
+
+        // In demo environment, show the new credentials
+        if (result.demoCredentials) {
+          // You could show a dialog with the new credentials here
+          // For now, just log them (in production, this would be handled differently)
+          console.warn('New demo credentials:', result.demoCredentials);
+        }
+      } else {
+        toast.error('Failed to resend invitation');
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred while resending invitation');
+      console.error('Resend invitation error:', error);
+    } finally {
+      setResendingUserId(null);
     }
   };
 
@@ -229,6 +259,25 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
                         <DropdownMenuItem onClick={() => setEditingUser(user)}>
                           Edit User
                         </DropdownMenuItem>
+                        {user.status === UserStatus.PENDING && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleResendInvitation(user.id)}
+                              disabled={resendingUserId === user.id}
+                            >
+                              <Mail className="mr-2 h-4 w-4" />
+                              {resendingUserId === user.id ? (
+                                <>
+                                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                  Resending...
+                                </>
+                              ) : (
+                                'Resend Invitation'
+                              )}
+                            </DropdownMenuItem>
+                          </>
+                        )}
                         <DropdownMenuSeparator />
                         <DropdownMenuLabel>Change Status</DropdownMenuLabel>
                         <DropdownMenuItem
