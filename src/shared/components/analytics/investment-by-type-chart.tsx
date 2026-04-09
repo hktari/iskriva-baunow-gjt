@@ -72,14 +72,14 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
           <Bar
             yAxisId="left"
             dataKey="valueInMillions"
-            fill="var(--color-primary)"
+            fill="var(--color-chart-1)"
             name="Investment (M EUR)"
           />
           <Line
             yAxisId="right"
             type="monotone"
             dataKey="count"
-            stroke="var(--color-chart-3)"
+            stroke="var(--color-chart-2)"
             name="Project Count"
           />
         </ComposedChart>

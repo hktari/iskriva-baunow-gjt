@@ -32,7 +32,7 @@ export function ProjectsByCountryChart({ data }: ProjectsByCountryChartProps) {
           <Tooltip />
           <Bar
             dataKey="count"
-            fill="var(--color-primary)"
+            fill="var(--color-chart-1)"
             label={{ position: 'top', fontSize: 14 }}
           />
         </BarChart>

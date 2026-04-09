@@ -59,7 +59,7 @@ export function KpiPerformanceChart({ data }: KpiPerformanceChartProps) {
               return null;
             }}
           />
-          <Bar dataKey="avgAchievement" fill="var(--color-primary)" radius={[0, 4, 4, 0]} />
+          <Bar dataKey="avgAchievement" fill="var(--color-chart-1)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>

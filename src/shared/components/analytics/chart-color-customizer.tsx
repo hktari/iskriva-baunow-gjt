@@ -26,65 +26,23 @@ const COLOR_CONFIGS: ColorConfig[] = [
   {
     name: 'chart-1',
     variable: '--color-chart-1',
-    label: 'Chart Color 1',
+    label: 'Color 1',
     description: 'Primary chart color (blue)',
     defaultValue: 'hsl(221.2 83.2% 53.3%)',
   },
   {
     name: 'chart-2',
     variable: '--color-chart-2',
-    label: 'Chart Color 2',
+    label: 'Color 2',
     description: 'Secondary chart color (green)',
     defaultValue: 'hsl(142.1 76.2% 36.3%)',
   },
   {
     name: 'chart-3',
     variable: '--color-chart-3',
-    label: 'Chart Color 3',
+    label: 'Color 3',
     description: 'Tertiary chart color (yellow)',
     defaultValue: 'hsl(47.9 95.8% 53.1%)',
-  },
-  {
-    name: 'chart-4',
-    variable: '--color-chart-4',
-    label: 'Chart Color 4',
-    description: 'Quaternary chart color (purple)',
-    defaultValue: 'hsl(280.4 89.1% 65.5%)',
-  },
-  {
-    name: 'chart-5',
-    variable: '--color-chart-5',
-    label: 'Chart Color 5',
-    description: 'Quinary chart color (pink)',
-    defaultValue: 'hsl(340.7 82.2% 52.5%)',
-  },
-  {
-    name: 'status-planning',
-    variable: '--color-status-planning',
-    label: 'Planning Status',
-    description: 'Color for projects in planning',
-    defaultValue: 'hsl(47.9 95.8% 53.1%)',
-  },
-  {
-    name: 'status-in-progress',
-    variable: '--color-status-in-progress',
-    label: 'In Progress Status',
-    description: 'Color for projects in progress',
-    defaultValue: 'hsl(221.2 83.2% 53.3%)',
-  },
-  {
-    name: 'status-completed',
-    variable: '--color-status-completed',
-    label: 'Completed Status',
-    description: 'Color for completed projects',
-    defaultValue: 'hsl(142.1 76.2% 36.3%)',
-  },
-  {
-    name: 'status-on-hold',
-    variable: '--color-status-on-hold',
-    label: 'On Hold Status',
-    description: 'Color for projects on hold',
-    defaultValue: 'hsl(0 84.2% 60.2%)',
   },
 ];
 
@@ -191,60 +149,34 @@ export function ChartColorCustomizer() {
           Customize Colors
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Customize Chart Colors</DialogTitle>
           <DialogDescription>
-            Personalize the colors used in analytics charts. Changes are saved locally in your
+            Personalize the 3 colors used in all analytics charts. Changes are saved locally in your
             browser.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
-          <div>
-            <h3 className="text-sm font-semibold mb-3">General Chart Colors</h3>
-            <div className="grid gap-4">
-              {COLOR_CONFIGS.filter(c => c.name.startsWith('chart-')).map(config => (
-                <div key={config.name} className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <Label htmlFor={config.name} className="font-medium">
-                      {config.label}
-                    </Label>
-                    <p className="text-xs text-muted-foreground">{config.description}</p>
-                  </div>
-                  <input
-                    type="color"
-                    id={config.name}
-                    value={hslToHex(colors[config.name] || config.defaultValue)}
-                    onChange={e => handleColorChange(config.name, e.target.value)}
-                    className="h-10 w-20 rounded border cursor-pointer"
-                  />
+        <div className="py-4">
+          <div className="grid gap-4">
+            {COLOR_CONFIGS.map(config => (
+              <div key={config.name} className="flex items-center gap-4">
+                <div className="flex-1">
+                  <Label htmlFor={config.name} className="font-medium">
+                    {config.label}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">{config.description}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold mb-3">Project Status Colors</h3>
-            <div className="grid gap-4">
-              {COLOR_CONFIGS.filter(c => c.name.startsWith('status-')).map(config => (
-                <div key={config.name} className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <Label htmlFor={config.name} className="font-medium">
-                      {config.label}
-                    </Label>
-                    <p className="text-xs text-muted-foreground">{config.description}</p>
-                  </div>
-                  <input
-                    type="color"
-                    id={config.name}
-                    value={hslToHex(colors[config.name] || config.defaultValue)}
-                    onChange={e => handleColorChange(config.name, e.target.value)}
-                    className="h-10 w-20 rounded border cursor-pointer"
-                  />
-                </div>
-              ))}
-            </div>
+                <input
+                  type="color"
+                  id={config.name}
+                  value={hslToHex(colors[config.name] || config.defaultValue)}
+                  onChange={e => handleColorChange(config.name, e.target.value)}
+                  className="h-10 w-20 rounded border cursor-pointer"
+                />
+              </div>
+            ))}
           </div>
         </div>
 
