@@ -144,7 +144,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
                   <SelectContent>
                     <SelectItem value={UserRole.VIEWER}>Viewer</SelectItem>
                     <SelectItem value={UserRole.EDITOR}>Editor</SelectItem>
-                    <SelectItem value={UserRole.SUPER_USER}>Super User</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

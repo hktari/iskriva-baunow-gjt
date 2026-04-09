@@ -33,7 +33,7 @@ import {
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { UserRole, UserStatus } from '@prisma/client';
-import { Mail, MoreHorizontal, Plus, RefreshCw, Search } from 'lucide-react';
+import { Mail, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { InviteUserDialog } from './invite-user-dialog';
@@ -81,7 +81,6 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
   const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState('');
   const [filteredUsers, setFilteredUsers] = useState(initialUsers);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
@@ -198,16 +197,10 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
             className="pl-8"
           />
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setIsInviteOpen(true)}>
-            <Mail className="mr-2 h-4 w-4" />
-            Invite User
-          </Button>
-          <Button onClick={() => setIsCreateOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add User
-          </Button>
-        </div>
+        <Button onClick={() => setIsInviteOpen(true)}>
+          <Mail className="mr-2 h-4 w-4" />
+          Invite User
+        </Button>
       </div>
 
       <div className="rounded-md border">
@@ -310,15 +303,6 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
           </TableBody>
         </Table>
       </div>
-
-      <UserFormDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-        onSuccess={(newUser: User) => {
-          setUsers([normalizeUserForList(newUser), ...users]);
-          setIsCreateOpen(false);
-        }}
-      />
 
       {editingUser ? (
         <UserFormDialog
