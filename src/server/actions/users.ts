@@ -1,11 +1,11 @@
 'use server';
 
 import { auth } from '@/server/auth';
-import { db } from '@/shared/lib/db';
-import { userSchema, type UserFormData } from '@/shared/lib/validations/user';
-import { createChildLogger } from '@/shared/lib/logger';
 import { captureError } from '@/shared/lib/capture-error';
+import { db } from '@/shared/lib/db';
+import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
+import { userSchema, type UserFormData } from '@/shared/lib/validations/user';
 import { UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
@@ -177,11 +177,16 @@ export async function deleteUser(id: string) {
   try {
     const user = await db.user.findUnique({
       where: { id },
-      select: { email: true, name: true },
+      select: { email: true, name: true, role: true },
     });
 
     if (!user) {
       return { error: 'User not found' };
+    }
+
+    // Prevent deleting super users - last line of defense against admin lockout
+    if (user.role === 'SUPER_USER') {
+      return { error: 'Cannot delete a super user account' };
     }
 
     await db.user.delete({

@@ -173,6 +173,24 @@ describe('User Server Actions - Audit Log FK Constraint', () => {
       // (regression test - the FK constraint has been removed)
       expect(result).toEqual({ error: 'Failed to delete user' });
     });
+
+    it('should prevent deleting a super user account', async () => {
+      const superUserId = 'super-user-to-delete';
+      const userToDelete = createMockUser({
+        id: superUserId,
+        name: 'Other Super User',
+        email: 'other-super@test.com',
+        role: 'SUPER_USER',
+      });
+
+      // Mock finding the super user
+      mockDb.user.findUnique.mockResolvedValue(userToDelete);
+
+      const result = await deleteUser(superUserId);
+
+      expect(result).toEqual({ error: 'Cannot delete a super user account' });
+      expect(mockDb.user.delete).not.toHaveBeenCalled();
+    });
   });
 
   describe('Audit log persistence', () => {

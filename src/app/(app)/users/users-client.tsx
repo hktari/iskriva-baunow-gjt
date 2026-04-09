@@ -290,13 +290,17 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
                         >
                           Set Inactive
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => setDeletingUserId(user.id)}
-                          className="text-destructive"
-                        >
-                          Delete User
-                        </DropdownMenuItem>
+                        {user.role !== 'SUPER_USER' && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => setDeletingUserId(user.id)}
+                              className="text-destructive"
+                            >
+                              Delete User
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
