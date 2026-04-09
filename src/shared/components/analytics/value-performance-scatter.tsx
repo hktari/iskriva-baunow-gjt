@@ -20,10 +20,10 @@ interface ValuePerformanceScatterProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'var(--color-muted)',
-  IN_PROGRESS: 'var(--color-primary)',
-  COMPLETED: 'var(--color-chart-2)',
-  ON_HOLD: 'var(--color-destructive)',
+  PLANNING: 'var(--color-status-planning)',
+  IN_PROGRESS: 'var(--color-status-in-progress)',
+  COMPLETED: 'var(--color-status-completed)',
+  ON_HOLD: 'var(--color-status-on-hold)',
 };
 
 export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) {

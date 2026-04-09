@@ -1,6 +1,7 @@
 'use client';
 
 import { getOrganizationAnalytics } from '@/server/actions/analytics';
+import { ChartColorCustomizer } from '@/shared/components/analytics/chart-color-customizer';
 import { InvestmentByTypeChart } from '@/shared/components/analytics/investment-by-type-chart';
 import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performance-chart';
 import { ProjectStatusChart } from '@/shared/components/analytics/project-status-chart';
@@ -118,13 +119,16 @@ export function OrganizationAnalyticsClient({
               <CardTitle>Organization</CardTitle>
               <CardDescription>Select an organization to view its analytics</CardDescription>
             </div>
-            <button
-              onClick={() => setShowSettings(!showSettings)}
-              className="p-2 hover:bg-accent rounded-md transition-colors"
-              aria-label="Toggle chart settings"
-            >
-              <Settings2 className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <ChartColorCustomizer />
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                className="p-2 hover:bg-accent rounded-md transition-colors"
+                aria-label="Toggle chart settings"
+              >
+                <Settings2 className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">

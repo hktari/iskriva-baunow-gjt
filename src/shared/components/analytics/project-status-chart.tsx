@@ -10,10 +10,10 @@ interface ProjectStatusChartProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  PLANNING: 'var(--color-yellow-600)',
-  IN_PROGRESS: 'var(--color-primary)',
-  COMPLETED: 'var(--color-green-600)',
-  ON_HOLD: 'var(--color-red-600)',
+  PLANNING: 'var(--color-status-planning)',
+  IN_PROGRESS: 'var(--color-status-in-progress)',
+  COMPLETED: 'var(--color-status-completed)',
+  ON_HOLD: 'var(--color-status-on-hold)',
 };
 
 export function ProjectStatusChart({ data }: ProjectStatusChartProps) {

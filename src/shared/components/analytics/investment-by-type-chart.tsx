@@ -79,7 +79,7 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
             yAxisId="right"
             type="monotone"
             dataKey="count"
-            stroke="var(--color-yellow-600)"
+            stroke="var(--color-chart-3)"
             name="Project Count"
           />
         </ComposedChart>

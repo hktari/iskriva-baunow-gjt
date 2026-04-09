@@ -1,6 +1,7 @@
 'use client';
 
 import { getGeneralAnalytics } from '@/server/actions/analytics';
+import { ChartColorCustomizer } from '@/shared/components/analytics/chart-color-customizer';
 import { EnvironmentalImpactChart } from '@/shared/components/analytics/environmental-impact-chart';
 import { InvestmentByTypeChart } from '@/shared/components/analytics/investment-by-type-chart';
 import { KpiPerformanceChart } from '@/shared/components/analytics/kpi-performance-chart';
@@ -93,8 +94,13 @@ export function GeneralAnalyticsClient({
       {/* Filters Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
-          <CardDescription>Filter analytics data by criteria</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Filters</CardTitle>
+              <CardDescription>Filter analytics data by criteria</CardDescription>
+            </div>
+            <ChartColorCustomizer />
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
