@@ -13,6 +13,7 @@ import {
   Menu,
   Newspaper,
   Settings,
+  UserCircle,
   Users,
 } from 'lucide-react';
 import { User } from 'next-auth';
@@ -110,6 +111,13 @@ export function AppHeader({ user }: AppHeaderProps) {
                     <Badge className={ROLE_COLORS[user.role]}>{ROLE_LABELS[user.role]}</Badge>
                   </div>
 
+                  <Button variant="ghost" size="sm" asChild className="hidden sm:flex gap-2">
+                    <Link href={'/profile' as any}>
+                      <UserCircle className="h-4 w-4" />
+                      Profile
+                    </Link>
+                  </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"
@@ -181,15 +189,23 @@ export function AppHeader({ user }: AppHeaderProps) {
             </nav>
 
             {isLoggedIn ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className="w-full justify-start gap-2"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </Button>
+              <>
+                <Link href={'/profile' as any} onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+                    <UserCircle className="h-4 w-4" />
+                    Profile
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="w-full justify-start gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </>
             ) : (
               <Button variant="default" size="sm" asChild className="w-full">
                 <Link href="/login">Login</Link>
