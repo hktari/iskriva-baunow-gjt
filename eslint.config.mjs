@@ -1,6 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
-import { defineConfig } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,19 +11,8 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-export default defineConfig([
+export default [
   {
-    extends: compat.extends('next/core-web-vitals', 'next/typescript'),
-
-    languageOptions: {
-      ecmaVersion: 5,
-      sourceType: 'script',
-
-      parserOptions: {
-        project: './tsconfig.json',
-      },
-    },
-
     ignores: [
       '**/node_modules/**',
       '**/.next/**',
@@ -34,6 +22,16 @@ export default defineConfig([
       '*.config.mjs',
       '*.config.js',
     ],
+  },
+  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  {
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
 
@@ -94,4 +92,4 @@ export default defineConfig([
       ],
     },
   },
-]);
+];
