@@ -34,18 +34,17 @@ test.describe('Admin Features', () => {
       await page.goto('/users');
 
       // Click Add User button
-      await page.getByRole('button', { name: 'Add User' }).click();
+      await page.getByRole('button', { name: 'Invite User' }).click();
 
       // Fill in the form
       await page.getByLabel('Name').fill('Test User');
       await page.getByLabel('Email').fill(`test-${Date.now()}@example.com`);
-      await page.getByLabel('Password', { exact: false }).fill('testpass123');
 
       // Submit form
-      await page.getByRole('button', { name: 'Create User' }).click();
+      await page.getByRole('button', { name: 'Send Invitation' }).click();
 
       // Wait for success message
-      await expect(page.getByText('User created successfully')).toBeVisible();
+      await expect(page.getByText('User invited successfully')).toBeVisible();
     });
 
     test('should invite a user', async ({ page }) => {
