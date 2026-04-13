@@ -6,7 +6,7 @@ export const projectSchema = z.object({
   projectType: z.string().min(1, 'Project type is required'),
   investmentType: z.string().optional().or(z.null()),
   projectValue: z.coerce.number().positive('Project value must be positive'),
-  investmentCosts: z.coerce.number().positive().optional().or(z.null()),
+  investmentCosts: z.coerce.number().nonnegative().optional().or(z.null()),
   status: z.enum(['PLANNING', 'IN_PROGRESS', 'COMPLETED', 'ON_HOLD']),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional().or(z.null()),
