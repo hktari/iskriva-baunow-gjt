@@ -1,17 +1,17 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, Star } from 'lucide-react';
 import { auth } from '@/server/auth';
-import { getProject, getConfigurableFields } from '@/server/queries/projects';
-import { Button } from '@/shared/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Badge } from '@/shared/components/ui/badge';
+import { getConfigurableFields, getProject } from '@/server/queries/projects';
+import { AddKpiDialog } from '@/shared/components/projects/add-kpi-dialog';
 import { FavoriteButton } from '@/shared/components/projects/favorite-button';
 import { KpiCard } from '@/shared/components/projects/kpi-card';
-import { AddKpiDialog } from '@/shared/components/projects/add-kpi-dialog';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent } from '@/shared/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { getStatusColor, getStatusLabel } from '@/shared/lib/formatters';
+import { ArrowLeft, Star } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ProjectDetailView } from './project-detail-view';
-import { getStatusLabel, getStatusColor } from '@/shared/lib/formatters';
 
 interface ProjectPageProps {
   params: Promise<{
@@ -51,7 +51,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p className="text-muted-foreground mt-1">
                 {project.country}
                 {project.organization ? ` • ${project.organization}` : null}
-                {` • ${project.projectType}`}
+                {` • {project.projectType}`}
               </p>
             </div>
             <div className="flex items-center gap-2">

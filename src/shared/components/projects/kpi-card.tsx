@@ -4,13 +4,8 @@ import { deleteKpi, setPrimaryKpi, updateKpi } from '@/server/actions/kpis';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
-import {
-  calculateKpiProgress,
-  formatNumber,
-  getKpiProgressBgColor,
-  getKpiProgressColor,
-} from '@/shared/lib/formatters';
-import { Pencil, Star, Trash2, TrendingDown, TrendingUp } from 'lucide-react';
+import { calculateKpiProgress, formatNumber } from '@/shared/lib/formatters';
+import { Pencil, Star, Trash2 } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -201,18 +196,11 @@ export function KpiCard({ kpi, projectId, canEdit, isAuthenticated }: KpiCardPro
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${getKpiProgressColor(progress)}`}>
-                  {progress}%
-                </span>
-                {progress >= 100 ? (
-                  <TrendingUp className="h-4 w-4 text-green-600" />
-                ) : progress < 80 ? (
-                  <TrendingDown className="h-4 w-4 text-red-600" />
-                ) : null}
+                <span className="text-sm font-medium">{progress}%</span>
               </div>
               <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <div
-                  className={`h-full ${getKpiProgressBgColor(progress)} transition-all`}
+                  className="h-full bg-primary transition-all"
                   style={{ width: `${Math.min(progress, 100)}%` }}
                 />
               </div>
