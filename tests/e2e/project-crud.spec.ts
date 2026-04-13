@@ -5,7 +5,9 @@ test.describe('Project Management Flow', () => {
     // Login as editor before each test
     await page.goto('/login');
     await page.getByRole('button', { name: 'Editor' }).click();
-    await expect(page).toHaveURL('/');
+    // Wait for navigation to complete after login
+    await page.waitForURL('/');
+    await expect(page.getByRole('heading', { name: /^projects$/i })).toBeVisible();
   });
 
   test('create a new project', async ({ page }) => {
@@ -21,6 +23,7 @@ test.describe('Project Management Flow', () => {
     await page.getByRole('option', { name: 'Research' }).click();
     await page.getByLabel(/project value \(eur\) \*/i).fill('1000000');
     await page.getByLabel(/start date \*/i).fill('2025-01-01');
+    await page.getByLabel(/end date \*/i).fill('2025-12-31');
     await page.getByLabel(/description \*/i).fill('This is an E2E test project');
 
     // Submit form
