@@ -1,6 +1,6 @@
 'use client';
 
-import { EU_COUNTRY_CODES, NUMERIC_ISO_COUNTRY } from '@/shared/lib/country-iso-mapping';
+import { EUROPEAN_COUNTRY_CODES, NUMERIC_ISO_COUNTRY } from '@/shared/lib/country-iso-mapping';
 import type { ProjectsByCountry } from '@/types/analytics';
 import { useState } from 'react';
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
@@ -19,9 +19,6 @@ const PROJECTION_CONFIG = {
   center: [0, 52] as [number, number],
   scale: 680,
 };
-
-/** All European country codes for display purposes (both EU and non-EU) */
-const EUROPEAN_COUNTRY_CODES = new Set(Object.keys(NUMERIC_ISO_COUNTRY));
 
 interface TooltipState {
   country: string;
@@ -120,25 +117,7 @@ export function ProjectsByCountryMap({ data }: ProjectsByCountryMapProps) {
                 const count = countByCountry.get(countryName) ?? 0;
                 const fill = getCountColor(count, maxCount, isDark);
 
-                // Non-EU European countries: visible but not interactable
-                if (!EU_COUNTRY_CODES.has(numericId)) {
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={fill}
-                      stroke={isDark ? '#4b5563' : '#9ca3af'}
-                      strokeWidth={0.6}
-                      style={{
-                        default: { outline: 'none', cursor: 'default' },
-                        hover: { outline: 'none' },
-                        pressed: { outline: 'none' },
-                      }}
-                    />
-                  );
-                }
-
-                // EU countries: fully interactable with hover and tooltip
+                // All European countries are now interactable with hover and tooltip
                 const hoverFill =
                   count === 0
                     ? isDark
