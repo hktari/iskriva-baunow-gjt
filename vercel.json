@@ -3,5 +3,11 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "nextjs",
-  "regions": ["fra1"]
+  "regions": ["fra1"],
+  "crons": [
+    {
+      "path": "/api/news/refresh",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }

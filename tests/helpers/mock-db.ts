@@ -48,6 +48,12 @@ export const mockDb = {
   configurableField: {
     findMany: vi.fn(),
   },
+  newsArticle: {
+    findMany: vi.fn(),
+    findFirst: vi.fn(),
+    count: vi.fn(),
+    upsert: vi.fn(),
+  },
   $transaction: vi.fn(fn => fn(mockDb)),
   $disconnect: vi.fn(),
 };

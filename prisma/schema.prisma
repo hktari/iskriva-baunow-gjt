@@ -203,3 +203,25 @@ enum FieldCategory {
   ORGANIZATION
   KPI_UNIT
 }
+
+enum NewsCategory {
+  ENERGY
+  FUNDING
+  POLICY
+}
+
+model NewsArticle {
+  id          String       @id @default(cuid())
+  guid        String       @unique
+  title       String
+  summary     String       @db.Text
+  url         String
+  source      String
+  category    NewsCategory
+  publishedAt DateTime
+  fetchedAt   DateTime     @default(now())
+
+  @@index([category])
+  @@index([publishedAt])
+  @@map("news_articles")
+}

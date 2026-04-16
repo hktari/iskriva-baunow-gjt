@@ -59,7 +59,7 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Map', href: '/map', icon: Map },
     { name: 'Methodology', href: '/methodology', icon: BookOpen, disabled: true },
-    { name: 'News', href: '/news', icon: Newspaper, disabled: true },
+    { name: 'News', href: '/news', icon: Newspaper },
     { name: 'About', href: '/about', icon: Info, disabled: true },
   ];
 

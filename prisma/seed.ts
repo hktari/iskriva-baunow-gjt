@@ -1,6 +1,13 @@
 /* eslint-disable no-console */
 
-import { FieldCategory, PrismaClient, ProjectStatus, UserRole, UserStatus } from '@prisma/client';
+import {
+  FieldCategory,
+  NewsCategory,
+  PrismaClient,
+  ProjectStatus,
+  UserRole,
+  UserStatus,
+} from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -9,6 +16,7 @@ async function main() {
   console.log('🌱 Starting database seed...');
 
   // Clear existing data
+  await prisma.newsArticle.deleteMany();
   await prisma.auditLog.deleteMany();
   await prisma.favorite.deleteMany();
   await prisma.kpi.deleteMany();
@@ -364,6 +372,70 @@ async function main() {
   });
 
   console.log('✅ Created audit logs');
+
+  // Seed news articles
+  const newsArticles = [
+    {
+      guid: 'seed-eu-energy-001',
+      title: 'EU accelerates renewable energy deployment to meet 2030 climate targets',
+      summary:
+        'The European Commission has unveiled new measures to fast-track permits for solar and wind projects, aiming to triple renewable capacity by 2030 under the REPowerEU plan.',
+      url: 'https://energy.ec.europa.eu/news',
+      source: 'EU DG Energy',
+      category: NewsCategory.ENERGY,
+      publishedAt: new Date('2025-03-15T09:00:00Z'),
+    },
+    {
+      guid: 'seed-cinea-funding-001',
+      title: 'CINEA launches €2.1 billion call for clean energy transition projects',
+      summary:
+        'The European Climate, Infrastructure and Environment Executive Agency has opened a new funding call under the Connecting Europe Facility targeting smart grids, hydrogen, and cross-border energy infrastructure.',
+      url: 'https://cinea.ec.europa.eu/news',
+      source: 'CINEA Clean Energy',
+      category: NewsCategory.FUNDING,
+      publishedAt: new Date('2025-03-10T11:00:00Z'),
+    },
+    {
+      guid: 'seed-eu-policy-001',
+      title: 'European Parliament adopts revised Energy Efficiency Directive',
+      summary:
+        'MEPs have formally adopted the updated Energy Efficiency Directive, setting binding annual energy savings targets of 1.5% for EU member states and introducing stricter requirements for public buildings.',
+      url: 'https://www.europarl.europa.eu/news',
+      source: 'EU Parliament',
+      category: NewsCategory.POLICY,
+      publishedAt: new Date('2025-02-28T14:30:00Z'),
+    },
+    {
+      guid: 'seed-eu-energy-002',
+      title: 'Record solar power generation across Europe in Q1 2025',
+      summary:
+        'Solar photovoltaic installations across EU member states generated a record 85 TWh in the first quarter of 2025, representing a 23% increase year-on-year, driven by falling panel costs and supportive policy frameworks.',
+      url: 'https://energy.ec.europa.eu/news/solar',
+      source: 'EU DG Energy',
+      category: NewsCategory.ENERGY,
+      publishedAt: new Date('2025-02-20T08:00:00Z'),
+    },
+    {
+      guid: 'seed-cinea-funding-002',
+      title: 'Innovation Fund awards €720 million to renewable hydrogen projects',
+      summary:
+        'The Innovation Fund has selected seven projects across Europe to produce 1.58 million tonnes of renewable hydrogen over ten years, collectively avoiding more than 10 million tonnes of CO2 emissions.',
+      url: 'https://cinea.ec.europa.eu/funding/innovation-fund',
+      source: 'CINEA Clean Energy',
+      category: NewsCategory.FUNDING,
+      publishedAt: new Date('2025-02-12T10:00:00Z'),
+    },
+  ];
+
+  for (const article of newsArticles) {
+    await prisma.newsArticle.upsert({
+      where: { guid: article.guid },
+      update: article,
+      create: article,
+    });
+  }
+
+  console.log('✅ Created seed news articles');
 
   console.log('\n🎉 Database seeded successfully!');
   console.log('\n📧 Demo accounts:');
