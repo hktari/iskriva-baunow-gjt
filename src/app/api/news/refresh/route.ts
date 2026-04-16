@@ -68,7 +68,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  void request;
+  // Vercel Crons send GET requests with Authorization: Bearer <CRON_SECRET>
+  if (isCronAuthorized(request)) {
+    return runRefresh();
+  }
+
   const session = await auth();
   if (!session?.user || session?.user?.role !== 'SUPER_USER') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });

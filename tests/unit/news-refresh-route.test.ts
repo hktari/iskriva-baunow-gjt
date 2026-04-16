@@ -19,9 +19,9 @@ vi.mock('@/shared/lib/logger', () => ({
   }),
 }));
 
+import { GET, POST } from '@/app/api/news/refresh/route';
 import { auth } from '@/server/auth';
 import { fetchAllFeeds } from '@/server/services/news-fetcher';
-import { GET, POST } from '@/app/api/news/refresh/route';
 import { NextRequest } from 'next/server';
 
 const mockAuth = auth as ReturnType<typeof vi.fn>;
@@ -97,6 +97,19 @@ describe('POST /api/news/refresh (cron)', () => {
     expect(res.status).toBe(200);
     expect(body.errors).toHaveLength(1);
     expect(body.upserted).toBe(0);
+  });
+});
+
+describe('GET /api/news/refresh (cron via Vercel)', () => {
+  it('runs refresh when cron authorization header is valid', async () => {
+    mockFetchAllFeeds.mockResolvedValue(sampleFeedResult);
+
+    const res = await GET(makeRequest('GET', 'Bearer test-secret-123'));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.upserted).toBe(1);
   });
 });
 
