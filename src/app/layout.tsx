@@ -1,3 +1,4 @@
+import { SessionProvider } from '@/shared/components/providers/session-provider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
@@ -26,8 +27,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className}`}>
-        {children}
-        <Toaster position="top-right" richColors />
+        <SessionProvider>
+          {children}
+          <Toaster position="top-right" richColors />
+        </SessionProvider>
       </body>
     </html>
   );
