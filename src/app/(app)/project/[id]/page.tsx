@@ -35,6 +35,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const isFavorite = userId && project.favorites && project.favorites.length > 0;
+  const canDelete =
+    session?.user?.role === 'SUPER_USER' ||
+    (session?.user?.role !== 'VIEWER' && !!userId && project.createdById === userId);
 
   return (
     <main className="container mx-auto px-4 py-8 space-y-6">
@@ -75,6 +78,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             project={project}
             configurableFields={configurableFields}
             canEdit={canEdit}
+            canDelete={canDelete}
             isAuthenticated={!!session}
           />
         </TabsContent>

@@ -1,12 +1,12 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { auth } from '@/server/auth';
-import { db } from '@/shared/lib/db';
-import { projectSchema, type ProjectFormData } from '@/shared/lib/validations/project';
-import { createChildLogger } from '@/shared/lib/logger';
 import { captureError } from '@/shared/lib/capture-error';
+import { db } from '@/shared/lib/db';
+import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
+import { projectSchema, type ProjectFormData } from '@/shared/lib/validations/project';
+import { revalidatePath } from 'next/cache';
 
 export async function createProject(data: ProjectFormData) {
   const session = await auth();
@@ -117,6 +117,16 @@ export async function deleteProject(id: string) {
   const logger = createChildLogger(context);
 
   try {
+    if (session.user.role !== 'SUPER_USER') {
+      const project = await db.project.findUnique({
+        where: { id },
+        select: { createdById: true },
+      });
+      if (!project || project.createdById !== session.user.id) {
+        return { error: 'Unauthorized' };
+      }
+    }
+
     await db.project.delete({
       where: { id },
     });

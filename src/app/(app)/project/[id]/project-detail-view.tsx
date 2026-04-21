@@ -1,6 +1,18 @@
 'use client';
 
+import { deleteProject } from '@/server/actions/projects';
 import { ProjectForm } from '@/shared/components/projects/project-form';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/shared/components/ui/alert-dialog';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -12,12 +24,15 @@ import {
 } from '@/shared/components/ui/card';
 import { formatCurrency, formatDate, getStatusLabel } from '@/shared/lib/formatters';
 import { Building2, Calendar, DollarSign, ExternalLink, FileText, Lock, Mail } from 'lucide-react';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
 interface ProjectDetailViewProps {
   project: any;
   configurableFields: any;
   canEdit: boolean;
+  canDelete: boolean;
   isAuthenticated: boolean;
 }
 
@@ -25,9 +40,24 @@ export function ProjectDetailView({
   project,
   configurableFields,
   canEdit,
+  canDelete,
   isAuthenticated,
 }: ProjectDetailViewProps) {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  function handleDelete() {
+    startTransition(async () => {
+      const result = await deleteProject(project.id);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success('Project deleted successfully');
+        router.push('/');
+      }
+    });
+  }
 
   if (isEditing) {
     return (
@@ -51,9 +81,36 @@ export function ProjectDetailView({
 
   return (
     <div className="space-y-6">
-      {canEdit ? (
-        <div className="flex justify-end">
-          <Button onClick={() => setIsEditing(true)}>Edit Project</Button>
+      {canEdit || canDelete ? (
+        <div className="flex justify-end gap-2">
+          {canEdit ? <Button onClick={() => setIsEditing(true)}>Edit Project</Button> : null}
+          {canDelete ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" disabled={isPending}>
+                  Delete Project
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete project?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete &quot;{project.name}&quot; and all its KPIs. This
+                    action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : null}
         </div>
       ) : null}
 

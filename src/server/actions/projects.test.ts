@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock dependencies at the top level before any imports
 vi.mock('next/cache', () => ({
@@ -15,6 +15,7 @@ vi.mock('@/shared/lib/db', () => ({
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      findUnique: vi.fn(),
     },
     favorite: {
       create: vi.fn(),
@@ -35,7 +36,7 @@ vi.mock('@/shared/lib/validations/project', () => ({
 
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
-import { createProject, updateProject, deleteProject, toggleFavorite } from './projects';
+import { createProject, deleteProject, toggleFavorite, updateProject } from './projects';
 
 const mockAuth = auth as ReturnType<typeof vi.fn>;
 
@@ -106,11 +107,33 @@ describe('Projects Server Actions', () => {
       expect(result).toEqual({ error: 'Unauthorized' });
     });
 
-    it('deletes project successfully', async () => {
+    it('deletes project successfully as super user', async () => {
       mockAuth.mockResolvedValue({ user: { id: 'user-1', role: 'SUPER_USER' } });
       (db.project.delete as any).mockResolvedValue({ id: 'proj-1' });
       const result = await deleteProject('proj-1');
       expect(result).toEqual({ success: true });
+    });
+
+    it('deletes project successfully when editor is the creator', async () => {
+      mockAuth.mockResolvedValue({ user: { id: 'user-1', role: 'EDITOR' } });
+      (db.project.findUnique as any).mockResolvedValue({ createdById: 'user-1' });
+      (db.project.delete as any).mockResolvedValue({ id: 'proj-1' });
+      const result = await deleteProject('proj-1');
+      expect(result).toEqual({ success: true });
+    });
+
+    it('returns error when editor is not the creator', async () => {
+      mockAuth.mockResolvedValue({ user: { id: 'user-1', role: 'EDITOR' } });
+      (db.project.findUnique as any).mockResolvedValue({ createdById: 'user-2' });
+      const result = await deleteProject('proj-1');
+      expect(result).toEqual({ error: 'Unauthorized' });
+    });
+
+    it('returns error when project does not exist and user is not super user', async () => {
+      mockAuth.mockResolvedValue({ user: { id: 'user-1', role: 'EDITOR' } });
+      (db.project.findUnique as any).mockResolvedValue(null);
+      const result = await deleteProject('proj-1');
+      expect(result).toEqual({ error: 'Unauthorized' });
     });
   });
 
