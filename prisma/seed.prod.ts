@@ -37,7 +37,6 @@ async function main() {
   const email = requireEnv('SUPER_USER_EMAIL');
   const name = requireEnv('SUPER_USER_NAME');
   const password = requireEnv('SUPER_USER_PASSWORD');
-  const organization = requireEnv('SUPER_USER_ORGANIZATION');
 
   // Configurable fields
   const projectTypes = [
@@ -65,8 +64,6 @@ async function main() {
     'Cohesion Fund',
     'LIFE Programme',
   ];
-
-  const organizations = [organization];
 
   const kpiUnits = [
     'EUR',
@@ -100,14 +97,6 @@ async function main() {
     });
   }
 
-  for (const value of organizations) {
-    await prisma.configurableField.upsert({
-      where: { category_value: { category: FieldCategory.ORGANIZATION, value } },
-      update: {},
-      create: { category: FieldCategory.ORGANIZATION, value },
-    });
-  }
-
   for (const value of kpiUnits) {
     await prisma.configurableField.upsert({
       where: { category_value: { category: FieldCategory.KPI_UNIT, value } },
@@ -130,7 +119,6 @@ async function main() {
         name,
         password: hashedPassword,
         role: UserRole.SUPER_USER,
-        organization,
         status: UserStatus.ACTIVE,
       },
     });
