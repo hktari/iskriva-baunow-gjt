@@ -149,11 +149,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
               </div>
 
               <div className="rounded-md bg-muted p-4 text-sm space-y-2">
-                <p className="font-medium">Delivery</p>
-                <p className="text-muted-foreground">
-                  Invitations send an email via Resend in production environments. In local/demo
-                  environments, credentials will be shown after sending.
-                </p>
                 {emailStatusLabel ? (
                   <p className="text-sm text-foreground">{emailStatusLabel}</p>
                 ) : null}
