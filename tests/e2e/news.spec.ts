@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { loginAsSuperUser, loginAsViewer } from './helpers/auth';
 
 test.describe('News Page', () => {
   test('should load news page and display seed articles', async ({ page }) => {
@@ -70,9 +71,7 @@ test.describe('News Page', () => {
   });
 
   test('Refresh feed button is hidden for viewer role', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Viewer' }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsViewer(page);
 
     await page.goto('/news');
 
@@ -80,9 +79,7 @@ test.describe('News Page', () => {
   });
 
   test('Refresh feed button is visible for super user', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Super User' }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsSuperUser(page);
 
     await page.goto('/news');
 

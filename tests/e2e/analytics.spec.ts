@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { loginAsEditor } from './helpers/auth';
 
 test.describe('Analytics Page', () => {
   test('should not have Prisma client-side errors on analytics page', async ({ page }) => {
@@ -11,9 +12,7 @@ test.describe('Analytics Page', () => {
     });
 
     // Login first (analytics requires auth)
-    await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsEditor(page);
 
     // Navigate to analytics page
     await page.goto('/analytics');
@@ -31,9 +30,7 @@ test.describe('Analytics Page', () => {
 
   test('should load general analytics tab successfully', async ({ page }) => {
     // Login
-    await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsEditor(page);
 
     // Navigate to analytics
     await page.goto('/analytics');
@@ -45,9 +42,7 @@ test.describe('Analytics Page', () => {
 
   test('should load organization analytics tab successfully', async ({ page }) => {
     // Login
-    await page.goto('/login');
-    await page.getByRole('button', { name: /editor/i }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsEditor(page);
 
     // Navigate to analytics
     await page.goto('/analytics');

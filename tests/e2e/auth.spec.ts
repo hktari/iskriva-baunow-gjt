@@ -1,15 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { loginAsEditor, loginAsViewer } from './helpers/auth';
 
 test.describe('Authentication Flow', () => {
   test('login with demo editor account', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto('/login');
-
-    // Click editor demo button
-    await page.getByRole('button', { name: 'Editor' }).click();
-
-    // Wait for navigation to complete
-    await page.waitForURL('/');
+    await loginAsEditor(page);
 
     // Should show authenticated content (Add New Project requires auth)
     await expect(page.getByRole('link', { name: /add new project/i })).toBeVisible();
@@ -19,10 +14,7 @@ test.describe('Authentication Flow', () => {
   });
 
   test('login with demo viewer account', async ({ page }) => {
-    await page.goto('/login');
-
-    // Click viewer demo button
-    await page.getByRole('button', { name: 'Viewer' }).click();
+    await loginAsViewer(page);
 
     // Should redirect to home page
     await expect(page).toHaveURL('/');
@@ -33,9 +25,7 @@ test.describe('Authentication Flow', () => {
 
   test('logout redirects to login page without 404', async ({ page }) => {
     // Login first
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Editor' }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsEditor(page);
 
     // Track any failed responses during logout
     const failedResponses: { url: string; status: number }[] = [];
@@ -63,8 +53,7 @@ test.describe('Authentication Flow', () => {
 
   test('access protected route when authenticated', async ({ page }) => {
     // Login as editor
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Editor' }).click();
+    await loginAsEditor(page);
 
     // Navigate to new project page
     await page.goto('/project/new');

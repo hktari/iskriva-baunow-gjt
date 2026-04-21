@@ -1,22 +1,5 @@
-import { expect, type Page, test } from '@playwright/test';
-
-async function loginAsSuperUser(page: Page) {
-  // Use request-based auth: fetch CSRF token, POST credentials, then navigate.
-  const csrfResponse = await page.request.get('/api/auth/csrf');
-  const { csrfToken } = (await csrfResponse.json()) as { csrfToken: string };
-  await page.request.post('/api/auth/callback/credentials', {
-    form: {
-      csrfToken,
-      email: 'admin@example.com',
-      password: 'demo123',
-      callbackUrl: 'http://localhost:3005/',
-      json: 'true',
-    },
-    maxRedirects: 0,
-  });
-  await page.goto('/');
-  await expect(page).toHaveURL('/');
-}
+import { expect, test } from '@playwright/test';
+import { loginAsEditor, loginAsSuperUser } from './helpers/auth';
 
 test.describe('Admin Features', () => {
   test.beforeEach(async ({ page }) => {
@@ -272,20 +255,7 @@ test.describe('Admin Features', () => {
 
 test.describe('Admin Features - Access Control', () => {
   test('should deny access to non-super users', async ({ page }) => {
-    // Login as Editor using request-based auth (similar to loginAsSuperUser)
-    const csrfResponse = await page.request.get('/api/auth/csrf');
-    const { csrfToken } = (await csrfResponse.json()) as { csrfToken: string };
-    await page.request.post('/api/auth/callback/credentials', {
-      form: {
-        csrfToken,
-        email: 'editor@example.com',
-        password: 'demo123',
-        callbackUrl: 'http://localhost:3005/',
-        json: 'true',
-      },
-      maxRedirects: 0,
-    });
-    await page.goto('/');
+    await loginAsEditor(page);
 
     // Verify admin menu items are not visible
     await expect(page.locator('nav').getByText('Users')).not.toBeVisible();

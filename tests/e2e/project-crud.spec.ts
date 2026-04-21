@@ -1,12 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { loginAsEditor } from './helpers/auth';
 
 test.describe('Project Management Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Login as editor before each test
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Editor' }).click();
-    // Wait for navigation to complete after login
-    await page.waitForURL('/');
+    await loginAsEditor(page);
     await expect(page.getByRole('heading', { name: /^projects$/i })).toBeVisible();
   });
 

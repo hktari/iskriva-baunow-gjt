@@ -1,11 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { loginAsViewer } from './helpers/auth';
 
 test.describe('Viewer Permissions', () => {
   test.beforeEach(async ({ page }) => {
     // Login as viewer before each test
-    await page.goto('/login');
-    await page.getByRole('button', { name: /viewer/i }).click();
-    await expect(page).toHaveURL('/');
+    await loginAsViewer(page);
   });
 
   test('cannot see add project button', async ({ page }) => {
