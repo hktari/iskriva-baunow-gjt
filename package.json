@@ -20,6 +20,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed:prod": "tsx prisma/seed.prod.ts",
     "db:studio": "prisma studio",
     "db:reset-preview": "dotenv -e .env -- ./scripts/reset-preview-db.sh",
     "deploy:preview": "dotenv -e .env -- ./scripts/deploy-preview.sh",

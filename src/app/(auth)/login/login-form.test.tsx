@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoginForm } from './login-form';
 
 const { mockPush, mockRefresh, mockSignIn, mockToastError, mockToastSuccess } = vi.hoisted(() => ({
@@ -41,13 +41,6 @@ describe('LoginForm', () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
-  });
-
-  it('renders demo account buttons', () => {
-    render(<LoginForm />);
-    expect(screen.getByRole('button', { name: /viewer/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /editor/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /super user/i })).toBeInTheDocument();
   });
 
   it('calls signIn with credentials on submit', async () => {
@@ -94,22 +87,6 @@ describe('LoginForm', () => {
     await waitFor(() => {
       expect(mockToastSuccess).toHaveBeenCalledWith('Login successful');
       expect(mockPush).toHaveBeenCalledWith('/');
-    });
-  });
-
-  it('calls signIn when demo button clicked', async () => {
-    mockSignIn.mockResolvedValue({ error: undefined });
-
-    render(<LoginForm />);
-
-    await user.click(screen.getByRole('button', { name: /viewer/i }));
-
-    await waitFor(() => {
-      expect(mockSignIn).toHaveBeenCalledWith('credentials', {
-        email: 'viewer@example.com',
-        password: 'demo123',
-        redirect: false,
-      });
     });
   });
 
