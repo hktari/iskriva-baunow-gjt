@@ -4,20 +4,22 @@
 
 import * as Sentry from '@sentry/nextjs';
 
+const environment = process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NODE_ENV || 'development';
+
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
 
   // Performance monitoring - normalized by environment
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  tracesSampleRate: environment === 'production' ? 0.1 : 1.0,
 
   // Enable debug mode in development
   debug: process.env.NODE_ENV === 'development',
 
   // Enable in production and preview/staging if configured
-  enabled: process.env.NODE_ENV === 'production' || process.env.SENTRY_ENABLED === 'true',
+  enabled: environment === 'production' || process.env.SENTRY_ENABLED === 'true',
 
   // Environment
-  environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development',
+  environment: environment,
 
   // Release tracking
   release: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA,
