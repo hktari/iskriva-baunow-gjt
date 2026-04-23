@@ -1,14 +1,14 @@
 'use server';
 
 import { auth } from '@/server/auth';
-import { db } from '@/shared/lib/db';
 import {
-  sendInvitationEmail,
-  resendInvitationEmail,
   EmailConfigurationError,
+  resendInvitationEmail,
+  sendInvitationEmail,
 } from '@/server/lib/email';
-import { createChildLogger } from '@/shared/lib/logger';
 import { captureError } from '@/shared/lib/capture-error';
+import { db } from '@/shared/lib/db';
+import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -16,7 +16,8 @@ import crypto from 'crypto';
 import { revalidatePath } from 'next/cache';
 
 const isDemoEnvironment = process.env.NODE_ENV !== 'production';
-const defaultLoginUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const defaultLoginUrl = `${appBaseUrl.replace(/\/$/, '')}/login`;
 
 type InvitationSuccessResponse = {
   success: true;

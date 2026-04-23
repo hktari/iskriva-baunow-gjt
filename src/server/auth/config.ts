@@ -1,5 +1,6 @@
 import { db } from '@/shared/lib/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
+import { UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
@@ -85,6 +86,27 @@ export const authConfig = {
 
         if (!passwordsMatch) {
           return null;
+        }
+
+        // Activate user on first successful login (accepting invitation)
+        if (user.status === UserStatus.PENDING) {
+          await db.user.update({
+            where: { id: user.id },
+            data: { status: UserStatus.ACTIVE },
+          });
+          await db.auditLog.create({
+            data: {
+              action: 'INVITATION_ACCEPTED',
+              entityType: 'User',
+              entityId: user.id,
+              userId: user.id,
+              userEmail: user.email,
+              metadata: {
+                userEmail: user.email,
+                via: 'first-login',
+              },
+            },
+          });
         }
 
         return {
