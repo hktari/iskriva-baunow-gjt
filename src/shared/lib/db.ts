@@ -1,42 +1,18 @@
+import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-/**
- * Builds database connection URL with Neon-optimized timeouts.
- * Adds connect_timeout and pool_timeout if not already present.
- * This prevents "Can't reach database server" errors when Neon compute
- * is idle and needs time to activate (cold start).
- *
- * @see https://neon.com/docs/guides/prisma#connection-timeouts
- */
-export function getDatabaseUrl(): string {
-  const baseUrl = process.env.DATABASE_URL;
-  if (!baseUrl) throw new Error('DATABASE_URL is not set');
+function createPrismaClient() {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) throw new Error('DATABASE_URL is not set');
 
-  const url = new URL(baseUrl);
+  const adapter = new PrismaNeon({ connectionString });
 
-  // Add timeout params for Neon serverless (if not already present)
-  if (!url.searchParams.has('connect_timeout')) {
-    url.searchParams.set('connect_timeout', '15');
-  }
-  if (!url.searchParams.has('pool_timeout')) {
-    url.searchParams.set('pool_timeout', '15');
-  }
-
-  return url.toString();
-}
-
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    datasources: {
-      db: {
-        url: getDatabaseUrl(),
-      },
-    },
+  return new PrismaClient({
+    adapter,
     log:
       process.env.NODE_ENV === 'development'
         ? [
@@ -47,5 +23,8 @@ export const db =
           ]
         : ['error'],
   });
+}
+
+export const db = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
