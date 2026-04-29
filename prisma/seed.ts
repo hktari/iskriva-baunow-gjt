@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import { PrismaNeon } from '@prisma/adapter-neon';
 import {
   FieldCategory,
   NewsCategory,
@@ -7,8 +8,7 @@ import {
   ProjectStatus,
   UserRole,
   UserStatus,
-} from '@/generated/prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
+} from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient({

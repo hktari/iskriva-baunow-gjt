@@ -1,6 +1,5 @@
 'use client';
 
-import { UserRole, UserStatus } from '@/generated/prisma/client';
 import { createUser, updateUser } from '@/server/actions/users';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -20,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
+import { UserRole, UserStatus } from '@prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 

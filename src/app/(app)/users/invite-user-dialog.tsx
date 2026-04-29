@@ -1,6 +1,5 @@
 'use client';
 
-import { UserRole } from '@/generated/prisma/client';
 import { inviteUser } from '@/server/actions/invitations';
 import {
   AlertDialog,
@@ -29,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
+import { UserRole } from '@prisma/enums';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 

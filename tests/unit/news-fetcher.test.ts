@@ -1,4 +1,4 @@
-import { NewsCategory } from '@/generated/prisma/client';
+import { NewsCategory } from '@prisma/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('rss-parser', () => {

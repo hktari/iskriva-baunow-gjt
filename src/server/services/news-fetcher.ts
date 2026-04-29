@@ -1,4 +1,4 @@
-import { NewsCategory } from '@/generated/prisma/client';
+import { NewsCategory } from '@prisma/enums';
 import Parser from 'rss-parser';
 
 export interface FeedArticle {

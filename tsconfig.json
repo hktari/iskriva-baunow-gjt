@@ -19,13 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@prisma/*": ["./generated/prisma/*"]
     },
     "types": ["vitest/globals"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": false,
-    "noImplicitAny": false
+    "noFallthroughCasesInSwitch": false
   },
   "include": [
     "next-env.d.ts",

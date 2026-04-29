@@ -1,4 +1,4 @@
-import { NewsCategory } from '@/generated/prisma/client';
+import { NewsCategory } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockDb, resetMockDb } from '../helpers/mock-db';
 

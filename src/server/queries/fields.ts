@@ -1,6 +1,6 @@
-import { FieldCategory } from '@/generated/prisma/client';
 import { auth } from '@/server/auth';
 import { db } from '@/shared/lib/db';
+import { FieldCategory } from '@prisma/enums';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 

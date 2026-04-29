@@ -1,11 +1,11 @@
 'use server';
 
-import { FieldCategory } from '@/generated/prisma/client';
 import { auth } from '@/server/auth';
 import { captureError } from '@/shared/lib/capture-error';
 import { db } from '@/shared/lib/db';
 import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
+import { FieldCategory } from '@prisma/enums';
 import { revalidatePath } from 'next/cache';
 
 export async function createField(category: FieldCategory, value: string) {

@@ -1,9 +1,9 @@
-import { NewsCategory } from '@/generated/prisma/client';
 import { auth } from '@/server/auth';
 import { getLastFetchedAt, getNewsArticles } from '@/server/services/news-service';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
+import { NewsCategory } from '@prisma/enums';
 import { Calendar, ExternalLink, Newspaper, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';

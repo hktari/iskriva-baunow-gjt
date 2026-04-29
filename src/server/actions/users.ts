@@ -1,12 +1,12 @@
 'use server';
 
-import { UserStatus } from '@/generated/prisma/client';
 import { auth } from '@/server/auth';
 import { captureError } from '@/shared/lib/capture-error';
 import { db } from '@/shared/lib/db';
 import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
 import { userSchema, type UserFormData } from '@/shared/lib/validations/user';
+import { UserStatus } from '@prisma/enums';
 import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 

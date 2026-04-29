@@ -1,6 +1,5 @@
 'use client';
 
-import { FieldCategory } from '@/generated/prisma/client';
 import { createField, deleteField, updateField } from '@/server/actions/fields';
 import {
   AlertDialog,
@@ -16,6 +15,7 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
+import { FieldCategory } from '@prisma/enums';
 import { Check, Edit2, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';

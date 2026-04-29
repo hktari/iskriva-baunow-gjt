@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from '@/generated/prisma/client';
+import { UserRole, UserStatus } from '@prisma/enums';
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import { UserFormDialog } from './user-form-dialog';

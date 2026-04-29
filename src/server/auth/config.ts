@@ -1,6 +1,6 @@
-import { UserStatus } from '@/generated/prisma/client';
 import { db } from '@/shared/lib/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
+import { UserStatus } from '@prisma/enums';
 import bcrypt from 'bcryptjs';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';

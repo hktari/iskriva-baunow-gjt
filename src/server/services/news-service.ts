@@ -1,5 +1,5 @@
-import { NewsCategory } from '@/generated/prisma/client';
 import { db } from '@/shared/lib/db';
+import { NewsCategory } from '@prisma/enums';
 
 export interface NewsFilters {
   category?: NewsCategory;

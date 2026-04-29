@@ -1,6 +1,6 @@
-import { FieldCategory } from '@/generated/prisma/client';
 import { getAllFields, getFieldStats } from '@/server/queries/fields';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { FieldCategory } from '@prisma/enums';
 import { Database, Settings } from 'lucide-react';
 import { Suspense } from 'react';
 import { FieldsClient } from './fields-client';

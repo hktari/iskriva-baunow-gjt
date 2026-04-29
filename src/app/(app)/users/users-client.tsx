@@ -1,6 +1,5 @@
 'use client';
 
-import { UserRole, UserStatus } from '@/generated/prisma/client';
 import { resendInvitation } from '@/server/actions/invitations';
 import { deleteUser, updateUserStatus } from '@/server/actions/users';
 import {
@@ -33,6 +32,7 @@ import {
   TableRow,
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
+import { UserRole, UserStatus } from '@/types/user';
 import { Mail, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';

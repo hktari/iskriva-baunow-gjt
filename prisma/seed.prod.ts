@@ -17,8 +17,8 @@
  *   pnpm tsx prisma/seed.prod.ts
  */
 
-import { FieldCategory, PrismaClient, UserRole, UserStatus } from '@/generated/prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
+import { FieldCategory, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient({

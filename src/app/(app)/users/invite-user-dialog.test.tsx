@@ -1,4 +1,4 @@
-import { UserRole } from '@/generated/prisma/client';
+import { UserRole } from '@prisma/enums';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
