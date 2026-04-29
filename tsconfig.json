@@ -24,7 +24,8 @@
     "types": ["vitest/globals"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false
   },
   "include": [
     "next-env.d.ts",

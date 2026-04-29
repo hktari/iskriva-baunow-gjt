@@ -7,10 +7,13 @@ import {
   ProjectStatus,
   UserRole,
   UserStatus,
-} from '@prisma/client';
+} from '@/generated/prisma/client';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL }),
+});
 
 async function main() {
   console.log('🌱 Starting database seed...');

@@ -17,10 +17,13 @@
  *   pnpm tsx prisma/seed.prod.ts
  */
 
-import { FieldCategory, PrismaClient, UserRole, UserStatus } from '@prisma/client';
+import { FieldCategory, PrismaClient, UserRole, UserStatus } from '@/generated/prisma/client';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaNeon({ connectionString: process.env.DATABASE_URL }),
+});
 
 function requireEnv(name: string): string {
   const value = process.env[name];

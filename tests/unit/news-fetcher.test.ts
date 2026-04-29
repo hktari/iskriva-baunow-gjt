@@ -1,4 +1,4 @@
-import { NewsCategory } from '@prisma/client';
+import { NewsCategory } from '@/generated/prisma/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('rss-parser', () => {
@@ -6,8 +6,8 @@ vi.mock('rss-parser', () => {
   return { default: Parser };
 });
 
-import Parser from 'rss-parser';
 import { FEED_CONFIGS, fetchAllFeeds, fetchFeed } from '@/server/services/news-fetcher';
+import Parser from 'rss-parser';
 
 const mockParseURL = vi.fn();
 

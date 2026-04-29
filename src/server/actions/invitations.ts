@@ -1,5 +1,6 @@
 'use server';
 
+import { UserRole, UserStatus } from '@/generated/prisma/client';
 import { auth } from '@/server/auth';
 import {
   EmailConfigurationError,
@@ -10,7 +11,6 @@ import { captureError } from '@/shared/lib/capture-error';
 import { db } from '@/shared/lib/db';
 import { createChildLogger } from '@/shared/lib/logger';
 import { createObservabilityContext, extractUserId } from '@/shared/lib/observability-context';
-import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { revalidatePath } from 'next/cache';

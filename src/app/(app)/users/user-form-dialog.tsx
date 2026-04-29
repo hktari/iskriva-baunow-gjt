@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { UserRole, UserStatus } from '@/generated/prisma/client';
+import { createUser, updateUser } from '@/server/actions/users';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -19,9 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { createUser, updateUser } from '@/server/actions/users';
+import { useEffect, useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { UserRole, UserStatus } from '@prisma/client';
 
 interface UserFormDialogProps {
   open: boolean;

@@ -1,5 +1,5 @@
+import { UserRole, UserStatus } from '@/generated/prisma/client';
 import { z } from 'zod';
-import { UserRole, UserStatus } from '@prisma/client';
 
 export const userSchema = z.object({
   email: z.string().email('Invalid email address'),

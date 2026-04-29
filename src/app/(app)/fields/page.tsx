@@ -1,9 +1,9 @@
-import { Suspense } from 'react';
+import { FieldCategory } from '@/generated/prisma/client';
 import { getAllFields, getFieldStats } from '@/server/queries/fields';
-import { FieldsClient } from './fields-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Settings, Database } from 'lucide-react';
-import { FieldCategory } from '@prisma/client';
+import { Database, Settings } from 'lucide-react';
+import { Suspense } from 'react';
+import { FieldsClient } from './fields-client';
 
 async function FieldStatsCards() {
   const stats = await getFieldStats();

@@ -1,4 +1,4 @@
-import { NewsCategory } from '@prisma/client';
+import { NewsCategory } from '@/generated/prisma/client';
 import { db } from '@/shared/lib/db';
 
 export interface NewsFilters {

@@ -1,5 +1,5 @@
+import { NewsCategory } from '@/generated/prisma/client';
 import Parser from 'rss-parser';
-import { NewsCategory } from '@prisma/client';
 
 export interface FeedArticle {
   guid: string;
