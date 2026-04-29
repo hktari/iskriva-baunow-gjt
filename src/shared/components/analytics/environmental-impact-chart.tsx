@@ -32,8 +32,11 @@ export function EnvironmentalImpactChart({ data }: EnvironmentalImpactChartProps
           <XAxis type="number" />
           <YAxis type="category" dataKey="metric" width={110} />
           <Tooltip
-            formatter={(value: number, name: string, props: any) => {
-              return [formatChartValue(value, props.payload.unit), 'Total Achieved'];
+            formatter={(value, name, props) => {
+              return [
+                formatChartValue(Number(value ?? 0), (props as any).payload.unit),
+                'Total Achieved',
+              ];
             }}
           />
           <Bar dataKey="value" fill="var(--color-chart-2)" radius={[0, 4, 4, 0]} />

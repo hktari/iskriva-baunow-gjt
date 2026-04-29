@@ -50,7 +50,7 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
             label={{
               value: 'Investment (M EUR)',
               angle: -90,
-              position: 'outsideLeft',
+              position: 'outsideLeft' as any,
               dx: -30,
             }}
           />
@@ -58,12 +58,12 @@ export function InvestmentByTypeChart({ data }: InvestmentByTypeChartProps) {
             yAxisId="right"
             orientation="right"
             allowDecimals={false}
-            label={{ value: 'Project Count', angle: 90, position: 'outsideRight', dx: 30 }}
+            label={{ value: 'Project Count', angle: 90, position: 'outsideRight' as any, dx: 30 }}
           />
           <Tooltip
-            formatter={(value: number, name: string) => {
+            formatter={(value, name) => {
               if (name === 'Investment (M EUR)') {
-                return [formatCurrencyMillions(value * 1_000_000), 'Investment'];
+                return [formatCurrencyMillions(Number(value) * 1_000_000), 'Investment'];
               }
               return [value, 'Projects'];
             }}

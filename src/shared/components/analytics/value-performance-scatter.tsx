@@ -63,7 +63,7 @@ export function ValuePerformanceScatter({ data }: ValuePerformanceScatterProps) 
             label={{
               value: 'Avg KPI Achievement (%)',
               angle: -90,
-              position: 'outsideLeft',
+              position: 'outsideLeft' as any,
               dx: -30,
             }}
           />
