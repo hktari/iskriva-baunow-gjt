@@ -22,7 +22,7 @@ vi.mock('next/cache', () => ({
 
 // Import actions after mocks are set up
 import { deleteUser, updateUser } from '@/server/actions/users';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 /**
  * Helper to create a Prisma FK constraint error
