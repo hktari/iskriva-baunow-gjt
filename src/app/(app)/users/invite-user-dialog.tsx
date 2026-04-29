@@ -135,7 +135,7 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
               <div className="grid gap-2">
                 <Label htmlFor="role">Role</Label>
                 <Select
-                  value={formData.role as string}
+                  value={formData.role}
                   onValueChange={value => setFormData({ ...formData, role: value as UserRole })}
                 >
                   <SelectTrigger id="role">

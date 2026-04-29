@@ -112,7 +112,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                   </div>
 
                   <Button variant="ghost" size="sm" asChild className="hidden sm:flex gap-2">
-                    <Link href={'/profile' as any}>
+                    <Link href="/profile">
                       <UserCircle className="h-4 w-4" />
                       Profile
                     </Link>
@@ -190,7 +190,7 @@ export function AppHeader({ user }: AppHeaderProps) {
 
             {isLoggedIn ? (
               <>
-                <Link href={'/profile' as any} onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
                     <UserCircle className="h-4 w-4" />
                     Profile

@@ -86,6 +86,7 @@ describe('User Server Actions - Audit Log FK Constraint', () => {
             userName: updatedUser.name,
             userEmail: updatedUser.email,
             changes: { name: 'Updated Name' },
+            requestId: expect.any(String),
           },
         },
       });
@@ -147,6 +148,7 @@ describe('User Server Actions - Audit Log FK Constraint', () => {
           metadata: {
             deletedUserName: userToDelete.name,
             deletedUserEmail: userToDelete.email,
+            requestId: expect.any(String),
           },
         },
       });

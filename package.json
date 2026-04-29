@@ -79,7 +79,7 @@
     "@types/react-simple-maps": "^3.0.6",
     "@vitejs/plugin-react": "^4.3.4",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^10.2.1",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.2.4",
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",

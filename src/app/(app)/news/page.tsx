@@ -100,12 +100,12 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
         <div className="flex items-center gap-2 flex-wrap">
           {CATEGORIES.map(cat => {
             const isActive = activeCategory === cat.value;
-            const href =
+            const href: any =
               cat.value === 'ALL'
                 ? `/news${search ? `?search=${encodeURIComponent(search)}` : ''}`
                 : `/news?category=${cat.value.toLowerCase()}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
             return (
-              <Link key={cat.value} href={href as any}>
+              <Link key={cat.value} href={href}>
                 <Button
                   variant={isActive ? 'default' : 'outline'}
                   size="sm"
@@ -192,7 +192,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           {page > 1 && (
-            <Link href={buildPageHref(page - 1, category, search) as any}>
+            <Link href={buildPageHref(page - 1, category, search)}>
               <Button variant="outline" size="sm">
                 Previous
               </Button>
@@ -202,7 +202,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
-            <Link href={buildPageHref(page + 1, category, search) as any}>
+            <Link href={buildPageHref(page + 1, category, search)}>
               <Button variant="outline" size="sm">
                 Next
               </Button>
@@ -218,7 +218,7 @@ function buildPageHref(
   page: number,
   category: NewsCategory | undefined,
   search: string | undefined
-): string {
+): any {
   const params = new URLSearchParams();
   if (category) params.set('category', category.toLowerCase());
   if (search) params.set('search', search);

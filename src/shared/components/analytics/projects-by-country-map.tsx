@@ -64,7 +64,7 @@ export function ProjectsByCountryMap({ data }: ProjectsByCountryMapProps) {
     countryName: string,
     count: number
   ) => {
-    const rect = (event.currentTarget as SVGPathElement).closest('svg')?.getBoundingClientRect();
+    const rect = event.currentTarget.closest('svg')?.getBoundingClientRect();
     const x = event.clientX - (rect?.left ?? 0);
     const y = event.clientY - (rect?.top ?? 0);
     setTooltip({ country: countryName, count, x, y });
@@ -72,7 +72,7 @@ export function ProjectsByCountryMap({ data }: ProjectsByCountryMapProps) {
 
   const handleMouseMove = (event: React.MouseEvent<SVGPathElement>) => {
     if (!tooltip) return;
-    const rect = (event.currentTarget as SVGPathElement).closest('svg')?.getBoundingClientRect();
+    const rect = event.currentTarget.closest('svg')?.getBoundingClientRect();
     const x = event.clientX - (rect?.left ?? 0);
     const y = event.clientY - (rect?.top ?? 0);
     setTooltip(prev => (prev ? { ...prev, x, y } : null));

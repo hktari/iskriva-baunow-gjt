@@ -1,29 +1,19 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-export default [
-  {
-    ignores: [
-      '**/node_modules/**',
-      '**/.next/**',
-      '**/dist/**',
-      '**/build/**',
-      '.agents/**',
-      '*.config.mjs',
-      '*.config.js',
-    ],
-  },
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+export default defineConfig([
+  globalIgnores([
+    'node_modules/**',
+    '.next/**',
+    'dist/**',
+    'build/**',
+    '.agents/**',
+    '*.config.mjs',
+    '*.config.js',
+  ]),
+  ...nextVitals,
+  ...nextTypescript,
   {
     languageOptions: {
       ecmaVersion: 'latest',
@@ -55,6 +45,7 @@ export default [
       '@typescript-eslint/triple-slash-reference': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/set-state-in-effect': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
 
       '@typescript-eslint/no-misused-promises': [
@@ -92,4 +83,4 @@ export default [
       ],
     },
   },
-];
+]);

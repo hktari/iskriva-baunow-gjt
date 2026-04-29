@@ -10,7 +10,10 @@ export const projectSchema = z
     investmentCosts: z.coerce.number().nonnegative().optional().or(z.null()),
     status: z.enum(['PLANNING', 'IN_PROGRESS', 'COMPLETED', 'ON_HOLD']),
     startDate: z.coerce.date(),
-    endDate: z.coerce.date().optional().or(z.null()),
+    endDate: z.preprocess(
+      val => (val === null || val === undefined || val === '' ? null : val),
+      z.coerce.date().nullable()
+    ),
     description: z.string().min(1, 'Description is required'),
     note: z.string().optional().or(z.null()),
     projectManager: z.string().optional().or(z.null()),
