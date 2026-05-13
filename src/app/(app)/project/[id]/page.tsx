@@ -54,7 +54,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p className="text-muted-foreground mt-1">
                 {project.country}
                 {project.organization ? ` • ${project.organization}` : null}
-                {` • {project.projectType}`}
+                {` • ${project.projectType}`}
               </p>
             </div>
             <div className="flex items-center gap-2">
