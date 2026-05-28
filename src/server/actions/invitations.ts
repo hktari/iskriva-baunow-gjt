@@ -270,6 +270,84 @@ export async function resendInvitation(
   }
 }
 
+type CredentialsSuccessResponse = {
+  success: true;
+  email: string;
+  tempPassword: string;
+};
+
+export async function generateNewCredentials(
+  userId: string
+): Promise<CredentialsSuccessResponse | InvitationErrorResponse> {
+  const session = await auth();
+
+  if (session?.user.role !== 'SUPER_USER') {
+    return { error: 'Unauthorized' };
+  }
+
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'generateNewCredentials',
+    userId: extractUserId(session),
+    entityId: userId,
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
+
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return { error: 'User not found' };
+    }
+
+    if (user.status !== UserStatus.PENDING) {
+      return { error: 'User is not in pending status' };
+    }
+
+    // Generate new temporary password
+    const tempPassword = crypto.randomBytes(16).toString('hex');
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    await db.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    logger.info({ userEmail: user.email }, 'New credentials generated for manual sharing');
+
+    // Log audit
+    await db.auditLog.create({
+      data: {
+        action: 'CREDENTIALS_REGENERATED',
+        entityType: 'User',
+        entityId: userId,
+        userId: session.user.id,
+        userEmail: session.user.email,
+        metadata: {
+          userEmail: user.email,
+          requestId: context.requestId,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      email: user.email,
+      tempPassword,
+    };
+  } catch (error) {
+    captureError(error, {
+      ...context,
+      errorType: 'generate-credentials-failed',
+      severity: 'error',
+    });
+    return { error: 'Failed to generate new credentials' };
+  }
+}
+
 export async function acceptInvitation(userId: string, newPassword: string) {
   const context = await createObservabilityContext({
     scope: 'invitations',

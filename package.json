@@ -97,18 +97,12 @@
     "pnpm": ">=9.0.0"
   },
   "packageManager": "pnpm@10.33.2",
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.14",
-      "@types/react-dom": "19.2.3"
-    },
-    "onlyBuiltDependencies": [
-      "@prisma/engines",
-      "@sentry/cli",
-      "esbuild",
-      "prisma",
-      "sharp",
-      "unrs-resolver"
-    ]
-  }
+  "onlyBuiltDependencies": [
+    "@prisma/engines",
+    "@sentry/cli",
+    "esbuild",
+    "prisma",
+    "sharp",
+    "unrs-resolver"
+  ]
 }

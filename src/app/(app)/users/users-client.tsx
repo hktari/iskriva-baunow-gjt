@@ -1,6 +1,6 @@
 'use client';
 
-import { resendInvitation } from '@/server/actions/invitations';
+import { generateNewCredentials, resendInvitation } from '@/server/actions/invitations';
 import { deleteUser, updateUserStatus } from '@/server/actions/users';
 import {
   AlertDialog,
@@ -33,7 +33,7 @@ import {
 } from '@/shared/components/ui/table';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { UserRole, UserStatus } from '@/types/user';
-import { Mail, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
+import { Copy, Key, Mail, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { InviteUserDialog } from './invite-user-dialog';
@@ -85,6 +85,11 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [resendingUserId, setResendingUserId] = useState<string | null>(null);
+  const [generatingCredentialsId, setGeneratingCredentialsId] = useState<string | null>(null);
+  const [credentialsUser, setCredentialsUser] = useState<{
+    email: string;
+    tempPassword: string;
+  } | null>(null);
 
   // Debounced search function
   const debouncedSearch = useDebouncedCallback(
@@ -161,6 +166,36 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
     } finally {
       setResendingUserId(null);
     }
+  };
+
+  const handleGetCredentials = async (id: string) => {
+    setGeneratingCredentialsId(id);
+
+    try {
+      const result = await generateNewCredentials(id);
+
+      if ('error' in result) {
+        toast.error(result.error);
+      } else if ('success' in result && result.success) {
+        setCredentialsUser({
+          email: result.email,
+          tempPassword: result.tempPassword,
+        });
+        toast.success('New credentials generated. Share them with the user manually.');
+      } else {
+        toast.error('Failed to generate credentials');
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred while generating credentials');
+      console.error('Generate credentials error:', error);
+    } finally {
+      setGeneratingCredentialsId(null);
+    }
+  };
+
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied to clipboard`);
   };
 
   const getRoleBadgeVariant = (role: UserRole) => {
@@ -256,6 +291,15 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
                           <>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                              onClick={() => handleGetCredentials(user.id)}
+                              disabled={generatingCredentialsId === user.id}
+                            >
+                              <Key className="mr-2 h-4 w-4" />
+                              {generatingCredentialsId === user.id
+                                ? 'Generating...'
+                                : 'Get Credentials'}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                               onClick={() => handleResendInvitation(user.id)}
                               disabled={resendingUserId === user.id}
                             >
@@ -342,6 +386,81 @@ export function UsersClient({ users: initialUsers }: UsersClientProps) {
             >
               Delete
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Credentials Dialog */}
+      <AlertDialog open={!!credentialsUser} onOpenChange={() => setCredentialsUser(null)}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>User Credentials</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  New credentials have been generated. Share these with the user manually via your
+                  preferred email client.
+                </p>
+                <div className="rounded-md bg-muted p-4 space-y-3">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Email:</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(credentialsUser?.email || '', 'Email')}
+                        className="h-6 px-2"
+                      >
+                        <Copy className="h-3 w-3 mr-1" />
+                        Copy
+                      </Button>
+                    </div>
+                    <code className="block bg-background px-2 py-1.5 rounded text-sm break-all">
+                      {credentialsUser?.email}
+                    </code>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Temporary Password:</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          copyToClipboard(credentialsUser?.tempPassword || '', 'Password')
+                        }
+                        className="h-6 px-2"
+                      >
+                        <Copy className="h-3 w-3 mr-1" />
+                        Copy
+                      </Button>
+                    </div>
+                    <code className="block bg-background px-2 py-1.5 rounded text-sm break-all">
+                      {credentialsUser?.tempPassword}
+                    </code>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      copyToClipboard(
+                        `Email: ${credentialsUser?.email}\nTemporary Password: ${credentialsUser?.tempPassword}\n\nLogin URL: ${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/login`,
+                        'All credentials'
+                      )
+                    }
+                    className="w-full mt-2"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy All (for email)
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  The user should change this password on first login.
+                </p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setCredentialsUser(null)}>Close</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
