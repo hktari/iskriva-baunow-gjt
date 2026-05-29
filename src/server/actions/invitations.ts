@@ -3,8 +3,8 @@
 import { auth } from '@/server/auth';
 import {
   EmailConfigurationError,
-  resendInvitationEmail,
-  sendInvitationEmail,
+  sendMagicLinkEmail,
+  sendPasswordResetEmail,
 } from '@/server/lib/email';
 import { captureError } from '@/shared/lib/capture-error';
 import { db } from '@/shared/lib/db';
@@ -18,6 +18,31 @@ import { revalidatePath } from 'next/cache';
 const isDemoEnvironment = process.env.NODE_ENV !== 'production';
 const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 const defaultLoginUrl = `${appBaseUrl.replace(/\/$/, '')}/login`;
+const TOKEN_EXPIRY_HOURS = 48;
+
+// Helper function to create password reset token
+async function createPasswordResetToken(userId: string): Promise<string> {
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+
+  const expires = new Date();
+  expires.setHours(expires.getHours() + TOKEN_EXPIRY_HOURS);
+
+  await db.passwordResetToken.create({
+    data: {
+      tokenHash,
+      userId,
+      expires,
+    },
+  });
+
+  return rawToken;
+}
+
+// Helper function to build magic link URL
+function buildMagicLinkUrl(token: string): string {
+  return `${appBaseUrl.replace(/\/$/, '')}/set-password?token=${token}`;
+}
 
 type InvitationSuccessResponse = {
   success: true;
@@ -97,14 +122,16 @@ export async function inviteUser(
       },
     });
 
-    // Send invitation email via Resend
+    // Create magic link token and send email
     let emailStatus: InvitationSuccessResponse['emailStatus'] = 'skipped';
     try {
-      await sendInvitationEmail({
+      const rawToken = await createPasswordResetToken(user.id);
+      const magicLinkUrl = buildMagicLinkUrl(rawToken);
+
+      await sendMagicLinkEmail({
         to: email,
         userName: name,
-        tempPassword,
-        loginUrl: defaultLoginUrl,
+        magicLinkUrl,
       });
       emailStatus = 'sent';
     } catch (emailError) {
@@ -214,14 +241,16 @@ export async function resendInvitation(
       },
     });
 
-    // Send new invitation email via Resend
+    // Create new magic link token and send email
     let emailStatus: InvitationSuccessResponse['emailStatus'] = 'skipped';
     try {
-      await resendInvitationEmail({
+      const rawToken = await createPasswordResetToken(user.id);
+      const magicLinkUrl = buildMagicLinkUrl(rawToken);
+
+      await sendMagicLinkEmail({
         to: user.email,
         userName: user.name || 'User',
-        tempPassword,
-        loginUrl: defaultLoginUrl,
+        magicLinkUrl,
       });
       emailStatus = 'sent';
     } catch (emailError) {
@@ -348,6 +377,156 @@ export async function generateNewCredentials(
   }
 }
 
+export async function validatePasswordResetToken(token: string) {
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+  const resetToken = await db.passwordResetToken.findUnique({
+    where: { tokenHash },
+    include: { user: true },
+  });
+
+  if (!resetToken) {
+    return { valid: false, error: 'Invalid token' };
+  }
+
+  if (resetToken.used) {
+    return { valid: false, error: 'Token has already been used' };
+  }
+
+  if (new Date() > resetToken.expires) {
+    return { valid: false, error: 'Token has expired' };
+  }
+
+  return {
+    valid: true,
+    userId: resetToken.userId,
+    email: resetToken.user.email,
+  };
+}
+
+export async function setPasswordWithToken(token: string, newPassword: string) {
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'setPasswordWithToken',
+    entityType: 'User',
+  });
+  const logger = createChildLogger(context);
+
+  try {
+    // Validate token first
+    const validation = await validatePasswordResetToken(token);
+    if (!validation.valid) {
+      return { error: validation.error };
+    }
+
+    const { userId, email } = validation;
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user password only — status is promoted to ACTIVE on first successful login
+    await db.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    // Mark token as used
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    await db.passwordResetToken.update({
+      where: { tokenHash },
+      data: { used: true },
+    });
+
+    logger.info(
+      { userEmail: email },
+      'Password set via token; user will be activated on first login'
+    );
+
+    // Log audit
+    await db.auditLog.create({
+      data: {
+        action: 'INVITATION_ACCEPTED',
+        entityType: 'User',
+        entityId: userId,
+        userId: userId,
+        userEmail: email,
+        metadata: {
+          userEmail: email,
+          method: 'magic_link',
+          requestId: context.requestId,
+        },
+      },
+    });
+
+    return { success: true, message: 'Password set successfully. You can now log in.' };
+  } catch (error) {
+    captureError(error, {
+      ...context,
+      errorType: 'set-password-with-token-failed',
+      severity: 'error',
+    });
+    return { error: 'Failed to set password' };
+  }
+}
+
+export async function requestPasswordReset(
+  email: string
+): Promise<{ success: true; message: string } | { error: string }> {
+  const context = await createObservabilityContext({
+    scope: 'invitations',
+    action: 'requestPasswordReset',
+  });
+  const logger = createChildLogger(context);
+
+  try {
+    const user = await db.user.findUnique({ where: { email } });
+
+    // Always return success to avoid email enumeration
+    if (!user || user.status === UserStatus.INACTIVE) {
+      return { success: true, message: 'If that email exists, a reset link has been sent.' };
+    }
+
+    const rawToken = await createPasswordResetToken(user.id);
+    const resetUrl = buildMagicLinkUrl(rawToken);
+
+    try {
+      await sendPasswordResetEmail({
+        to: user.email,
+        userName: user.name || 'User',
+        resetUrl,
+      });
+    } catch (emailError) {
+      if (emailError instanceof EmailConfigurationError) {
+        logger.warn(
+          { scope: 'resend.password-reset', reason: (emailError as Error).message },
+          'Resend configuration missing, password reset email skipped'
+        );
+      } else {
+        logger.error(
+          {
+            scope: 'resend.password-reset',
+            error: emailError instanceof Error ? emailError.message : emailError,
+          },
+          'Failed to send password reset email'
+        );
+      }
+    }
+
+    logger.info({ userEmail: email }, 'Password reset requested');
+
+    return { success: true, message: 'If that email exists, a reset link has been sent.' };
+  } catch (error) {
+    captureError(error, {
+      ...context,
+      errorType: 'request-password-reset-failed',
+      severity: 'error',
+      extra: { email },
+    });
+    return { error: 'Failed to process password reset request' };
+  }
+}
+
+// Deprecated: Kept for backward compatibility, use setPasswordWithToken instead
 export async function acceptInvitation(userId: string, newPassword: string) {
   const context = await createObservabilityContext({
     scope: 'invitations',
