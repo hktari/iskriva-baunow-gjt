@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   description: 'Set your password to access the Baunow GJT Platform',
 };
 
-export default function SetPasswordPage({
+export default async function SetPasswordPage({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const token = searchParams.token;
+  const { token } = await searchParams;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
