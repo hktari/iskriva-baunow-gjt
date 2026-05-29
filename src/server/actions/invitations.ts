@@ -15,9 +15,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { revalidatePath } from 'next/cache';
 
-const isDemoEnvironment = process.env.NODE_ENV !== 'production';
 const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-const defaultLoginUrl = `${appBaseUrl.replace(/\/$/, '')}/login`;
 const TOKEN_EXPIRY_HOURS = 48;
 
 // Helper function to create password reset token
@@ -49,10 +47,6 @@ type InvitationSuccessResponse = {
   userId: string;
   message: string;
   emailStatus: 'sent' | 'skipped' | 'failed';
-  demoCredentials?: {
-    email: string;
-    tempPassword: string;
-  };
 };
 
 type InvitationErrorResponse = {
@@ -87,16 +81,12 @@ export async function inviteUser(
       return { error: 'User with this email already exists' };
     }
 
-    // Generate temporary password
-    const tempPassword = crypto.randomBytes(16).toString('hex');
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
-
-    // Create user with PENDING status
+    // Create user with PENDING status (no password yet — set via reset link)
     const user = await db.user.create({
       data: {
         email,
         name,
-        password: hashedPassword,
+        password: '',
         role,
         status: UserStatus.PENDING,
         invitedBy: session.user.id,
@@ -165,12 +155,6 @@ export async function inviteUser(
           : emailStatus === 'failed'
             ? 'User invited, but the email could not be delivered automatically. Please resend later.'
             : 'User invited successfully. Email notifications are currently disabled.',
-      demoCredentials: isDemoEnvironment
-        ? {
-            email,
-            tempPassword,
-          }
-        : undefined,
     };
   } catch (error) {
     captureError(error, {
@@ -214,15 +198,6 @@ export async function resendInvitation(
     if (user.status !== UserStatus.PENDING) {
       return { error: 'User is not in pending status' };
     }
-
-    // Generate new temporary password
-    const tempPassword = crypto.randomBytes(16).toString('hex');
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
-
-    await db.user.update({
-      where: { id: userId },
-      data: { password: hashedPassword },
-    });
 
     logger.info({ userEmail: user.email }, 'Invitation resent successfully');
 
@@ -282,12 +257,6 @@ export async function resendInvitation(
           : emailStatus === 'failed'
             ? 'Invitation resent but email delivery failed - please check logs.'
             : 'Invitation resent. Email notifications are currently disabled.',
-      demoCredentials: isDemoEnvironment
-        ? {
-            email: user.email,
-            tempPassword,
-          }
-        : undefined,
     };
   } catch (error) {
     captureError(error, {
@@ -296,84 +265,6 @@ export async function resendInvitation(
       severity: 'error',
     });
     return { error: 'Failed to resend invitation' };
-  }
-}
-
-type CredentialsSuccessResponse = {
-  success: true;
-  email: string;
-  tempPassword: string;
-};
-
-export async function generateNewCredentials(
-  userId: string
-): Promise<CredentialsSuccessResponse | InvitationErrorResponse> {
-  const session = await auth();
-
-  if (session?.user.role !== 'SUPER_USER') {
-    return { error: 'Unauthorized' };
-  }
-
-  const context = await createObservabilityContext({
-    scope: 'invitations',
-    action: 'generateNewCredentials',
-    userId: extractUserId(session),
-    entityId: userId,
-    entityType: 'User',
-  });
-  const logger = createChildLogger(context);
-
-  try {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      return { error: 'User not found' };
-    }
-
-    if (user.status !== UserStatus.PENDING) {
-      return { error: 'User is not in pending status' };
-    }
-
-    // Generate new temporary password
-    const tempPassword = crypto.randomBytes(16).toString('hex');
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
-
-    await db.user.update({
-      where: { id: userId },
-      data: { password: hashedPassword },
-    });
-
-    logger.info({ userEmail: user.email }, 'New credentials generated for manual sharing');
-
-    // Log audit
-    await db.auditLog.create({
-      data: {
-        action: 'CREDENTIALS_REGENERATED',
-        entityType: 'User',
-        entityId: userId,
-        userId: session.user.id,
-        userEmail: session.user.email,
-        metadata: {
-          userEmail: user.email,
-          requestId: context.requestId,
-        },
-      },
-    });
-
-    return {
-      success: true,
-      email: user.email,
-      tempPassword,
-    };
-  } catch (error) {
-    captureError(error, {
-      ...context,
-      errorType: 'generate-credentials-failed',
-      severity: 'error',
-    });
-    return { error: 'Failed to generate new credentials' };
   }
 }
 
@@ -498,7 +389,7 @@ export async function requestPasswordReset(
     } catch (emailError) {
       if (emailError instanceof EmailConfigurationError) {
         logger.warn(
-          { scope: 'resend.password-reset', reason: (emailError as Error).message },
+          { scope: 'resend.password-reset', reason: emailError.message },
           'Resend configuration missing, password reset email skipped'
         );
       } else {

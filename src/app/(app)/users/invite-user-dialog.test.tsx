@@ -40,10 +40,6 @@ describe('InviteUserDialog - Resend Email Service', () => {
       userId: 'new-user-id',
       emailStatus: 'sent',
       message: 'User invited successfully. Invitation email sent via Resend.',
-      demoCredentials: {
-        email: 'newuser@example.com',
-        tempPassword: 'temp-password-123',
-      },
     });
 
     render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
@@ -89,10 +85,6 @@ describe('InviteUserDialog - Resend Email Service', () => {
       emailStatus: 'failed',
       message:
         'User invited, but the email could not be delivered automatically. Please resend later.',
-      demoCredentials: {
-        email: 'newuser@example.com',
-        tempPassword: 'temp-password-123',
-      },
     });
 
     render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
@@ -110,12 +102,10 @@ describe('InviteUserDialog - Resend Email Service', () => {
       expect.stringContaining('could not be delivered automatically')
     );
 
-    // Demo credentials dialog should be visible with shared secrets
+    // Verify the degraded message is shown in the dialog
     await waitFor(() => {
-      expect(screen.getByText(/Share the temporary credentials below/i)).toBeInTheDocument();
+      expect(screen.getByText(/could not be delivered automatically/i)).toBeInTheDocument();
     });
-    expect(screen.getByText('newuser@example.com')).toBeInTheDocument();
-    expect(screen.getByText('temp-password-123')).toBeInTheDocument();
 
     // Success callback still fires so parent can refresh
     expect(mockOnSuccess).toHaveBeenCalled();
@@ -131,10 +121,6 @@ describe('InviteUserDialog - Resend Email Service', () => {
       userId: 'new-user-id',
       emailStatus: 'sent',
       message: 'Invitation email sent successfully via Resend',
-      demoCredentials: {
-        email: 'newuser@example.com',
-        tempPassword: 'temp-password-123',
-      },
     });
 
     render(<InviteUserDialog open onOpenChange={mockOnOpenChange} onSuccess={mockOnSuccess} />);
@@ -154,6 +140,5 @@ describe('InviteUserDialog - Resend Email Service', () => {
     // Verify the response indicates email was sent successfully
     const result = await mockInviteUser.mock.results[0].value;
     expect(result.emailStatus).toBe('sent');
-    expect(result.demoCredentials?.tempPassword).toBe('temp-password-123');
   });
 });

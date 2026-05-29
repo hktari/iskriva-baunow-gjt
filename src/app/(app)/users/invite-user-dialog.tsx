@@ -1,15 +1,6 @@
 'use client';
 
 import { inviteUser } from '@/server/actions/invitations';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/shared/components/ui/alert-dialog';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -45,10 +36,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
     name: '',
     role: UserRole.VIEWER as UserRole,
   });
-  const [demoCredentials, setDemoCredentials] = useState<{
-    email: string;
-    tempPassword: string;
-  } | null>(null);
   const [emailStatus, setEmailStatus] = useState<'sent' | 'failed' | 'skipped' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,7 +52,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
       if ('success' in result && result.success) {
         toast.success(result.message || 'User invited successfully');
         setEmailStatus(result.emailStatus);
-        setDemoCredentials(result.demoCredentials || null);
         // Pass the new user data to parent for state update
         onSuccess({
           id: result.userId,
@@ -81,7 +67,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
 
   const handleClose = () => {
     setFormData({ email: '', name: '', role: UserRole.VIEWER });
-    setDemoCredentials(null);
     setEmailStatus(null);
     onOpenChange(false);
   };
@@ -94,13 +79,13 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
       case 'failed':
         return 'The user was created, but the email could not be delivered automatically.';
       case 'skipped':
-        return 'Email delivery is disabled in this environment. Share the credentials manually.';
+        return 'Email delivery is disabled in this environment. The user account has been created.';
     }
   }, [emailStatus]);
 
   return (
     <>
-      <Dialog open={open ? !demoCredentials : undefined} onOpenChange={handleClose}>
+      <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="sm:max-w-[500px]">
           <form onSubmit={handleSubmit}>
             <DialogHeader>
@@ -166,45 +151,6 @@ export function InviteUserDialog({ open, onOpenChange, onSuccess }: InviteUserDi
           </form>
         </DialogContent>
       </Dialog>
-
-      <AlertDialog open={!!demoCredentials} onOpenChange={() => setDemoCredentials(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Invitation Sent Successfully</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <div className="space-y-4">
-                <p>
-                  The user has been invited. Share the temporary credentials below. In production,
-                  this dialog is hidden because the user receives an email directly.
-                </p>
-                <div className="rounded-md bg-muted p-4">
-                  <p className="font-medium mb-2">Demo Information:</p>
-                  <div className="space-y-2 text-sm">
-                    <div>
-                      <span className="font-medium">Email:</span>{' '}
-                      <code className="bg-background px-1 py-0.5 rounded">
-                        {demoCredentials?.email}
-                      </code>
-                    </div>
-                    <div>
-                      <span className="font-medium">Temporary Password:</span>{' '}
-                      <code className="bg-background px-1 py-0.5 rounded">
-                        {demoCredentials?.tempPassword}
-                      </code>
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    The user should change this password on first login.
-                  </p>
-                </div>
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={handleClose}>Close</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }
