@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
 
+  // Expose VERCEL_ENV to client for Sentry environment detection
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV,
+  },
+
   serverExternalPackages: ['pino', 'pino-pretty'],
 
   typedRoutes: true,
