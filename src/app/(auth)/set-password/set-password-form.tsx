@@ -10,10 +10,7 @@ import {
 } from '@/shared/components/ui/card';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import {
-  setPasswordWithToken,
-  validatePasswordResetToken,
-} from '@/server/actions/invitations';
+import { setPasswordWithToken, validatePasswordResetToken } from '@/server/actions/invitations';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
@@ -136,7 +133,9 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
         </CardHeader>
         <CardContent>
           <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
-            <p className="text-red-700 text-sm">{error || 'The invitation link is invalid or has expired.'}</p>
+            <p className="text-red-700 text-sm">
+              {error || 'The invitation link is invalid or has expired.'}
+            </p>
           </div>
           <Button onClick={() => router.push('/login')} className="w-full">
             Go to Login
@@ -150,7 +149,9 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
     <Card>
       <CardHeader>
         <CardTitle>Set Your Password</CardTitle>
-        <CardDescription>Welcome! Create a password to complete your account setup.</CardDescription>
+        <CardDescription>
+          Welcome! Create a password to complete your account setup.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -56,10 +56,7 @@ export function ForgotPasswordForm() {
           <p className="text-sm text-muted-foreground mb-4">
             The link will expire in 48 hours. Check your spam folder if you don&apos;t see it.
           </p>
-          <Link
-            href="/login"
-            className="text-sm text-primary underline-offset-4 hover:underline"
-          >
+          <Link href="/login" className="text-sm text-primary underline-offset-4 hover:underline">
             Back to login
           </Link>
         </CardContent>
