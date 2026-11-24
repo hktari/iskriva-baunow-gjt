@@ -58,7 +58,7 @@ export function AppHeader({ user }: AppHeaderProps) {
     { name: 'Projects', href: '/', icon: FolderKanban },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
     { name: 'Map', href: '/map', icon: Map },
-    { name: 'Methodology', href: '/methodology', icon: BookOpen, disabled: true },
+    { name: 'Methodology', href: '/methodology', icon: BookOpen },
     { name: 'News', href: '/news', icon: Newspaper },
     { name: 'About', href: '/about', icon: Info, disabled: true },
   ];
