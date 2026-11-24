@@ -9,6 +9,7 @@ export default defineConfig([
     'dist/**',
     'build/**',
     '.agents/**',
+    '.claude/worktrees/**',
     '*.config.mjs',
     '*.config.js',
   ]),
